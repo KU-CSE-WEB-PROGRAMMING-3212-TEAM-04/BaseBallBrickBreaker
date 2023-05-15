@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <input type="text" id="name">
+    <input type="number" id="score">
+    <input type="button" value="append to firestore" onclick="appendRanking()">
+
+    <ol id="rankingList">
+
+    </ol>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="js/ranking.js"></script>
+</body>
+
+</html>
