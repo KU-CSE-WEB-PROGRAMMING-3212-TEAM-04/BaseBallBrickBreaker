@@ -1,0 +1,100 @@
+html{
+  background: #222;
+}
+#select {
+    display: grid;
+    place-items: center;
+    height: 95vh;
+    text-align: center;
+    font-family: sans-serif;
+  }
+
+  #team_select .team {
+    width: 20vw;
+    max-width: 250px;
+    height: 75vh;
+    background: red;
+    background-size: auto 100%;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: inline-block;
+    margin: 0 0.5rem;
+    filter: grayscale(1) opacity(0.1) contrast(200%);
+    transition: 0.5s;
+    transform: skewY(-10deg);
+    z-index: -1;
+  }
+  .c_img{
+    height: 65vh;
+    width: 25vh;
+  }
+
+  @media (orientation: portrait) {
+    .team_select{
+      width: 75vw;
+      max-width: 75vw;
+      height: 20vh;
+      display: block;
+      margin: 1rem 0;
+      background-size: 100% auto;
+      background-position: 50% 0%;
+      transform: skewX(-10deg);
+    }
+    #team_select div:nth-child(1) {
+      background-position: 50% 10%;
+    }
+    #team_select div:nth-child(3) {
+      background-position: 50% 20%;
+    }
+    #team_select div:nth-child(4) {
+      background-position: 50% 10%;
+    }
+  }
+  
+  #team_select div:nth-child(1) {
+    background-color: dodgerblue;
+  }
+  
+  #team_select div:nth-child(2) {
+    background-color: black;
+  }
+  #team_select div:nth-child(3) {
+    background-color: darkorange;
+  }
+  #team_select div:nth-child(4) {
+    background-color: red;
+  }
+  
+  #team_select div:nth-child(1):after,
+  #team_select div:nth-child(2):after,
+  #team_select div:nth-child(3):after,
+  #team_select div:nth-child(4):after {
+    content: "NAME";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 60px;
+    font-weight: 900;
+    color: white;
+    text-shadow: 3px 3px #555;
+  }
+  #team_select div:nth-child(1):after {
+    content: "LIONS";
+  }
+  #team_select div:nth-child(2):after {
+    content: "TWINS";
+  }
+  #team_select div:nth-child(3):after {
+    content: "EAGLES";
+  }
+  #team_select div:nth-child(4):after {
+    content: "TIGERS";
+  }
+  #team_select div:hover {
+    filter: grayscale(0) opacity(1);
+    transform: scale(1.1);
+    box-shadow: 0 25px 50px black;
+    z-index: 100;
+  }

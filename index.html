@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Baseball BrickBreaker</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script src="js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <audio id="sound_progress" src="src/효과음1.mp3"></audio>
+    <audio id="bgm_start" src="src/startbgm1.mp3"></audio>
+
+    <div class="progress">
+      <div class="progress-container" id="pc1">
+        <label> W </label>
+        <label> E </label>
+        <label> B </label>
+        <label> </label>
+        <label> P </label>
+        <label> R </label>
+        <label> O </label>
+        <label> G </label>
+        <label> R </label>
+        <label> A </label>
+        <label> M </label>
+        <label> I </label>
+        <label> N </label>
+        <label> G </label>
+      </div>
+      <div class="progress-container" id="pc2">
+        <label> T </label>
+        <label> E </label>
+        <label> A </label>
+        <label> M </label>
+        <label> 4 </label>
+      </div>
+    </div>
+
+    <div id="start">
+      <video muted autoplay loop>
+        <source src="src/startmedia1.mp4" type="video/mp4" />
+      </video>
+      <img src="src/setting.png" id="settingbtn" />
+      <img src="src/title4.png" id="title" />
+      <img src="src/startbtn.png" id="startbtn" />
+    </div>
+  </body>
+</html>

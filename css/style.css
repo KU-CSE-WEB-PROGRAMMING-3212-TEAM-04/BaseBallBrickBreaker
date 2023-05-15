@@ -1,0 +1,99 @@
+html,body {
+  margin: 0;
+  padding: 0;
+  background:#000000;
+  height: 100%;
+  font-family: sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* 인트로 */
+.progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+.progress-container {
+  transform: translateY(-50%);
+  top: 50%;
+  position: absolute;
+  width: calc(100% - 200px);
+  color: #FFF;
+  padding: 0 100px;
+  text-align: center;
+}
+.progress-container label {
+  font-size: 20px;
+  opacity: 0;
+  display:inline-block;
+}
+@keyframes anim {
+  0% {
+    opacity: 0;
+    transform: translateX(-300px);
+  }
+  33% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  66% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(300px);
+  }
+}
+
+@-webkit-keyframes anim {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-300px);
+  }
+  33% {
+    opacity: 1;
+    -webkit-transform: translateX(0px);
+  }
+  66% {
+    opacity: 1;
+    -webkit-transform: translateX(0px);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateX(300px);
+  }
+}
+/* 시작화면 */
+#start {
+  position: relative;
+  width: 70vw; 
+  height: 70vh;
+  display: none;
+}
+video {
+  width: 100%; 
+  height: 100%;
+  object-fit: cover; 
+}
+#title{
+  position: absolute;
+  left: 25%;
+  top: 20%;
+  width: 50%;
+}
+#settingbtn{
+  position: absolute;
+  top: 5%;
+  right: 5%;
+  width: 5%;
+}
+#startbtn{
+  position: absolute;
+  bottom: 10%;
+  left: 40%;
+  width: 20%;
+}
