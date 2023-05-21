@@ -20,8 +20,8 @@ $(document).ready(function() {
     let ballX = canvas.width / 2;
     let ballY = paddleY - ballRadius;
     let ballDX = 4;
-    let ballDY = -4;
-    const ballSpeed = 4;
+    let ballDY = -5;
+    const ballSpeed = 5;
 
     // 키보드 이벤트 처리를 위한 변수 선언
     let rightPressed = false;
@@ -152,14 +152,18 @@ $(document).ready(function() {
 
             // 충돌 판정
             if (checkCollision(paddleBox, ballBox)) {
-                // 충돌 시 패들과의 상대적인 충돌 위치 계산
-                const collisionPoint = ballX - (paddleX + paddleWidth / 2);
-        
-                // 상대적인 충돌 위치에 따라 공의 속도와 방향을 조절
-                const maxBounceAngle = (paddleMaxAngle * Math.PI) / 180;
-                const bounceAngle = (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
-                ballDX = ballSpeed * Math.sin(bounceAngle);
-                ballDY = -ballSpeed;
+                if (resetPaddleAngle) { // 'e' 키가 눌려 있는 경우
+                    ballDX = 0; // 가로 속도를 0으로 설정하여 멈춤
+                } else {
+                    // 충돌 시 패들과의 상대적인 충돌 위치 계산
+                    const collisionPoint = ballX - (paddleX + paddleWidth / 2);
+                    
+                    // 상대적인 충돌 위치에 따라 공의 속도와 방향을 조절
+                    const maxBounceAngle = (paddleMaxAngle * Math.PI) / 180;
+                    const bounceAngle = (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
+                    ballDX = ballSpeed * Math.sin(bounceAngle);
+                }
+                ballDY = -ballSpeed; // 수직 방향은 항상 위쪽으로 설정
             }
         }
 
