@@ -130,17 +130,17 @@ canvas {
 
 #heartImg {
   width: 30px;
-  float: right;
+  float: left;
 }
 
 #livesLeft {
-  float: right;
+  float: left;
   font-size: 25px;
   margin-left: 10px;
 }
 
 #rankedGameLiveScore {
-  float: right;
+  float: left;
   font-size: 25px;
   margin-left: 30px;
 }

@@ -1,245 +1,187 @@
 $(document).ready(function () {
   var canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
+  var userTeamType = 0;
+  var rankedGameScore = 0;
 
-  // Initialize the game
-  function initializeGame() {
-    // removeAllEventListeners();
-    clearCanvas();
-    displayHomepage();
-  }
-
-  // Clear the canvas
   function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    console.log("canvas cleared");
   }
 
-  // Display the game start button
-  // Display the game start button
-  function displayStartButton() {
-    const buttonWidth = 120;
-    const buttonHeight = 50;
-    const buttonX = 250;
-    const buttonY = 350;
-
-    ctx.fillStyle = "blue";
-    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-    // Add text inside the button
-    ctx.fillStyle = "white";
-    ctx.font = "bold 16px Arial";
-    ctx.fillText("Start Game", buttonX + 10, buttonY + 30);
-
-    // Add event listener to the canvas
-    function startGameOnClick(event) {
-      // Remove the event listener
-      canvas.removeEventListener("click", startGameOnClick);
-
-      const rect = canvas.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const clickY = event.clientY - rect.top;
-
-      // Check if the click is within the button's boundaries
-      if (
-        clickX >= buttonX &&
-        clickX <= buttonX + buttonWidth &&
-        clickY >= buttonY &&
-        clickY <= buttonY + buttonHeight
-      ) {
-        selectGameType();
-      }
-    }
-
-    canvas.addEventListener("click", startGameOnClick);
-  }
-
-  // Display the settings button
-  function displaySettingsButton() {
-    const buttonWidth = 100;
-    const buttonHeight = 50;
-    const buttonX = 400;
-    const buttonY = 350;
-
-    ctx.fillStyle = "green";
-    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-    // Add text inside the button
-    ctx.fillStyle = "white";
-    ctx.font = "bold 16px Arial";
-    ctx.fillText("Settings", buttonX + 20, buttonY + 30);
-
-    // Add event listener to the canvas
-    canvas.addEventListener("click", function (event) {
-      const rect = canvas.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const clickY = event.clientY - rect.top;
-
-      // Check if the click is within the button's boundaries
-      if (
-        clickX >= buttonX &&
-        clickX <= buttonX + buttonWidth &&
-        clickY >= buttonY &&
-        clickY <= buttonY + buttonHeight
-      ) {
-        settings();
-      }
-    });
-  }
-
-  // Handle the settings functionality
-  function settings() {
+  // Initialize the game
+  function displayHomepage() {
     clearCanvas();
-    displayBatImageSelection();
-    displayBallColorSelection();
-    displayBackButton();
+    userTeamType = 0;
+    $("#homepage").show();
+    $("#settingsPage").hide();
+    $("#gameTypeChoosingPage").hide();
+    $("#difficultyChoosingPage").hide();
+    $("#teamSelectingPage").hide();
+    $("#rankedGameStatus").hide();
+    $("#rankedGameEndedPage").hide();
   }
 
-  // Display the back button
-  function displayBackButton() {}
+  $("#startGameButton").on("click", function () {
+    console.log("Start");
+    $("#homepage").hide();
+    $("#gameTypeChoosingPage").show();
+  });
 
-  // Select the game type
-  function selectGameType() {
-    clearCanvas();
-    displayStoryGameButton();
-    displayRankedGameButton();
-  }
+  $("#settingsButton").on("click", function () {
+    console.log("Settings");
+    $("#homepage").hide();
+    $("#settingsPage").show();
+  });
 
-  // Display the button for story game
-  function displayStoryGameButton() {
-    const buttonWidth = 120;
-    const buttonHeight = 50;
-    const buttonX = 250;
-    const buttonY = 250;
+  $("#settingsToHomeButton").on("click", function () {
+    displayHomepage();
+  });
 
-    ctx.fillStyle = "green";
-    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+  $("#chooseStoryModeButton").on("click", function () {
+    $("#gameTypeChoosingPage").hide();
+    $("#difficultyChoosingPage").show();
+  });
 
-    // Add text inside the button
-    ctx.fillStyle = "white";
-    ctx.font = "bold 16px Arial";
-    ctx.fillText("Story Game", buttonX + 10, buttonY + 30);
+  $("#chooseRankedModeButton").on("click", function () {
+    $("#gameTypeChoosingPage").hide();
+    $("#teamSelectingPage").show();
+  });
 
-    // Add event listener to the canvas
-    canvas.addEventListener("click", function (event) {
-      const rect = canvas.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const clickY = event.clientY - rect.top;
+  $("#chooseTeam1").on("click", function () {
+    userTeamType = 1;
+    $("#teamSelectingPage").hide();
+    playRankedGame();
+  });
 
-      // Check if the click is within the button's boundaries
-      if (
-        clickX >= buttonX &&
-        clickX <= buttonX + buttonWidth &&
-        clickY >= buttonY &&
-        clickY <= buttonY + buttonHeight
-      ) {
-        selectTeam();
-      }
-    });
-  }
+  $("#chooseTeam2").on("click", function () {
+    userTeamType = 2;
+    $("#teamSelectingPage").hide();
+    playRankedGame();
+  });
 
-  // Select the team for story game
-  function selectTeam() {
-    clearCanvas;
-    const buttonWidth = 120;
-    const buttonHeight = 50;
-    const buttonX = 250;
-    const buttonY = 250;
+  $("#chooseTeam3").on("click", function () {
+    userTeamType = 3;
+    $("#teamSelectingPage").hide();
+    playRankedGame();
+  });
 
-    ctx.fillStyle = "green";
-    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+  $("#chooseTeam4").on("click", function () {
+    userTeamType = 4;
+    $("#teamSelectingPage").hide();
+    endRankedGame();
+  });
 
-    // Add text inside the button
-    ctx.fillStyle = "white";
-    ctx.font = "bold 16px Arial";
-    ctx.fillText("Story Game", buttonX + 10, buttonY + 30);
+  function playRankedGame() {
+    console.log("starting ranked game..");
+    $("#rankedGameStatus").show();
+    var lives = 3;
+    $("#livesLeft").text(lives);
+    $("#rankedGameLiveScore").text("Score: "+rankedGameScore);
 
-    // Add event listener to the canvas
-    canvas.addEventListener("click", function (event) {
-      const rect = canvas.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const clickY = event.clientY - rect.top;
-
-      // Check if the click is within the button's boundaries
-      if (
-        clickX >= buttonX &&
-        clickX <= buttonX + buttonWidth &&
-        clickY >= buttonY &&
-        clickY <= buttonY + buttonHeight
-      ) {
-        selectTeam();
-      }
-    });
-  }
-
-  // Display the button for ranked game
-  function displayRankedGameButton() {
-    const buttonWidth = 120;
-    const buttonHeight = 50;
-    const buttonX = 400;
-    const buttonY = 250;
-
-    ctx.fillStyle = "orange";
-    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-    // Add text inside the button
-    ctx.fillStyle = "white";
-    ctx.font = "bold 16px Arial";
-    ctx.fillText("Ranked Game", buttonX + 10, buttonY + 30);
-
-    // Add event listener to the canvas
-    canvas.addEventListener("click", function (event) {
-      const rect = canvas.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const clickY = event.clientY - rect.top;
-
-      // Check if the click is within the button's boundaries
-      if (
-        clickX >= buttonX &&
-        clickX <= buttonX + buttonWidth &&
-        clickY >= buttonY &&
-        clickY <= buttonY + buttonHeight
-      ) {
-        startRankedGame();
-      }
-    });
-  }
-
-  function startRankedGame() {
-    clearCanvas();
-
-    // Initialize game variables
+    //variables about the paddle
     const paddleWidth = 134;
     const paddleHeight = 18;
-    let paddleX = (canvas.width - paddleWidth) / 2; // Initial paddle position
+    const paddleSpeed = 7;
+    const paddleMaxAngle = 105; // 최대 회전 각도 (방망이 휘두르는 각도)
+    let paddleX = (canvas.width - paddleWidth) / 2;
     let paddleY = canvas.height - paddleHeight - 30;
+    let paddleAngle = -25; // 현재 방망이 회전 각도
+    const paddleImage = $("#paddleImage")[0];
 
+    // variables about the ball
+    const ballImage = $("#ballImage")[0];
+    let ballRotationAngle = 0;
     const ballRadius = 8;
-    let ballX = canvas.width / 2; // Initial ball position
-    let ballY = paddleY - ballRadius; // Initial ball position
-    let ballDX = 4; // Initial ball velocity
-    let ballDY = -5; // Initial ball velocity
-    let score = 0;
-    let lives = 3;
+    let ballX = canvas.width / 2;
+    let ballY = paddleY - ballRadius;
+    let ballDX = 4;
+    let ballDY = -5;
+    const ballSpeed = 5;
 
-    // Initialize bricks
-    const brickRowCount = 3;
-    const brickColumnCount = 5;
-    const brickWidth = 75;
-    const brickHeight = 20;
-    const brickPadding = 10;
+    // variables about the brick
+    const brickRowCount = 4; // 벽돌 행 개수
+    const brickColumnCount = 10; // 벽돌 열 개수
+    const brickWidth = 70;
+    const brickHeight = 30;
+    const brickPadding = 5; // 벽돌 사이 간격
     const brickOffsetTop = 30;
     const brickOffsetLeft = 30;
-    const bricks = [];
 
+    const bricks = [];
     for (let c = 0; c < brickColumnCount; c++) {
       bricks[c] = [];
       for (let r = 0; r < brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 1 };
+        bricks[c][r] = { x: 0, y: 0, status: 1 }; // status: 1이면 벽돌이 존재하는 상태
       }
     }
 
-    // Function to draw bricks on the canvas
+    // 키보드 이벤트 처리를 위한 변수 선언
+    let rightPressed = false;
+    let leftPressed = false;
+    let spacePressed = false;
+    let resetPaddleAngle = false; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화하기 위한 변수
+
+    // 키보드 이벤트 리스너 추가
+    $(document).keydown(keyDownHandler);
+    $(document).keyup(keyUpHandler);
+
+    // 키보드 이벤트 처리 함수
+    function keyDownHandler(event) {
+      if (event.key === "Right" || event.key === "ArrowRight") {
+        rightPressed = true;
+      } else if (event.key === "Left" || event.key === "ArrowLeft") {
+        leftPressed = true;
+      } else if (event.key === " ") {
+        spacePressed = true;
+      } else if (event.key === "e") {
+        resetPaddleAngle = true; // 'e' 키를 누르면 패들 각도 초기화 플래그를 true로 설정
+      }
+    }
+
+    function keyUpHandler(event) {
+      if (event.key === "Right" || event.key === "ArrowRight") {
+        rightPressed = false;
+      } else if (event.key === "Left" || event.key === "ArrowLeft") {
+        leftPressed = false;
+      } else if (event.key === " ") {
+        spacePressed = false;
+      } else if (event.key === "e") {
+        resetPaddleAngle = false; // 'e' 키를 뗐을 때 패들 각도 초기화 플래그를 false로 설정
+      }
+    }
+
+    // 공 그리기
+    function drawBall() {
+      ctx.save();
+      ctx.translate(ballX, ballY);
+      ctx.rotate((Math.PI / 180) * ballRotationAngle); // 회전 각도 적용
+      ctx.drawImage(
+        ballImage,
+        -ballRadius,
+        -ballRadius,
+        ballRadius * 2,
+        ballRadius * 2
+      );
+      ctx.restore();
+    }
+
+    // 패들 그리기
+    function drawPaddle() {
+      ctx.save();
+      ctx.translate(paddleX, paddleY);
+      ctx.rotate((-Math.PI / 180) * paddleAngle); // 각도를 라디안으로 변환하여 회전
+      ctx.drawImage(paddleImage, 0, 0, paddleWidth, paddleHeight);
+      ctx.restore();
+    }
+
+    // 공 이미지 회전 함수
+    function rotateBallImage() {
+      ballRotationAngle += 15; // 회전 속도 조절
+      if (ballRotationAngle >= 360) {
+        ballRotationAngle = 0;
+      }
+    }
+    // 벽돌 그리기
     function drawBricks() {
       for (let c = 0; c < brickColumnCount; c++) {
         for (let r = 0; r < brickRowCount; r++) {
@@ -248,233 +190,201 @@ $(document).ready(function () {
             const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
             bricks[c][r].x = brickX;
             bricks[c][r].y = brickY;
-            ctx.fillStyle = "orange";
-            ctx.fillRect(brickX, brickY, brickWidth, brickHeight);
+            ctx.beginPath();
+            ctx.rect(brickX, brickY, brickWidth, brickHeight);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
           }
         }
       }
     }
 
-    // Function to update game state and redraw elements
-    function update() {
-      // Clear the canvas
-      clearCanvas();
+    // 충돌 감지 및 벽돌 제거
+    function collisionDetection() {
+      for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
+          const b = bricks[c][r];
+          if (b.status === 1) {
+            if (
+              ballX > b.x &&
+              ballX < b.x + brickWidth &&
+              ballY > b.y &&
+              ballY < b.y + brickHeight
+            ) {
+              ballDY = -ballDY;
+              b.status = 0; // 벽돌을 제거하기 위해 상태를 0으로 변경
+              rankedGameScore++;
+              $("#rankedGameLiveScore").text("Score: "+rankedGameScore);
+            }
+          }
+        }
+      }
+    }
+
+    function gameOver() {
+      if (lives === 0) {
+        endRankedGame();
+        return true;
+      }
+      return false;
+    }
+
+    // Function to reset the ball and paddle positions
+    function resetPositions() {
+      paddleX = (canvas.width - paddleWidth) / 2;
+      paddleY = canvas.height - paddleHeight - 30;
+      ballX = canvas.width / 2;
+      ballY = paddleY - ballRadius;
+      ballDX = 4;
+      ballDY = -5;
+    }
+
+    // Game over and reset function
+    function handleGameOver() {
+      resetPositions();
+      lives--;
+      $("#livesLeft").text(lives);
+      console.log("Lives: "+lives);
+      if (!gameOver()) {
+        setTimeout(function () {
+          draw();
+        }, 1000);
+      }
+    }
+
+    // 게임 루프
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      drawPaddle();
+
+      drawBall();
+
+      rotateBallImage();
 
       drawBricks();
 
-      // Update ball position
+      // 충돌 감지 및 벽돌 제거
+      collisionDetection();
+
+      // 패들 이동
+      if (rightPressed && paddleX < canvas.width - paddleWidth) {
+        paddleX += paddleSpeed;
+      } else if (leftPressed && paddleX > 0) {
+        paddleX -= paddleSpeed;
+      }
+
+      // 방망이 휘두르는 모션
+      if (spacePressed) {
+        paddleAngle = Math.min(paddleAngle + 15, paddleMaxAngle); // 최대 각도까지 회전
+      } else if (resetPaddleAngle) {
+        paddleAngle = 0; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화
+      } else {
+        paddleAngle = -25; // 스페이스바를 뗐을 때 각도 초기화
+      }
+
+      // 공 위치 업데이트
       ballX += ballDX;
       ballY += ballDY;
 
-      // Draw paddle
-      ctx.fillStyle = "blue";
-      ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
-
-      // Draw ball
-      ctx.beginPath();
-      ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-      ctx.fillStyle = "red";
-      ctx.fill();
-      ctx.closePath();
-
-      // Handle collisions
+      // 벽과 충돌 감지
       if (ballX + ballRadius > canvas.width || ballX - ballRadius < 0) {
-        // Ball hits the side walls, change horizontal direction
-        ballDX = -ballDX;
+        ballDX = -ballDX; // x 방향 반대로 변경하여 튕김
       }
       if (ballY - ballRadius < 0) {
-        // Ball hits the top wall, change vertical direction
-        ballDY = -ballDY;
+        ballDY = -ballDY; // y 방향 반대로 변경하여 튕김
       }
+
+      // ground collision detection
+      if (ballY > canvas.height) {
+        handleGameOver();
+        return;
+      }
+
+      // 패들과 충돌 감지
       if (
-        ballY + ballRadius > paddleY &&
+        (spacePressed || resetPaddleAngle) &&
+        ballY + ballRadius > paddleY && // 공이 패들의 y 좌표 범위에 있을 때
         ballX > paddleX &&
-        ballX < paddleX + paddleWidth
+        ballX < paddleX + paddleWidth // 공이 패들의 x 좌표 범위에 있을 때
       ) {
-        // Ball hits the paddle, change vertical direction
-        ballDY = -ballDY;
-      }
+        // 패들과 충돌 판정을 위한 충돌 박스 계산
+        const paddleCenterX = paddleX + paddleWidth / 2;
+        const paddleTopY = paddleY;
+        const paddleBox = {
+          x: paddleCenterX - paddleWidth / 2,
+          y: paddleTopY,
+          width: paddleWidth,
+          height: paddleHeight,
+        };
 
-      // Check for game over conditions
-      if (ballY + ballRadius > canvas.height) {
-        // Ball goes below the paddle, lose a life
-        lives--;
-        if (lives <= 0) {
-          // No more lives, game over
-          endRankedGame();
-          return;
-        } else {
-          // Reset ball and paddle positions
-          ballX = canvas.width / 2;
-          ballY = paddleY - ballRadius;
-          paddleX = (canvas.width - paddleWidth) / 2;
+        // 공과 충돌 판정을 위한 충돌 박스 계산
+        const ballBox = {
+          x: ballX - ballRadius,
+          y: ballY - ballRadius,
+          width: ballRadius * 2,
+          height: ballRadius * 2,
+        };
+
+        // 충돌 판정
+        if (checkCollision(paddleBox, ballBox)) {
+          if (resetPaddleAngle) {
+            // 'e' 키가 눌려 있는 경우
+            ballDX = 0; // 가로 속도를 0으로 설정하여 멈춤
+          } else {
+            // 충돌 시 패들과의 상대적인 충돌 위치 계산
+            const collisionPoint = ballX - (paddleX + paddleWidth / 2);
+
+            // 상대적인 충돌 위치에 따라 공의 속도와 방향을 조절
+            const maxBounceAngle = (paddleMaxAngle * Math.PI) / 180;
+            const bounceAngle =
+              (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
+            ballDX = ballSpeed * Math.sin(bounceAngle);
+          }
+          ballDY = -ballSpeed; // 수직 방향은 항상 위쪽으로 설정
         }
       }
 
-      // Request animation frame to continue the game loop
-      requestAnimationFrame(update);
+      // 충돌 판정 함수
+      function checkCollision(rect1, rect2) {
+        return (
+          rect1.x < rect2.x + rect2.width &&
+          rect1.x + rect1.width > rect2.x &&
+          rect1.y < rect2.y + rect2.height &&
+          rect1.y + rect1.height > rect2.y
+        );
+      }
+
+      requestAnimationFrame(draw);
     }
 
-    // Function to handle paddle movement based on user input
-    function handlePaddleMovement(event) {
-      if (event.key === "ArrowLeft") {
-        // Move paddle to the left
-        paddleX -= 10;
-        if (paddleX < 0) {
-          paddleX = 0;
-        }
-      } else if (event.key === "ArrowRight") {
-        // Move paddle to the right
-        paddleX += 10;
-        if (paddleX + paddleWidth > canvas.width) {
-          paddleX = canvas.width - paddleWidth;
-        }
-      }
-    }
-
-    // Event listeners for paddle movement
-    document.addEventListener("keydown", handlePaddleMovement);
-    document.addEventListener("keyup", handlePaddleMovement);
-
-    // Start the game loop
-    update();
+    // 게임 루프 실행
+    draw();
   }
 
-  // Handle the end of the ranked game
   function endRankedGame() {
+    //uploadScoreToDB();
+    $("#rankedGameStatus").hide();
     clearCanvas();
-    displayRestartButton();
-    displayBackToHomeButton();
+    $("#rankedGameScore").text("Score: " + rankedGameScore);
+    $("#rankedGameEndedPage").show();
   }
 
-  function displayRestartButton() {
-    const buttonWidth = 100;
-    const buttonHeight = 50;
-    const buttonX = 50;
-    const buttonY = 150;
+  function uploadScoreToDB() {
+    // 율원씨 구현부분
+  }
 
-    // Clear the canvas
+  $("#restartRankedgameButton").on("click", function () {
+    $("#rankedGameEndedPage").hide();
     clearCanvas();
+    rankedGameScore = 0;
+    playRankedGame();
+  });
 
-    // Draw the button
-    ctx.fillStyle = "red";
-    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+  $("#backToHomeButton").on("click", function () {
+    displayHomepage();
+  });
 
-    // Add text inside the button
-    ctx.fillStyle = "white";
-    ctx.font = "bold 16px Arial";
-    ctx.fillText("Restart", buttonX + 10, buttonY + 30);
-
-    // Add event listener to the canvas
-    canvas.addEventListener("click", function (event) {
-      const rect = canvas.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const clickY = event.clientY - rect.top;
-
-      // Check if the click is within the button's boundaries
-      if (
-        clickX >= buttonX &&
-        clickX <= buttonX + buttonWidth &&
-        clickY >= buttonY &&
-        clickY <= buttonY + buttonHeight
-      ) {
-        startRankedGame();
-      }
-    });
-  }
-
-  function displayBackToHomeButton() {
-    const buttonWidth = 180;
-    const buttonHeight = 50;
-    const buttonX = 200;
-    const buttonY = 150;
-
-    ctx.fillStyle = "red";
-    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-    // Add text inside the button
-    ctx.fillStyle = "white";
-    ctx.font = "bold 16px Arial";
-    ctx.fillText("Back to Home", buttonX + 20, buttonY + 30);
-
-    // Add event listener to the canvas
-    canvas.addEventListener("click", function (event) {
-      const rect = canvas.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const clickY = event.clientY - rect.top;
-
-      // Check if the click is within the button's boundaries
-      if (
-        clickX >= buttonX &&
-        clickX <= buttonX + buttonWidth &&
-        clickY >= buttonY &&
-        clickY <= buttonY + buttonHeight
-      ) {
-        initializeGame();
-      }
-    });
-  }
-
-  initializeGame();
+  displayHomepage();
 });
-
-// Global variables
-let teamType; // Four team types
-let batImage; // Customization: bat image
-let ballColor; // Customization: ball color
-let rankedGameScore = 0;
-let rankedGameLives = 3;
-let ballX = 0; // Ball position
-let ballY = 0;
-let ballDX = 0; // Ball velocity
-let ballDY = 0;
-
-// Display bat image selection
-function displayBatImageSelection() {
-  // Implementation for bat image selection
-}
-
-// Display ball color selection
-function displayBallColorSelection() {
-  // Implementation for ball color selection
-}
-
-// Select the difficulty level for the story game
-function selectStoryGameDifficulty() {
-  // Implementation for selecting the difficulty level in the story game
-}
-
-// Handle key up events
-function handleKeyUp(e) {
-  // Implementation for key up events
-}
-
-// Perform a bunt action
-function bunt() {
-  // Implementation for bunt action
-}
-
-// Perform a swing with skill action
-function swingWithSkill() {
-  // Implementation for swing with skill action
-}
-
-// Perform a normal swing action
-function swing() {
-  // Implementation for normal swing action
-}
-
-// Handle the submission of user name and registration in ranked game
-function handleUserRegistration() {
-  // Implementation for handling user name registration
-}
-
-// Display the ranked game rank on the canvas
-function displayRank() {
-  // Implementation for displaying ranked game rank on the canvas
-}
-
-// Restart the ranked game
-function restartRankedGame() {
-  // Implementation for restarting the ranked game
-}
