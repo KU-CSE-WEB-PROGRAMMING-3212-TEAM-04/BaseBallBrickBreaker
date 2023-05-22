@@ -23,26 +23,45 @@ canvas {
   transform: translate(-50%, 0%);
 }
 
-.homePageButton {
+#startGameButton {
+  float: left;
   width: 200px;
   height: 80px;
   line-height: 80px;
   font-size: 30px;
-  margin: 100px auto;
+  margin: 400px 100px 0 300px;
+  text-align: center;
+  border: 1px solid black;
 }
 
-.homePageButton:hover {
+#startGameButton:hover {
   background-color: aquamarine;
 }
 
-#startGameButton {
+#settingsButton {
+  float: right;
+  width: 50px;
+  margin-top: 410px;
+  margin-right: 50px;
+}
+
+#settingsButton:hover {
+  filter: blur(2px); /* Adjust the blur amount as desired */
+}
+
+#settingsToHomeButton {
+  width: 200px;
+  height: 80px;
+  line-height: 80px;
+  font-size: 30px;
+  margin: 400px 100px 0 300px;
   text-align: center;
   border: 1px solid black;
 }
 
-#settingsButton {
-  text-align: center;
-  border: 1px solid black;
+#settingsToHomeButton:hover {
+  background-color: teal;
+  color: white;
 }
 
 .gameTypeChoosingButton {
@@ -57,6 +76,32 @@ canvas {
 
 .gameTypeChoosingButton:hover {
   background-color: aquamarine;
+}
+
+#difficultyChoosingPage {
+  text-align: center;
+}
+
+#difficultyChoosingPage h1 {
+  display: block;
+  height: 200px;
+  line-height: 200px;
+  font-size: 30px;
+}
+
+.difficultyChoosingButton {
+  float: left;
+  width: 264px;
+  height: 400px;
+  line-height: 400px;
+  border: 1px solid black;
+  font-size: 20px;
+  text-align: center;
+}
+
+.difficultyChoosingButton:hover {
+  background-color: cornflowerblue;
+  color: white;
 }
 
 #teamSelectingPage {
@@ -75,6 +120,29 @@ canvas {
 .teamImg:hover {
   background-color: blueviolet;
   color: white;
+}
+
+#rankedGameStatus {
+  width: 800px;
+  height: 200px;
+  margin-top: 600px;
+}
+
+#heartImg {
+  width: 30px;
+  float: right;
+}
+
+#livesLeft {
+  float: right;
+  font-size: 25px;
+  margin-left: 10px;
+}
+
+#rankedGameLiveScore {
+  float: right;
+  font-size: 25px;
+  margin-left: 30px;
 }
 
 #rankedGameEndedPage {

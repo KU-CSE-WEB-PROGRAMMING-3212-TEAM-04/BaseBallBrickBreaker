@@ -10,20 +10,43 @@
   <body>
     <div id="pageContainer">
       <canvas id="gameCanvas" width="800" height="600"></canvas>
+
       <div class="page" id="homepage">
         <div class="homePageButton" id="startGameButton">Start</div>
-        <div class="homePageButton" id="settingsButton">Settings</div>
+        <img id="settingsButton" src="src/setting.png" />
       </div>
-  
+
+      <div class="page" id="settingsPage">
+        <div id="settingsToHomeButton">Back To Home</div>
+      </div>
+
       <div class="page" id="gameTypeChoosingPage">
-        <div class="gameTypeChoosingButton" id="chooseStoryModeButton">Play Story Mode</div>
-        <div class="gameTypeChoosingButton" id="chooseRankedModeButton">Play Ranked Mode</div>
+        <div class="gameTypeChoosingButton" id="chooseStoryModeButton">
+          Play Story Mode
+        </div>
+        <div class="gameTypeChoosingButton" id="chooseRankedModeButton">
+          Play Ranked Mode
+        </div>
       </div>
 
       <div class="page" id="difficultyChoosingPage">
-        <div class="difficultyChoosingButton" id="easy"></div>
-        <div class="difficultyChoosingButton" id="normal"></div>
-        <div class="difficultyChoosingButton" id="hard"></div>
+        <h1>Choose Difficulty</h1>
+        <div id="difficultyButtonContainer">
+          <div class="difficultyChoosingButton" id="easy">동네야구</div>
+          <div class="difficultyChoosingButton" id="normal">KBL</div>
+          <div class="difficultyChoosingButton" id="hard">NBL</div>
+        </div>
+      </div>
+
+      <div class="page" id="rankedGameStatus">
+        <img id="heartImg" src="src/heart.png">
+        <div id="livesLeft">LivesLeft</div>
+        <div id="rankedGameLiveScore">Score</div>
+      </div>
+
+      <div>
+        <img id="paddleImage" src="src/bat.png" style="display: none" />
+        <img id="ballImage" src="src/ball.png" style="display: none" />
       </div>
 
       <div class="page" id="teamSelectingPage">
@@ -39,7 +62,6 @@
         <div id="restartRankedgameButton">Restart Game</div>
         <div id="backToHomeButton">Back To Home</div>
       </div>
-
     </div>
   </body>
 </html>
