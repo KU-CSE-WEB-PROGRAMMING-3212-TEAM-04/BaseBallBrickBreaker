@@ -23,6 +23,24 @@ $(document).ready(function() {
     let ballDY = -5;
     const ballSpeed = 5;
 
+    //벽돌
+    const brickRowCount = 4; // 벽돌 행 개수
+    const brickColumnCount = 10; // 벽돌 열 개수
+    const brickWidth = 70;
+    const brickHeight = 30;
+    const brickPadding = 5; // 벽돌 사이 간격
+    const brickOffsetTop = 30;
+    const brickOffsetLeft = 30;
+
+    // 벽돌 배열 생성
+    const bricks = [];
+    for (let c = 0; c < brickColumnCount; c++) {
+        bricks[c] = [];
+        for (let r = 0; r < brickRowCount; r++) {
+            bricks[c][r] = { x: 0, y: 0, status: 1 }; // status: 1이면 벽돌이 존재하는 상태
+        }
+    }
+
     // 키보드 이벤트 처리를 위한 변수 선언
     let rightPressed = false;
     let leftPressed = false;
@@ -83,6 +101,44 @@ $(document).ready(function() {
             ballRotationAngle = 0;
         }
     }
+    // 벽돌 그리기
+    function drawBricks() {
+        for (let c = 0; c < brickColumnCount; c++) {
+            for (let r = 0; r < brickRowCount; r++) {
+                if (bricks[c][r].status === 1) {
+                    const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+                    const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+                    bricks[c][r].x = brickX;
+                    bricks[c][r].y = brickY;
+                    context.beginPath();
+                    context.rect(brickX, brickY, brickWidth, brickHeight);
+                    context.fillStyle = "#0095DD";
+                    context.fill();
+                    context.closePath();
+                }
+            }
+        }
+    }
+
+    // 충돌 감지 및 벽돌 제거
+    function collisionDetection() {
+        for (let c = 0; c < brickColumnCount; c++) {
+            for (let r = 0; r < brickRowCount; r++) {
+                const b = bricks[c][r];
+                if (b.status === 1) {
+                    if (
+                        ballX > b.x &&
+                        ballX < b.x + brickWidth &&
+                        ballY > b.y &&
+                        ballY < b.y + brickHeight
+                    ) {
+                        ballDY = -ballDY;
+                        b.status = 0; // 벽돌을 제거하기 위해 상태를 0으로 변경
+                    }
+                }
+            }
+        }
+    }
 
     // 게임 루프
     function draw() {
@@ -97,6 +153,11 @@ $(document).ready(function() {
 
         // 공 이미지 회전
         rotateBallImage();
+        // 벽돌 그리기
+        drawBricks();
+
+        // 충돌 감지 및 벽돌 제거
+        collisionDetection();
 
         // 패들 이동
         if (rightPressed && paddleX < canvas.width - paddleWidth) {
