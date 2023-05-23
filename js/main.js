@@ -86,10 +86,17 @@ $(document).ready(function () {
     let paddleX = (canvas.width - paddleWidth) / 2;
     let paddleY = canvas.height - paddleHeight - 30;
     let paddleAngle = -25; // 현재 방망이 회전 각도
-    const paddleImage = $("#paddleImage")[0];
+    const paddleImage = new Image();
+    paddleImage.src = 'src/bat.png';
 
     // variables about the ball
-    const ballImage = $("#ballImage")[0];
+    const ballImage = new Image();
+    ballImage.src = 'src/ball.png';
+
+    // 배경 이미지 그리기
+    const backgroundImage = new Image();
+    backgroundImage.src = 'src/ground.jpg';
+
     let ballRotationAngle = 0;
     const ballRadius = 8;
     let ballX = canvas.width / 2;
@@ -99,11 +106,11 @@ $(document).ready(function () {
     const ballSpeed = 5;
 
     // variables about the brick
-    const brickRowCount = 4; // 벽돌 행 개수
-    const brickColumnCount = 10; // 벽돌 열 개수
-    const brickWidth = 70;
-    const brickHeight = 30;
-    const brickPadding = 5; // 벽돌 사이 간격
+    const brickRowCount = 3; // 벽돌 행 개수
+    const brickColumnCount = 6; // 벽돌 열 개수
+    const brickWidth = 120;
+    const brickHeight = 40;
+    const brickPadding = 1; // 벽돌 사이 간격
     const brickOffsetTop = 30;
     const brickOffsetLeft = 30;
 
@@ -161,7 +168,7 @@ $(document).ready(function () {
         -ballRadius,
         ballRadius * 2,
         ballRadius * 2
-      );
+        );
       ctx.restore();
     }
 
@@ -211,7 +218,7 @@ $(document).ready(function () {
               ballX < b.x + brickWidth &&
               ballY > b.y &&
               ballY < b.y + brickHeight
-            ) {
+              ) {
               ballDY = -ballDY;
               b.status = 0; // 벽돌을 제거하기 위해 상태를 0으로 변경
               rankedGameScore++;
@@ -256,6 +263,8 @@ $(document).ready(function () {
     // 게임 루프
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
 
       drawPaddle();
 
@@ -308,28 +317,28 @@ $(document).ready(function () {
         ballY + ballRadius > paddleY && // 공이 패들의 y 좌표 범위에 있을 때
         ballX > paddleX &&
         ballX < paddleX + paddleWidth // 공이 패들의 x 좌표 범위에 있을 때
-      ) {
+        ) {
         // 패들과 충돌 판정을 위한 충돌 박스 계산
         const paddleCenterX = paddleX + paddleWidth / 2;
-        const paddleTopY = paddleY;
-        const paddleBox = {
-          x: paddleCenterX - paddleWidth / 2,
-          y: paddleTopY,
-          width: paddleWidth,
-          height: paddleHeight,
-        };
+      const paddleTopY = paddleY;
+      const paddleBox = {
+        x: paddleCenterX - paddleWidth / 2,
+        y: paddleTopY,
+        width: paddleWidth,
+        height: paddleHeight,
+      };
 
         // 공과 충돌 판정을 위한 충돌 박스 계산
-        const ballBox = {
-          x: ballX - ballRadius,
-          y: ballY - ballRadius,
-          width: ballRadius * 2,
-          height: ballRadius * 2,
-        };
+      const ballBox = {
+        x: ballX - ballRadius,
+        y: ballY - ballRadius,
+        width: ballRadius * 2,
+        height: ballRadius * 2,
+      };
 
         // 충돌 판정
-        if (checkCollision(paddleBox, ballBox)) {
-          if (resetPaddleAngle) {
+      if (checkCollision(paddleBox, ballBox)) {
+        if (resetPaddleAngle) {
             // 'e' 키가 눌려 있는 경우
             ballDX = 0; // 가로 속도를 0으로 설정하여 멈춤
           } else {
@@ -339,7 +348,7 @@ $(document).ready(function () {
             // 상대적인 충돌 위치에 따라 공의 속도와 방향을 조절
             const maxBounceAngle = (paddleMaxAngle * Math.PI) / 180;
             const bounceAngle =
-              (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
+            (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
             ballDX = ballSpeed * Math.sin(bounceAngle);
           }
           ballDY = -ballSpeed; // 수직 방향은 항상 위쪽으로 설정
@@ -353,7 +362,7 @@ $(document).ready(function () {
           rect1.x + rect1.width > rect2.x &&
           rect1.y < rect2.y + rect2.height &&
           rect1.y + rect1.height > rect2.y
-        );
+          );
       }
 
       requestAnimationFrame(draw);
