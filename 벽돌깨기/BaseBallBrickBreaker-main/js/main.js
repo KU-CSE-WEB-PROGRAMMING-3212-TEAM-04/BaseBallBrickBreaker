@@ -86,10 +86,12 @@ $(document).ready(function () {
     let paddleX = (canvas.width - paddleWidth) / 2;
     let paddleY = canvas.height - paddleHeight - 30;
     let paddleAngle = -25; // 현재 방망이 회전 각도
-    const paddleImage = $("#paddleImage")[0];
+    const paddleImage = new Image();
+    paddleImage.src = 'src/bat.png';
 
     // variables about the ball
-    const ballImage = $("#ballImage")[0];
+    const ballImage = new Image();
+    ballImage.src = 'src/ball.png';
 
     // 배경 이미지 그리기
     const backgroundImage = new Image();
