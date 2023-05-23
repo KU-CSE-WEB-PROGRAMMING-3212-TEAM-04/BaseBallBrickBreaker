@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Baseball BrickBreaker</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+  </head>
+  <body>
+    <div id="pageContainer">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+      <div class="page" id="homepage">
+        <div class="homePageButton" id="startGameButton">Start</div>
+        <img id="settingsButton" src="src/setting.png" />
+      </div>
+
+      <div class="page" id="settingsPage">
+        <div id="settingsToHomeButton">Back To Home</div>
+      </div>
+
+      <div class="page" id="gameTypeChoosingPage">
+        <div class="gameTypeChoosingButton" id="chooseStoryModeButton">
+          Play Story Mode
+        </div>
+        <div class="gameTypeChoosingButton" id="chooseRankedModeButton">
+          Play Ranked Mode
+        </div>
+      </div>
+
+      <div class="page" id="difficultyChoosingPage">
+        <h1>Choose Difficulty</h1>
+        <div id="difficultyButtonContainer">
+          <div class="difficultyChoosingButton" id="easy">동네야구</div>
+          <div class="difficultyChoosingButton" id="normal">KBL</div>
+          <div class="difficultyChoosingButton" id="hard">NBL</div>
+        </div>
+      </div>
+
+      <div class="page" id="rankedGameStatus">
+        <img id="heartImg" src="src/heart.png">
+        <div id="livesLeft">LivesLeft</div>
+        <div id="rankedGameLiveScore">Score</div>
+      </div>
+
+      <div>
+        <img id="paddleImage" src="src/bat.png" style="display: none" />
+        <img id="ballImage" src="src/ball.png" style="display: none" />
+      </div>
+
+      <div class="page" id="teamSelectingPage">
+        <div class="teamImg" id="chooseTeam1">Team1</div>
+        <div class="teamImg" id="chooseTeam2">Team2</div>
+        <div class="teamImg" id="chooseTeam3">Team3</div>
+        <div class="teamImg" id="chooseTeam4">Team4</div>
+      </div>
+
+      <div class="page" id="rankedGameEndedPage">
+        <div id="rankedGameScore">User's Score</div>
+        <div id="rankingBoardButton">Check Out Ranks</div>
+        <div id="restartRankedgameButton">Restart Game</div>
+        <div id="backToHomeButton">Back To Home</div>
+      </div>
+    </div>
+  </body>
+</html>
