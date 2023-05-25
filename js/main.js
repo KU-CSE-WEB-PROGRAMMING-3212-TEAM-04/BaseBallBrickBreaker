@@ -106,10 +106,10 @@ $(document).ready(function () {
     const ballSpeed = 5;
 
     // variables about the brick
-    const brickRowCount = 3; // 벽돌 행 개수
-    const brickColumnCount = 6; // 벽돌 열 개수
+    const brickRowCount = 4; // 벽돌 행 개수
+    const brickColumnCount = 7; // 벽돌 열 개수
     var rowGeneratingInterval = 5000;
-    let maximumBrickRow = 8;
+    let maximumBrickRow = 9;
     const brickWidth = 60;
     const brickHeight = 30;
     const brickPadding = 15; // 벽돌 사이 간격
