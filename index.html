@@ -2,61 +2,155 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Baseball BrickBreaker</title>
+    <title>Document</title>
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="js/main.js"></script>
   </head>
   <body>
-    <div id="pageContainer">
-      <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <audio id="introAudio" src="src/효과음1.mp3"></audio>
+    <!-- <audio id="bgm_start" src="source/startbgm1.mp3"></audio> -->
 
-      <div class="page" id="homepage">
-        <div class="homePageButton" id="startGameButton">Start</div>
-        <img id="settingsButton" src="src/setting.png" />
+    <div class="gameIntroScreen">
+      <div class="gameIntroContainer" id="gameIntro1">
+        <label> W </label>
+        <label> E </label>
+        <label> B </label>
+        <label> </label>
+        <label> P </label>
+        <label> R </label>
+        <label> O </label>
+        <label> G </label>
+        <label> R </label>
+        <label> A </label>
+        <label> M </label>
+        <label> I </label>
+        <label> N </label>
+        <label> G </label>
       </div>
 
-      <div class="page" id="settingsPage">
-        <div id="settingsToHomeButton">Back To Home</div>
+      <div class="gameIntroContainer" id="gameIntro2">
+        <label> T </label>
+        <label> E </label>
+        <label> A </label>
+        <label> M </label>
+        <label> 4 </label>
       </div>
+    </div>
 
-      <div class="page" id="gameTypeChoosingPage">
-        <div class="gameTypeChoosingButton" id="chooseStoryModeButton">
-          Play Story Mode
+    <div id="homeScreen">
+      <video muted autoplay loop>
+        <source src="src/startmedia1.mp4" type="video/mp4" />
+      </video>
+      <img src="src/title4.png" id="title" />
+      <!-- Settings button -->
+      <img src="src/setting.png" id="settingsButton" />
+      <!-- <input type="button" class="setting-button" id="contents"/> -->
+      <!-- Start button -->
+      <img src="src/startbtn.png" id="startGameButton" />
+    </div>
+
+    <div id="settingsScreen">
+      <div id="popmenu">
+        <div id="setting-main-text">Setting</div>
+        <div id="music-onoff">
+          <div class="settingText">Music</div>
+          <label class="rad-label">
+            <input
+              type="radio"
+              class="rad-input"
+              name="rad"
+              value="b1"
+              checked
+            />
+            <div class="rad-design"></div>
+            <div class="rad-text">BGM1</div>
+          </label>
+          <label class="rad-label">
+            <input type="radio" class="rad-input" name="rad" value="b2" />
+            <div class="rad-design"></div>
+            <div class="rad-text">BGM2</div>
+          </label>
+          <label class="rad-label">
+            <input type="radio" class="rad-input" name="rad" value="off" />
+            <div class="rad-design"></div>
+            <div class="rad-text">Off</div>
+          </label>
         </div>
-        <div class="gameTypeChoosingButton" id="chooseRankedModeButton">
-          Play Ranked Mode
+        <div id="set_ballColor">
+          <div class="settingText">Ball Color</div>
+          <br />
+          <div id="setting_color"></div>
+          <div id="ballColor">
+            <div id="R">RED</div>
+            <input type="range" id="Red" value="0" min="0" max="255" />
+            <div id="G">GREEN</div>
+            <input type="range" id="Green" value="0" min="0" max="255" />
+            <div id="B">BLUE</div>
+            <input type="range" id="Blue" value="0" min="0" max="255" />
+          </div>
+        </div>
+        <div id="exitSettings">save</div>
+      </div>
+    </div>
+
+    <div id="gameSelectingScreen">
+      <div id="gameTypeSelectingScreen">
+        <div class="gameType" id="selectStoryGameButton">
+          <img src="src/mode1.jpg" class="m_img" alt="m_img" />
+        </div>
+        <div class="gameType" id="selectRankedGameButton">
+          <img src="src/mode2.jpg" class="m_img" alt="m_img" />
         </div>
       </div>
 
-      <div class="page" id="difficultyChoosingPage">
-        <h1>Choose Difficulty</h1>
-        <div id="difficultyButtonContainer">
-          <div class="difficultyChoosingButton" id="easy">동네야구</div>
-          <div class="difficultyChoosingButton" id="normal">KBL</div>
-          <div class="difficultyChoosingButton" id="hard">NBL</div>
+      <div id="teamSelectingScreen">
+        <div class="selectTeamTypeButton" id="selectTeam1">
+          <img src="src/team1.jpg" class="t_img" alt="t_img" />
+        </div>
+        <div class="selectTeamTypeButton" id="selectTeam2">
+          <img src="src/team2.jpg" class="t_img" alt="t_img" />
+        </div>
+        <div class="selectTeamTypeButton" id="selectTeam3">
+          <img src="src/team3.jpg" class="t_img" alt="t_img" />
+        </div>
+        <div class="selectTeamTypeButton" id="selectTeam4">
+          <img src="src/team4.jpg" class="t_img" alt="t_img" />
         </div>
       </div>
 
-      <div class="page" id="rankedGameStatus">
-        <img id="heartImg" src="src/heart.png">
-        <div id="livesLeft">LivesLeft</div>
-        <div id="rankedGameLiveScore">Score</div>
+      <div id="difficultyChoosingScreen">
+        <div class="difficulty" id="selectEasyDifficulty">
+          <img src="src/level1.png" class="l_img" alt="c_img" />
+        </div>
+        <div class="difficulty" id="selectNormalDifficulty">
+          <img src="src/level2.jpg" class="l_img" alt="c_img" />
+        </div>
+        <div class="difficulty" id="selectHardDifficulty">
+          <img src="src/level3.png" class="l_img" alt="c_img" />
+        </div>
       </div>
+    </div>
 
-      <div class="page" id="teamSelectingPage">
-        <div class="teamImg" id="chooseTeam1">Team1</div>
-        <div class="teamImg" id="chooseTeam2">Team2</div>
-        <div class="teamImg" id="chooseTeam3">Team3</div>
-        <div class="teamImg" id="chooseTeam4">Team4</div>
-      </div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
 
-      <div class="page" id="rankedGameEndedPage">
+    <div class="page" id="beforePlayingRankedGamePage">
+      <h1>Space - Swing the bat</h1>
+      <h1>E - Bunt</h1>
+      <div id="playRankedGameButton">Play!</div>
+    </div>
+
+    <div class="page" id="rankedGameStatus">
+      <img id="heartImg" src="src/heart.png" />
+      <div id="livesLeft">LivesLeft</div>
+      <div id="rankedGameLiveScore">Score</div>
+    </div>
+
+    <div class="page" id="rankedGameEndingPage">
         <div id="rankedGameScore">User's Score</div>
         <div id="rankingBoardButton">Check Out Ranks</div>
         <div id="restartRankedgameButton">Restart Game</div>
         <div id="backToHomeButton">Back To Home</div>
       </div>
-    </div>
   </body>
 </html>

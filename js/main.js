@@ -1,82 +1,179 @@
+//인트로
+var introDuration1;
+var introLabel2;
+var introDuration1;
+var introDuration2;
+var totalDuration;
+
+//시작화면
+var red_value = 0;
+var green_value = 0;
+var blue_value = 0;
+var startBgm = new Audio("src/startbgm1.mp3");
+var bgm2 = new Audio("src/startbgm2.mp3");
+
+var teamType = -1;
+var storyGameDifficulty = -1;
+var rankedGameScore = 0;
+
 $(document).ready(function () {
   var canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
-  var userTeamType = 0;
-  var rankedGameScore = 0;
 
   function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
-  // Initialize the game
-  function displayHomepage() {
-    clearCanvas();
-    userTeamType = 0;
-    $("#homepage").show();
-    $("#settingsPage").hide();
-    $("#gameTypeChoosingPage").hide();
-    $("#difficultyChoosingPage").hide();
-    $("#teamSelectingPage").hide();
-    $("#rankedGameStatus").hide();
-    $("#rankedGameEndedPage").hide();
+  //인트로
+  introDuration1 = $("#gameIntro1").find($("label"));
+  introLabel2 = $("#gameIntro2").find($("label"));
+  introDuration1 = animateLabels(introDuration1, 0);
+  setTimeout(function () {
+    $("#gameIntro1").hide();
+  }, introDuration1);
+  introDuration2 = animateLabels(introLabel2, introDuration1);
+  totalDuration = introDuration1 + introDuration2 - 2000;
+
+  setTimeout(function () {
+    $("#gameIntroScreen").fadeOut();
+    $("#homeScreen").fadeIn();
+    startBgm.play();
+    startBgm.loop = true;
+  }, totalDuration);
+
+  function animateLabels(inputs, initialDelay) {
+    var totalDuration = initialDelay;
+    for (var i = 0; i < inputs.length; i++) {
+      var index = i + 1;
+      var time = (inputs.length - i) * 50;
+      totalDuration += time;
+      $(inputs[i]).css(
+        "-animation",
+        "anim 3s " + (initialDelay + time) + "ms ease-in-out"
+      );
+    }
+    setTimeout(function () {
+      $("#introAudio")[0].play();
+    }, initialDelay + time);
+
+    return totalDuration;
   }
 
-  $("#startGameButton").on("click", function () {
-    console.log("Start");
-    $("#homepage").hide();
-    $("#gameTypeChoosingPage").show();
+  function displayHomeScreen() {
+    console.log("Displaying Homescreen...");
+    //시작화면
+    $("#settingsButton").click(function () {
+      $("#settingsScreen").fadeIn();
+      updateColor();
+      $("#Red").change(function (e) {
+        red_value = $(this).val();
+        updateColor();
+      });
+      $("#Green").change(function (e) {
+        green_value = $(this).val();
+        updateColor();
+      });
+      $("#Blue").change(function (e) {
+        blue_value = $(this).val();
+        updateColor();
+      });
+
+      $("#exitSettings").click(function () {
+        if ($('input[name="rad"]:checked').val() == "b1") {
+          bgm2.pause();
+          startBgm.play();
+          startBgm.loop = true;
+        } else if ($('input[name="rad"]:checked').val() == "b2") {
+          startBgm.pause();
+          bgm2.play();
+          bgm2.loop = true;
+        } else {
+          startBgm.pause();
+          bgm2.pause();
+        }
+        $("#settingsScreen").fadeOut();
+      });
+
+      function updateColor() {
+        ballColor =
+          "rgb(" + red_value + "," + green_value + "," + blue_value + ")";
+        $("#setting_color").css("background-color", ballColor);
+      }
+    });
+
+    $("#startGameButton").click(function () {
+      $("#homeScreen").hide();
+      $("#gameSelectingScreen").fadeIn();
+    });
+  }
+
+  displayHomeScreen();
+
+  function play() {
+    var audio = $("#click_sound")[0];
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  }
+
+  $("#selectStoryGameButton").click(function () {
+    $("#gameTypeSelectingScreen").hide();
+    $("#teamSelectingScreen").fadeIn();
+    play();
   });
 
-  $("#settingsButton").on("click", function () {
-    console.log("Settings");
-    $("#homepage").hide();
-    $("#settingsPage").show();
+  $("#selectTeam1").click(function () {
+    teamType = 1;
+    $("#teamSelectingScreen").hide();
+    $("#difficultyChoosingScreen").fadeIn();
+    play();
   });
 
-  $("#settingsToHomeButton").on("click", function () {
-    displayHomepage();
+  $("#selectEasyDifficulty").click(function () {
+    console.log("Storygame Difficulty: Easy");
+    storyGameDifficulty = 1;
+    play();
   });
 
-  $("#chooseStoryModeButton").on("click", function () {
-    $("#gameTypeChoosingPage").hide();
-    $("#difficultyChoosingPage").show();
+  $("#selectNormalDifficulty").click(function () {
+    console.log("Storygame Difficulty: Normal");
+    storyGameDifficulty = 2;
+    play();
   });
 
-  $("#chooseRankedModeButton").on("click", function () {
-    $("#gameTypeChoosingPage").hide();
-    $("#teamSelectingPage").show();
+  $("#selectHardDifficulty").click(function () {
+    console.log("Storygame Difficulty: Hard");
+    storyGameDifficulty = 3;
+    play();
   });
 
-  $("#chooseTeam1").on("click", function () {
-    userTeamType = 1;
-    $("#teamSelectingPage").hide();
-    playRankedGame();
+  $("#selectRankedGameButton").click(function () {
+    $("#gameTypeSelectingScreen").hide();
+    $("#gameCanvas").show();
+    beforePlayingRankedGame();
   });
 
-  $("#chooseTeam2").on("click", function () {
-    userTeamType = 2;
-    $("#teamSelectingPage").hide();
-    playRankedGame();
-  });
-
-  $("#chooseTeam3").on("click", function () {
-    userTeamType = 3;
-    $("#teamSelectingPage").hide();
-    playRankedGame();
-  });
-
-  $("#chooseTeam4").on("click", function () {
-    userTeamType = 4;
-    $("#teamSelectingPage").hide();
-    endRankedGame();
-  });
+  function beforePlayingRankedGame() {
+    $("#beforePlayingRankedGamePage").show();
+    $("#playRankedGameButton").click(function() {
+      $("#beforePlayingRankedGamePage").hide();
+      playRankedGame();
+    });
+  }
 
   function playRankedGame() {
+    $("#rankedGameEndingPage").hide();
+    clearCanvas();
     console.log("starting ranked game..");
+    startBgm.pause();
     $("#rankedGameStatus").show();
     var lives = 3;
+    rankedGameScore = 0;
     $("#livesLeft").text(lives);
-    $("#rankedGameLiveScore").text("Score: "+rankedGameScore);
+    $("#rankedGameLiveScore").text("Score: " + rankedGameScore);
 
     //variables about the paddle
     const paddleWidth = 134;
@@ -87,15 +184,15 @@ $(document).ready(function () {
     let paddleY = canvas.height - paddleHeight - 30;
     let paddleAngle = -25; // 현재 방망이 회전 각도
     const paddleImage = new Image();
-    paddleImage.src = 'src/bat.png';
+    paddleImage.src = "src/bat.png";
 
     // variables about the ball
     const ballImage = new Image();
-    ballImage.src = 'src/ball.png';
+    ballImage.src = "src/ball.png";
 
     // 배경 이미지 그리기
     const backgroundImage = new Image();
-    backgroundImage.src = 'src/ground.jpg';
+    backgroundImage.src = "src/ground.jpg";
 
     let ballRotationAngle = 0;
     const ballRadius = 8;
@@ -106,13 +203,15 @@ $(document).ready(function () {
     const ballSpeed = 5;
 
     // variables about the brick
-    const brickRowCount = 3; // 벽돌 행 개수
-    const brickColumnCount = 6; // 벽돌 열 개수
-    const brickWidth = 120;
-    const brickHeight = 40;
-    const brickPadding = 1; // 벽돌 사이 간격
+    const brickRowCount = 4; // number of rows of bricks
+    const brickColumnCount = 6; // number of rows of bricks
+    var rowGeneratingInterval = 5000;
+    let maximumBrickRow = 9;
+    const brickWidth = 60;
+    const brickHeight = 30;
+    const brickPadding = 5; // spacing between bricks
     const brickOffsetTop = 30;
-    const brickOffsetLeft = 30;
+    const brickOffsetLeft = 215;
 
     const bricks = [];
     for (let c = 0; c < brickColumnCount; c++) {
@@ -168,7 +267,7 @@ $(document).ready(function () {
         -ballRadius,
         ballRadius * 2,
         ballRadius * 2
-        );
+      );
       ctx.restore();
     }
 
@@ -188,6 +287,7 @@ $(document).ready(function () {
         ballRotationAngle = 0;
       }
     }
+
     // 벽돌 그리기
     function drawBricks() {
       for (let c = 0; c < brickColumnCount; c++) {
@@ -199,7 +299,7 @@ $(document).ready(function () {
             bricks[c][r].y = brickY;
             ctx.beginPath();
             ctx.rect(brickX, brickY, brickWidth, brickHeight);
-            ctx.fillStyle = "#0095DD";
+            ctx.fillStyle = "#556B2F";
             ctx.fill();
             ctx.closePath();
           }
@@ -218,11 +318,11 @@ $(document).ready(function () {
               ballX < b.x + brickWidth &&
               ballY > b.y &&
               ballY < b.y + brickHeight
-              ) {
+            ) {
               ballDY = -ballDY;
               b.status = 0; // 벽돌을 제거하기 위해 상태를 0으로 변경
               rankedGameScore++;
-              $("#rankedGameLiveScore").text("Score: "+rankedGameScore);
+              $("#rankedGameLiveScore").text("Score: " + rankedGameScore);
             }
           }
         }
@@ -252,7 +352,7 @@ $(document).ready(function () {
       resetPositions();
       lives--;
       $("#livesLeft").text(lives);
-      console.log("Lives: "+lives);
+      console.log("Lives: " + lives);
       if (!gameOver()) {
         setTimeout(function () {
           draw();
@@ -260,11 +360,43 @@ $(document).ready(function () {
       }
     }
 
+    // Function to generate new brick row
+    function generateNewBrickRow() {
+      // Create a new row of bricks
+      const newRow = [];
+      for (let c = 0; c < brickColumnCount; c++) {
+        newRow[c] = { x: 0, y: 0, status: 1 };
+      }
+
+      // Insert the new row at the beginning of the bricks array
+      bricks.unshift(newRow);
+
+      // Update the Y positions of existing rows
+      for (let r = 1; r < bricks.length; r++) {
+        for (let c = 0; c < brickColumnCount; c++) {
+          if (bricks[r][c]) {
+            bricks[r][c].y += brickHeight + brickPadding;
+          }
+        }
+      }
+
+      // Remove the last row if the total number of rows exceeds brickRowCount
+      if (bricks.length > maximumBrickRow) {
+        bricks.pop();
+      }
+    }
+
+    function startNewBrickRowTimer() {
+      setInterval(generateNewBrickRow, rowGeneratingInterval);
+    }
+
+    // Call the function to start the timer
+    startNewBrickRowTimer();
+
     // 게임 루프
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
 
       drawPaddle();
 
@@ -317,28 +449,28 @@ $(document).ready(function () {
         ballY + ballRadius > paddleY && // 공이 패들의 y 좌표 범위에 있을 때
         ballX > paddleX &&
         ballX < paddleX + paddleWidth // 공이 패들의 x 좌표 범위에 있을 때
-        ) {
+      ) {
         // 패들과 충돌 판정을 위한 충돌 박스 계산
         const paddleCenterX = paddleX + paddleWidth / 2;
-      const paddleTopY = paddleY;
-      const paddleBox = {
-        x: paddleCenterX - paddleWidth / 2,
-        y: paddleTopY,
-        width: paddleWidth,
-        height: paddleHeight,
-      };
+        const paddleTopY = paddleY;
+        const paddleBox = {
+          x: paddleCenterX - paddleWidth / 2,
+          y: paddleTopY,
+          width: paddleWidth,
+          height: paddleHeight,
+        };
 
         // 공과 충돌 판정을 위한 충돌 박스 계산
-      const ballBox = {
-        x: ballX - ballRadius,
-        y: ballY - ballRadius,
-        width: ballRadius * 2,
-        height: ballRadius * 2,
-      };
+        const ballBox = {
+          x: ballX - ballRadius,
+          y: ballY - ballRadius,
+          width: ballRadius * 2,
+          height: ballRadius * 2,
+        };
 
         // 충돌 판정
-      if (checkCollision(paddleBox, ballBox)) {
-        if (resetPaddleAngle) {
+        if (checkCollision(paddleBox, ballBox)) {
+          if (resetPaddleAngle) {
             // 'e' 키가 눌려 있는 경우
             ballDX = 0; // 가로 속도를 0으로 설정하여 멈춤
           } else {
@@ -348,7 +480,7 @@ $(document).ready(function () {
             // 상대적인 충돌 위치에 따라 공의 속도와 방향을 조절
             const maxBounceAngle = (paddleMaxAngle * Math.PI) / 180;
             const bounceAngle =
-            (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
+              (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
             ballDX = ballSpeed * Math.sin(bounceAngle);
           }
           ballDY = -ballSpeed; // 수직 방향은 항상 위쪽으로 설정
@@ -362,7 +494,7 @@ $(document).ready(function () {
           rect1.x + rect1.width > rect2.x &&
           rect1.y < rect2.y + rect2.height &&
           rect1.y + rect1.height > rect2.y
-          );
+        );
       }
 
       requestAnimationFrame(draw);
@@ -373,11 +505,13 @@ $(document).ready(function () {
   }
 
   function endRankedGame() {
-    //uploadScoreToDB();
-    $("#rankedGameStatus").hide();
     clearCanvas();
+    $("#rankedGameStatus").hide();
+    //uploadScoreToDB(rankedGameScore);
     $("#rankedGameScore").text("Score: " + rankedGameScore);
-    $("#rankedGameEndedPage").show();
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    $("#rankedGameEndingPage").show();
   }
 
   function uploadScoreToDB() {
@@ -385,15 +519,17 @@ $(document).ready(function () {
   }
 
   $("#restartRankedgameButton").on("click", function () {
+    console.log("Restarting Ranked Game...");
     $("#rankedGameEndedPage").hide();
     clearCanvas();
     rankedGameScore = 0;
     playRankedGame();
   });
 
-  $("#backToHomeButton").on("click", function () {
-    displayHomepage();
+  $("#backToHomeButton").click(function () {
+    console.log("Back To Home...");
+    $("#rankedGameEndingPage").hide();
+    $("#gameCanvas").hide();
+    displayHomeScreen();
   });
-
-  displayHomepage();
 });
