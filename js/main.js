@@ -1,80 +1,177 @@
+//인트로
+var introDuration1;
+var introLabel2;
+var introDuration1;
+var introDuration2;
+var totalDuration;
+
+//시작화면
+var red_value = 0;
+var green_value = 0;
+var blue_value = 0;
+var startBgm = new Audio("src/startbgm1.mp3");
+var bgm2 = new Audio("src/startbgm2.mp3");
+
+var teamType = -1;
+var storyGameDifficulty = -1;
+var rankedGameScore = 0;
+
 $(document).ready(function () {
   var canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
-  var userTeamType = 0;
-  var rankedGameScore = 0;
 
   function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
-  // Initialize the game
-  function displayHomepage() {
-    clearCanvas();
-    userTeamType = 0;
-    $("#homepage").show();
-    $("#settingsPage").hide();
-    $("#gameTypeChoosingPage").hide();
-    $("#difficultyChoosingPage").hide();
-    $("#teamSelectingPage").hide();
-    $("#rankedGameStatus").hide();
-    $("#rankedGameEndedPage").hide();
+  //인트로
+  introDuration1 = $("#gameIntro1").find($("label"));
+  introLabel2 = $("#gameIntro2").find($("label"));
+  introDuration1 = animateLabels(introDuration1, 0);
+  setTimeout(function () {
+    $("#gameIntro1").hide();
+  }, introDuration1);
+  introDuration2 = animateLabels(introLabel2, introDuration1);
+  totalDuration = introDuration1 + introDuration2 - 2000;
+
+  setTimeout(function () {
+    $("#gameIntroScreen").fadeOut();
+    $("#homeScreen").fadeIn();
+    startBgm.play();
+    startBgm.loop = true;
+  }, totalDuration);
+
+  function animateLabels(inputs, initialDelay) {
+    var totalDuration = initialDelay;
+    for (var i = 0; i < inputs.length; i++) {
+      var index = i + 1;
+      var time = (inputs.length - i) * 50;
+      totalDuration += time;
+      $(inputs[i]).css(
+        "-animation",
+        "anim 3s " + (initialDelay + time) + "ms ease-in-out"
+      );
+    }
+    setTimeout(function () {
+      $("#introAudio")[0].play();
+    }, initialDelay + time);
+
+    return totalDuration;
   }
 
-  $("#startGameButton").on("click", function () {
-    console.log("Start");
-    $("#homepage").hide();
-    $("#gameTypeChoosingPage").show();
+  function displayHomeScreen() {
+    console.log("Displaying Homescreen...");
+    //시작화면
+    $("#settingsButton").click(function () {
+      $("#settingsScreen").fadeIn();
+      updateColor();
+      $("#Red").change(function (e) {
+        red_value = $(this).val();
+        updateColor();
+      });
+      $("#Green").change(function (e) {
+        green_value = $(this).val();
+        updateColor();
+      });
+      $("#Blue").change(function (e) {
+        blue_value = $(this).val();
+        updateColor();
+      });
+
+      $("#exitSettings").click(function () {
+        if ($('input[name="rad"]:checked').val() == "b1") {
+          bgm2.pause();
+          startBgm.play();
+          startBgm.loop = true;
+        } else if ($('input[name="rad"]:checked').val() == "b2") {
+          startBgm.pause();
+          bgm2.play();
+          bgm2.loop = true;
+        } else {
+          startBgm.pause();
+          bgm2.pause();
+        }
+        $("#settingsScreen").fadeOut();
+      });
+
+      function updateColor() {
+        ballColor =
+          "rgb(" + red_value + "," + green_value + "," + blue_value + ")";
+        $("#setting_color").css("background-color", ballColor);
+      }
+    });
+
+    $("#startGameButton").click(function () {
+      $("#homeScreen").hide();
+      $("#gameSelectingScreen").fadeIn();
+    });
+  }
+
+  displayHomeScreen();
+
+  function play() {
+    var audio = $("#click_sound")[0];
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  }
+
+  $("#selectStoryGameButton").click(function () {
+    $("#gameTypeSelectingScreen").hide();
+    $("#teamSelectingScreen").fadeIn();
+    play();
   });
 
-  $("#settingsButton").on("click", function () {
-    console.log("Settings");
-    $("#homepage").hide();
-    $("#settingsPage").show();
+  $("#selectTeam1").click(function () {
+    teamType = 1;
+    $("#teamSelectingScreen").hide();
+    $("#difficultyChoosingScreen").fadeIn();
+    play();
   });
 
-  $("#settingsToHomeButton").on("click", function () {
-    displayHomepage();
+  $("#selectEasyDifficulty").click(function () {
+    console.log("Storygame Difficulty: Easy");
+    storyGameDifficulty = 1;
+    play();
   });
 
-  $("#chooseStoryModeButton").on("click", function () {
-    $("#gameTypeChoosingPage").hide();
-    $("#difficultyChoosingPage").show();
+  $("#selectNormalDifficulty").click(function () {
+    console.log("Storygame Difficulty: Normal");
+    storyGameDifficulty = 2;
+    play();
   });
 
-  $("#chooseRankedModeButton").on("click", function () {
-    $("#gameTypeChoosingPage").hide();
-    $("#teamSelectingPage").show();
+  $("#selectHardDifficulty").click(function () {
+    console.log("Storygame Difficulty: Hard");
+    storyGameDifficulty = 3;
+    play();
   });
 
-  $("#chooseTeam1").on("click", function () {
-    userTeamType = 1;
-    $("#teamSelectingPage").hide();
-    playRankedGame();
+  $("#selectRankedGameButton").click(function () {
+    $("#gameTypeSelectingScreen").hide();
+    $("#gameCanvas").show();
+    beforePlayingRankedGame();
   });
 
-  $("#chooseTeam2").on("click", function () {
-    userTeamType = 2;
-    $("#teamSelectingPage").hide();
-    playRankedGame();
-  });
-
-  $("#chooseTeam3").on("click", function () {
-    userTeamType = 3;
-    $("#teamSelectingPage").hide();
-    playRankedGame();
-  });
-
-  $("#chooseTeam4").on("click", function () {
-    userTeamType = 4;
-    $("#teamSelectingPage").hide();
-    endRankedGame();
-  });
+  function beforePlayingRankedGame() {
+    $("#beforePlayingRankedGamePage").show();
+    $("#playRankedGameButton").click(function() {
+      $("#beforePlayingRankedGamePage").hide();
+      playRankedGame();
+    });
+  }
 
   function playRankedGame() {
+    $("#rankedGameEndingPage").hide();
+    clearCanvas();
     console.log("starting ranked game..");
+    startBgm.pause();
     $("#rankedGameStatus").show();
     var lives = 3;
+    rankedGameScore = 0;
     $("#livesLeft").text(lives);
     $("#rankedGameLiveScore").text("Score: " + rankedGameScore);
 
@@ -106,15 +203,15 @@ $(document).ready(function () {
     const ballSpeed = 5;
 
     // variables about the brick
-    const brickRowCount = 4; // 벽돌 행 개수
-    const brickColumnCount = 7; // 벽돌 열 개수
+    const brickRowCount = 4; // number of rows of bricks
+    const brickColumnCount = 6; // number of rows of bricks
     var rowGeneratingInterval = 5000;
     let maximumBrickRow = 9;
     const brickWidth = 60;
     const brickHeight = 30;
-    const brickPadding = 15; // 벽돌 사이 간격
+    const brickPadding = 5; // spacing between bricks
     const brickOffsetTop = 30;
-    const brickOffsetLeft = 180;
+    const brickOffsetLeft = 215;
 
     const bricks = [];
     for (let c = 0; c < brickColumnCount; c++) {
@@ -190,6 +287,7 @@ $(document).ready(function () {
         ballRotationAngle = 0;
       }
     }
+
     // 벽돌 그리기
     function drawBricks() {
       for (let c = 0; c < brickColumnCount; c++) {
@@ -201,7 +299,7 @@ $(document).ready(function () {
             bricks[c][r].y = brickY;
             ctx.beginPath();
             ctx.rect(brickX, brickY, brickWidth, brickHeight);
-            ctx.fillStyle = "#0095DD";
+            ctx.fillStyle = "#556B2F";
             ctx.fill();
             ctx.closePath();
           }
@@ -276,7 +374,9 @@ $(document).ready(function () {
       // Update the Y positions of existing rows
       for (let r = 1; r < bricks.length; r++) {
         for (let c = 0; c < brickColumnCount; c++) {
-          bricks[r][c].y += brickHeight + brickPadding;
+          if (bricks[r][c]) {
+            bricks[r][c].y += brickHeight + brickPadding;
+          }
         }
       }
 
@@ -405,11 +505,13 @@ $(document).ready(function () {
   }
 
   function endRankedGame() {
-    //uploadScoreToDB();
-    $("#rankedGameStatus").hide();
     clearCanvas();
+    $("#rankedGameStatus").hide();
+    //uploadScoreToDB(rankedGameScore);
     $("#rankedGameScore").text("Score: " + rankedGameScore);
-    $("#rankedGameEndedPage").show();
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    $("#rankedGameEndingPage").show();
   }
 
   function uploadScoreToDB() {
@@ -417,15 +519,17 @@ $(document).ready(function () {
   }
 
   $("#restartRankedgameButton").on("click", function () {
+    console.log("Restarting Ranked Game...");
     $("#rankedGameEndedPage").hide();
     clearCanvas();
     rankedGameScore = 0;
     playRankedGame();
   });
 
-  $("#backToHomeButton").on("click", function () {
-    displayHomepage();
+  $("#backToHomeButton").click(function () {
+    console.log("Back To Home...");
+    $("#rankedGameEndingPage").hide();
+    $("#gameCanvas").hide();
+    displayHomeScreen();
   });
-
-  displayHomepage();
 });
