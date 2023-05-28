@@ -175,7 +175,7 @@ $(document).ready(function () {
   });
 
   function beforePlayingRankedGame() {
-    $("#beforePlayingRankedGamePage").show();
+    $("#beforePlayingRankedGamePage").css("display", "flex");
     $("#playRankedGameButton").click(function () {
       $("#beforePlayingRankedGamePage").hide();
       playRankedGame();
@@ -191,7 +191,7 @@ $(document).ready(function () {
     var lives = 3;
     rankedGameScore = 0;
     $("#livesLeft").text(lives);
-    $("#rankedGameLiveScore").text("Score: " + rankedGameScore);
+    $("#rankedGameLiveScore").text("SCORE: " + rankedGameScore);
 
     //variables about the paddle
     const paddleWidth = 134;
@@ -340,7 +340,7 @@ $(document).ready(function () {
               ballDY = -ballDY;
               b.status = 0; // 벽돌을 제거하기 위해 상태를 0으로 변경
               rankedGameScore++;
-              $("#rankedGameLiveScore").text("Score: " + rankedGameScore);
+              $("#rankedGameLiveScore").text("SCORE: " + rankedGameScore);
             }
           }
         }
@@ -526,7 +526,7 @@ $(document).ready(function () {
     clearCanvas();
     $("#rankedGameStatus").hide();
     uploadScoreToDB(rankedGameScore);
-    $("#rankedGameScore").text("Score: " + rankedGameScore);
+    $("#rankedGameScore").text("SCORE: " + rankedGameScore);
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     $("#rankedGameEndingPage").show();
