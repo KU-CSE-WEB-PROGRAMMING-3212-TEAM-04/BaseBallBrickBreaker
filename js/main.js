@@ -16,6 +16,24 @@ var teamType = -1;
 var storyGameDifficulty = -1;
 var rankedGameScore = 0;
 
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDM0rW9kzS-RyTSimfSUkB_65Tryb6PwR4",
+  authDomain: "break-out-web.firebaseapp.com",
+  projectId: "break-out-web",
+  storageBucket: "break-out-web.appspot.com",
+  messagingSenderId: "258505534376",
+  appId: "1:258505534376:web:a7afb4f9ed674aa4c44b9d",
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Initialize Firestore and get a reference to the service
+const db = firebase.firestore();
+
+var rankingRef = db.collection("ranking");
+
 $(document).ready(function () {
   var canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
@@ -158,7 +176,7 @@ $(document).ready(function () {
 
   function beforePlayingRankedGame() {
     $("#beforePlayingRankedGamePage").show();
-    $("#playRankedGameButton").click(function() {
+    $("#playRankedGameButton").click(function () {
       $("#beforePlayingRankedGamePage").hide();
       playRankedGame();
     });
@@ -507,16 +525,42 @@ $(document).ready(function () {
   function endRankedGame() {
     clearCanvas();
     $("#rankedGameStatus").hide();
-    //uploadScoreToDB(rankedGameScore);
+    uploadScoreToDB(rankedGameScore);
     $("#rankedGameScore").text("Score: " + rankedGameScore);
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     $("#rankedGameEndingPage").show();
   }
 
-  function uploadScoreToDB() {
-    // 율원씨 구현부분
-  }
+  const uploadScoreToDB = (score) => {
+    const name = "NAME";
+
+    rankingRef.doc(name).set({
+      score: score,
+    });
+  };
+
+  rankingRef.orderBy("score", "desc").onSnapshot((querySnapshot) => {
+    $("#rankingTable").html("<tr><th>등수</th><th>이름</th><th>점수</th></tr>");
+    var i = 0;
+    querySnapshot.forEach((doc) => {
+      if (i >= 10) return;
+      $("#rankingTable").html(
+        `${$("#rankingTable").html()}<tr><td>${++i}</td><td>${doc.id}</td><td>${
+          doc.data().score
+        }</td></tr>`
+      );
+    });
+  });
+
+  $("#rankingBoardButton").on("click", () => {
+    console.log("Displaying Ranking Modal");
+    $("#rankingModal").show();
+  });
+
+  $("#rankingModalCloseButton").on("click", () => {
+    $("#rankingModal").hide();
+  });
 
   $("#restartRankedgameButton").on("click", function () {
     console.log("Restarting Ranked Game...");

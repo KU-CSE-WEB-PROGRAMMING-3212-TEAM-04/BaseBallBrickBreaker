@@ -1,3 +1,9 @@
+@font-face {
+  font-family: "bitbit";
+  src: url("//cdn.df.nexon.com/img/common/font/DNFBitBit-Regular.woff"),
+    url("//cdn.df.nexon.com/img/common/font/DNFBitBit-Regular.woff2");
+}
+
 html,
 body {
   margin: 0;
@@ -526,7 +532,7 @@ canvas {
 #rankingBoardButton:hover {
   background-color: lightsalmon;
 }
- 
+
 #restartRankedgameButton {
   text-align: center;
   border: 1px solid black;
@@ -553,4 +559,142 @@ canvas {
 
 #backToHomeButton:hover {
   background-color: lightsalmon;
+}
+
+#rankingModal {
+  display: none;
+  text-align: center;
+  width: 400px;
+  height: 500px;
+  margin-top: 50px;
+  background-color: #ffd42a;
+  border: 4px solid #cea61e;
+  font-family: "bitbit", sans-serif;
+  font-weight: normal;
+}
+
+#rankingModal h1 {
+  position: relative;
+  margin: -25px auto 30px;
+  padding: 15px 0;
+  text-align: center;
+  background-color: #da0000;
+  color: white;
+  font-size: 3rem;
+  text-shadow: -3.8px 0 #990100, 0 3.5px #990100, 3.8px 0 #990100,
+    0 -3.5px #990100;
+}
+
+#rankingModal h1::before,
+#rankingModal h1::after {
+  content: "";
+  width: 80px;
+  height: 100%;
+  background-color: #990100;
+
+  position: absolute;
+  z-index: -1;
+  top: 20px;
+
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 25% 50%);
+
+  background-image: linear-gradient(45deg, transparent 50%, #690000 50%);
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+}
+
+#rankingModal h1::before {
+  left: -60px;
+}
+
+#rankingModal h1::after {
+  right: -60px;
+  transform: scaleX(-1);
+}
+
+#rankingModalCloseButton {
+  background-color: #da0000;
+  width: 100px;
+  padding: 8px;
+  margin: 15px auto;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  position: relative;
+}
+
+#rankingModalCloseButton:hover,
+#rankingModalCloseButton:hover::before,
+#rankingModalCloseButton:hover::after {
+  background-color: hsl(0, 100%, 47%);
+}
+
+#rankingModalCloseButton::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: -10px;
+  right: -10px;
+  background-color: #da0000;
+  z-index: -1;
+}
+
+#rankingModalCloseButton::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: -10px;
+  right: -10px;
+  background-color: #da0000;
+  z-index: -1;
+}
+
+#rankingModalCloseButton::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: -6px;
+  right: -6px;
+  background: #da0000;
+  z-index: -1;
+}
+
+#rankingTable {
+  width: 370px;
+  margin: 0 15px;
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  border: 0;
+  border-spacing: 0;
+}
+
+#rankingTable th {
+  color: #da0000;
+  text-shadow: -1.5px 0 #fff, 0 1.5px #fff, 1.5px 0 #fff, 0 -1.5px #fff;
+}
+#rankingTable tr {
+  text-shadow: -1.5px 0 white, 0 1.5px white, 1.5px 0 white, 0 -1.5px white;
+}
+
+#rankingTable tr:nth-child(2n) {
+  background-color: hsl(48, 100%, 48%);
+}
+
+#rankingTable tr:nth-child(2) {
+  color: #fec124;
+}
+
+#rankingTable tr:nth-child(3) {
+  color: #77919d;
+}
+
+#rankingTable tr:nth-child(4) {
+  color: #5d4038;
 }
