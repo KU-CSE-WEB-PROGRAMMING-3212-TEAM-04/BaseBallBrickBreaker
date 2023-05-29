@@ -252,9 +252,14 @@ const play = (difficulty) => {
   $("#livesLeft").text(lifeCount);
   $("#liveScore").text("");
 
+  var skillsLeft = 5;
+  $("#skillImg").attr("src", "src/skill" + teamType + ".png");
+  $("#skillStatusPage").show();
+  $("#skillsLeft").text(skillsLeft);
+
   //variables about the paddle
-  const paddleWidth = 134;
-  const paddleHeight = 18;
+  var paddleWidth = 134;
+  var paddleHeight = 18;
   const paddleSpeed = 7;
   const paddleMaxAngle = 105; // 최대 회전 각도 (방망이 휘두르는 각도)
   let paddleX = (canvas.width - paddleWidth) / 2;
@@ -278,7 +283,7 @@ const play = (difficulty) => {
   backgroundImage.src = "src/ground.jpg";
 
   let ballRotationAngle = 0;
-  const ballRadius = 8;
+  var ballRadius = 8;
   let ballX = canvas.width / 2;
   let ballY = paddleY - ballRadius;
   let ballDX = 4 + difficulty;
@@ -334,7 +339,7 @@ const play = (difficulty) => {
         paddleWidth += 50;
         paddleHeight += 25;
         $("#skillAlert").text("The Bat Got Bigger!!");
-        setTimeout(skill2_backToNormal, 5000);
+        setTimeout(skill2_backToNormal, 8000);
         setTimeout(hideSkillAlert, 3000);
       } else if (teamType === 3) {
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
@@ -408,9 +413,8 @@ const play = (difficulty) => {
       spacePressed = false;
     } else if (event.key === "e") {
       resetPaddleAngle = false; // 'e' 키를 뗐을 때 패들 각도 초기화 플래그를 false로 설정
-
     } else if (event.key === "r") {
-      usingSkillHandler();
+      handleSkill();
     } else if (event.key === "Escape") {
       brickCnt = 0;
 
