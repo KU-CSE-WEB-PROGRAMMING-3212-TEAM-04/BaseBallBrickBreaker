@@ -49,7 +49,7 @@ content3 += "상대 투수는 일본 최고의 선수\n";
 content3 += "율타니 쇼헤이...\n\n";
 content3 += "9회말 2아웃\n";
 content3 += "나는 타석에 올라간다...\n";
-content3 += "대한민국의 우승을 위해\n";
+content3 += "대한민국의 명예을 위해\n";
 content3 += "그를 꺾고 우승을 차지하겠다...";
 var content;
 var storyPage;
@@ -669,6 +669,7 @@ const play = (difficulty) => {
       $("#gameCanvas").hide();
       $("#gameStatus").hide();
       $("#skillStatusPage").hide();
+      $("#skillAlertPage").hide();
       $("#story").fadeIn();
       clearInterval(typingInterval);
       typingInterval = setInterval(typing, 100);
@@ -687,8 +688,9 @@ const play = (difficulty) => {
     // ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  function clearStoryMode(){
-    clearCanvas();
+
+  function clearStoryMode() {
+
     $("#gameStatus").hide();
     $("#skillStatusPage").hide();
     ctx.fillStyle = "Yellow";
