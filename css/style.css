@@ -127,38 +127,6 @@ video {
   background: rgba(0, 0, 0, 0.1);
   z-index: 1;
 }
-/* 
-#settingModal {
-  display: none;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 500px;
-  height: 550px;
-  text-align: center;
-  background: #fff;
-  border-radius: 3em;
-  color: black;
-  font-size: 1rem;
-} */
-
-#settingModal {
-  display: none;
-  position: absolute;
-  left: 50%;
-  top: calc(50% - 2.25rem);
-  transform: translate(-50%, -50%);
-
-  text-align: center;
-  width: 400px;
-  height: 500px;
-  margin-top: 50px;
-  background-color: #ffd42a;
-  border: 4px solid #cea61e;
-  border-radius: 1rem;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 0.375rem 1.625rem;
-}
 
 .rad-input {
   display: none;
@@ -425,9 +393,6 @@ canvas {
   position: absolute;
   width: 800px;
   height: 600px;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, 0%);
 }
 
 #beforePlayingRankedGamePage {
@@ -568,14 +533,20 @@ canvas {
   z-index: -1;
 }
 
-#rankingModal {
+.modal {
   display: none;
+  position: absolute;
+  left: 50%;
+  top: calc(50% - 2.25rem);
+  transform: translate(-50%, -50%);
   text-align: center;
   width: 400px;
   height: 500px;
   margin-top: 50px;
   background-color: #ffd42a;
   border: 4px solid #cea61e;
+  border-radius: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0.375rem 1.625rem;
 }
 
 .modal h1 {
@@ -627,6 +598,7 @@ canvas {
   font-size: 1.5rem;
   cursor: pointer;
   position: relative;
+  z-index: 1;
 }
 
 .pixelButton:hover,
