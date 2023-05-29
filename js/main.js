@@ -108,7 +108,7 @@ function animateLabels(inputs, initialDelay) {
     $(inputs[i]).css(
       "-animation",
       "anim 3s " + (initialDelay + time) + "ms ease-in-out"
-    );
+      );
   }
   setTimeout(function () {
     $("#introAudio")[0].play();
@@ -278,6 +278,7 @@ const play = (difficulty) => {
   //타자
   const hitterImage = new Image();
   hitterImage.src = "src/hitter" + teamType + ".png";
+  
   const hitterWidth = 80;
   const hitterHeight = 120;
   let hitterX = paddleX - 70;
@@ -332,7 +333,7 @@ const play = (difficulty) => {
         skill4SoundEffect.play();
         var randomColumnIndex = Math.floor(
           (Math.random() * 10) / brickColumnCount
-        );
+          );
         for (let j = 0; j < brickColumnCount; j++) {
           const b = bricks[j][randomColumnIndex];
           if (b.status > 0) {
@@ -442,7 +443,7 @@ const play = (difficulty) => {
       -ballRadius,
       ballRadius * 2,
       ballRadius * 2
-    );
+      );
     ctx.restore();
   }
 
@@ -499,21 +500,21 @@ const play = (difficulty) => {
             ballX - ballRadius < b.x + brickWidth &&
             ballY + ballRadius > b.y &&
             ballY - ballRadius < b.y + brickHeight
-          ) {
+            ) {
             const brickLeft = b.x;
-            const brickRight = b.x + brickWidth;
-            const brickTop = b.y;
-            const brickBottom = b.y + brickHeight;
+          const brickRight = b.x + brickWidth;
+          const brickTop = b.y;
+          const brickBottom = b.y + brickHeight;
 
-            if (
-              ballX + ballRadius > brickRight ||
-              ballX - ballRadius < brickLeft
+          if (
+            ballX + ballRadius > brickRight ||
+            ballX - ballRadius < brickLeft
             ) {
               // 충돌이 벽돌의 옆면에 있는 경우
               ballDX = -ballDX; // x축 이동 방향을 반대로 변경
-            } else if (
-              ballY + ballRadius > brickTop &&
-              ballY - ballRadius < brickBottom
+          } else if (
+            ballY + ballRadius > brickTop &&
+            ballY - ballRadius < brickBottom
             ) {
               // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
               ballDY = -ballDY; // y축 이동 방향을 반대로 변경
@@ -618,28 +619,28 @@ const play = (difficulty) => {
       ballY + ballRadius > paddleY && // 공이 패들의 y 좌표 범위에 있을 때
       ballX > paddleX &&
       ballX < paddleX + paddleWidth // 공이 패들의 x 좌표 범위에 있을 때
-    ) {
+      ) {
       // 패들과 충돌 판정을 위한 충돌 박스 계산
       const paddleCenterX = paddleX + paddleWidth / 2;
-      const paddleTopY = paddleY;
-      const paddleBox = {
-        x: paddleCenterX - paddleWidth / 2,
-        y: paddleTopY,
-        width: paddleWidth,
-        height: paddleHeight,
-      };
+    const paddleTopY = paddleY;
+    const paddleBox = {
+      x: paddleCenterX - paddleWidth / 2,
+      y: paddleTopY,
+      width: paddleWidth,
+      height: paddleHeight,
+    };
 
       // 공과 충돌 판정을 위한 충돌 박스 계산
-      const ballBox = {
-        x: ballX - ballRadius,
-        y: ballY - ballRadius,
-        width: ballRadius * 2,
-        height: ballRadius * 2,
-      };
+    const ballBox = {
+      x: ballX - ballRadius,
+      y: ballY - ballRadius,
+      width: ballRadius * 2,
+      height: ballRadius * 2,
+    };
 
       // 충돌 판정
-      if (checkCollision(paddleBox, ballBox)) {
-        if (resetPaddleAngle) {
+    if (checkCollision(paddleBox, ballBox)) {
+      if (resetPaddleAngle) {
           // 'e' 키가 눌려 있는 경우
 
           ballDX = Math.random() * 2 - 1; // 가로 속도를 -1~1중 램덤으로 설정
@@ -651,7 +652,7 @@ const play = (difficulty) => {
           // 상대적인 충돌 위치에 따라 공의 속도와 방향을 조절
           const maxBounceAngle = (paddleMaxAngle * Math.PI) / 180;
           const bounceAngle =
-            (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
+          (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
           ballDX = ballSpeed * Math.sin(bounceAngle);
           hit.play();
         }
@@ -660,7 +661,7 @@ const play = (difficulty) => {
     }
 
     if (brickCnt > 0) requestAnimationFrame(draw);
-    else if (difficulty > 2) {
+    else if (difficulty === 2 && brickCnt===0) {
       console.log("Hard Mode Cleared");
       clearStoryMode();
     }
@@ -694,10 +695,19 @@ const play = (difficulty) => {
     $("#gameStatus").hide();
     $("#skillStatusPage").hide();
     ctx.fillStyle = "Yellow";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     $("#StoryClearPage").fadeIn();
+   $('#victoryImg')
+  .attr("src","src/victory"+teamType+".png")
+  .css({
+    width: "230px",
+    height: "270px",
+    "padding-left": "50px"
+  });
+
     startBgm.pause();
     bgm2.pause();
+
     clearSound.play();
     victorySound.play();
   }
@@ -712,13 +722,13 @@ const play = (difficulty) => {
   });
 
   $("#restartStorygameButton").on("click", function () {
-  console.log("Restarting Story Game...");
-  $("#StroyGameOverPage").hide();
-  lifeCount=3;
-  brickCnt=brickRowCount*brickColumnCount;
-  play(difficulty);
-  
-});
+    console.log("Restarting Story Game...");
+    $("#StroyGameOverPage").hide();
+    lifeCount=3;
+    brickCnt=brickRowCount*brickColumnCount;
+    play(difficulty);
+
+  });
 
 
   $("#clearModalCloseButton").click(function () {
@@ -860,7 +870,7 @@ function playRankedGame() {
       -ballRadius,
       ballRadius * 2,
       ballRadius * 2
-    );
+      );
     ctx.restore();
   }
 
@@ -917,21 +927,21 @@ function playRankedGame() {
             ballX - ballRadius < b.x + brickWidth &&
             ballY + ballRadius > b.y &&
             ballY - ballRadius < b.y + brickHeight
-          ) {
+            ) {
             const brickLeft = b.x;
-            const brickRight = b.x + brickWidth;
-            const brickTop = b.y;
-            const brickBottom = b.y + brickHeight;
+          const brickRight = b.x + brickWidth;
+          const brickTop = b.y;
+          const brickBottom = b.y + brickHeight;
 
-            if (
-              ballX + ballRadius > brickRight ||
-              ballX - ballRadius < brickLeft
+          if (
+            ballX + ballRadius > brickRight ||
+            ballX - ballRadius < brickLeft
             ) {
               // 충돌이 벽돌의 옆면에 있는 경우
               ballDX = -ballDX; // x축 이동 방향을 반대로 변경
-            } else if (
-              ballY + ballRadius > brickTop &&
-              ballY - ballRadius < brickBottom
+          } else if (
+            ballY + ballRadius > brickTop &&
+            ballY - ballRadius < brickBottom
             ) {
               // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
               ballDY = -ballDY; // y축 이동 방향을 반대로 변경
@@ -1077,28 +1087,28 @@ function playRankedGame() {
       ballY + ballRadius > paddleY && // 공이 패들의 y 좌표 범위에 있을 때
       ballX > paddleX &&
       ballX < paddleX + paddleWidth // 공이 패들의 x 좌표 범위에 있을 때
-    ) {
+      ) {
       // 패들과 충돌 판정을 위한 충돌 박스 계산
       const paddleCenterX = paddleX + paddleWidth / 2;
-      const paddleTopY = paddleY;
-      const paddleBox = {
-        x: paddleCenterX - paddleWidth / 2,
-        y: paddleTopY,
-        width: paddleWidth,
-        height: paddleHeight,
-      };
+    const paddleTopY = paddleY;
+    const paddleBox = {
+      x: paddleCenterX - paddleWidth / 2,
+      y: paddleTopY,
+      width: paddleWidth,
+      height: paddleHeight,
+    };
 
       // 공과 충돌 판정을 위한 충돌 박스 계산
-      const ballBox = {
-        x: ballX - ballRadius,
-        y: ballY - ballRadius,
-        width: ballRadius * 2,
-        height: ballRadius * 2,
-      };
+    const ballBox = {
+      x: ballX - ballRadius,
+      y: ballY - ballRadius,
+      width: ballRadius * 2,
+      height: ballRadius * 2,
+    };
 
       // 충돌 판정
-      if (checkCollision(paddleBox, ballBox)) {
-        if (resetPaddleAngle) {
+    if (checkCollision(paddleBox, ballBox)) {
+      if (resetPaddleAngle) {
           // 'e' 키가 눌려 있는 경우
           ballDX = Math.random() * 2 - 1; // 가로 속도를 -1~1로 설정
           bunt.play();
@@ -1109,7 +1119,7 @@ function playRankedGame() {
           // 상대적인 충돌 위치에 따라 공의 속도와 방향을 조절
           const maxBounceAngle = (paddleMaxAngle * Math.PI) / 180;
           const bounceAngle =
-            (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
+          (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
           ballDX = ballSpeed * Math.sin(bounceAngle);
           hit.play();
         }
@@ -1136,20 +1146,20 @@ function endRankedGame() {
 
 const uploadScoreToDB = (score) => {
   rankingRef
-    .doc(playerName)
-    .get()
-    .then((doc) => {
-      if (doc.exists && doc.data().score > score) {
-        console.log("Ranking not updated");
-      } else {
-        rankingRef.doc(playerName).set({
-          score: score,
-        });
-      }
-    })
-    .catch((error) => {
-      console.log("Error getting document:", error);
-    });
+  .doc(playerName)
+  .get()
+  .then((doc) => {
+    if (doc.exists && doc.data().score > score) {
+      console.log("Ranking not updated");
+    } else {
+      rankingRef.doc(playerName).set({
+        score: score,
+      });
+    }
+  })
+  .catch((error) => {
+    console.log("Error getting document:", error);
+  });
 };
 
 rankingRef.orderBy("score", "desc").onSnapshot((querySnapshot) => {
@@ -1161,7 +1171,7 @@ rankingRef.orderBy("score", "desc").onSnapshot((querySnapshot) => {
       `${$("#rankingTable").html()}<tr><td>${++i}</td><td>${doc.id}</td><td>${
         doc.data().score
       }</td></tr>`
-    );
+      );
   });
 });
 
@@ -1199,5 +1209,5 @@ function checkCollision(rect1, rect2) {
     rect1.x + rect1.width > rect2.x &&
     rect1.y < rect2.y + rect2.height &&
     rect1.y + rect1.height > rect2.y
-  );
+    );
 }
