@@ -265,6 +265,7 @@ const play = (difficulty) => {
   $("#liveScore").text("");
 
   var skillsLeft = 5;
+
   $("#skillImg").attr("src", "src/skill" + teamType + ".png");
   $("#skillStatusPage").show();
   $("#skillsLeft").text(skillsLeft);
@@ -315,9 +316,9 @@ const play = (difficulty) => {
   const brickOffsetLeft = 150;
 
   var bricks = new Array(brickRowCount);
-  for (let i = 0; i < brickColumnCount; i++) {
+  for (let i = 0; i < brickRowCount; i++) {
     bricks[i] = new Array(brickColumnCount);
-    for (let j = 0; j < brickRowCount; j++) {
+    for (let j = 0; j < brickColumnCount; j++) {
       var randomStatusValue = Math.floor(Math.random() * (difficulty + 1) + 1);
       bricks[i][j] = { x: 0, y: 0, status: randomStatusValue };
     }
@@ -333,44 +334,52 @@ const play = (difficulty) => {
     $("#skillAlertPage").show();
     if (skillsLeft > 0) {
       if (teamType === 1) {
+        // remove ramdom row
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
         skill4SoundEffect.play();
-        var randomColumnIndex = Math.floor(
-          (Math.random() * 10) / brickColumnCount
-        );
+        var randomRowIndex = Math.floor(Math.random() * brickRowCount + 1);
         for (let j = 0; j < brickColumnCount; j++) {
-          const b = bricks[j][randomColumnIndex];
+          const b = bricks[randomRowIndex][j];
           if (b.status > 0) {
             b.status--;
-            brickCnt--;
+            if (b.status === 0) {
+              brickCnt--;
+            }
           }
         }
         $("#skillAlert").text("Removed Random Row!!");
-        setTimeout(hideSkillAlert, 3000);
+        setTimeout(hideSkillAlert, 2000);
       } else if (teamType === 2) {
+        // make bat bigger
+        $("#skillAlert").text("The Bat Got Bigger!!");
+        setTimeout(hideSkillAlert, 2000);
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
         skill4SoundEffect.play();
         paddleWidth += 50;
         paddleHeight += 25;
-        $("#skillAlert").text("The Bat Got Bigger!!");
         setTimeout(skill2_backToNormal, 8000);
-        setTimeout(hideSkillAlert, 3000);
       } else if (teamType === 3) {
+        // make ball bigger
+        $("#skillAlert").text("The Ball Got Bigger!!");
+        setTimeout(hideSkillAlert, 2000);
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
         skill4SoundEffect.play();
         ballRadius += 10;
         setTimeout(skill3_backToNormal, 5000);
-        $("#skillAlert").text("The Ball Got Bigger!!");
-        setTimeout(hideSkillAlert, 3000);
       } else if (teamType === 4) {
+        // remove random column
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
         skill4SoundEffect.play();
-        var randomRowIndex = Math.floor((Math.random() * 10) / brickRowCount);
+        var randomColumnIndex = Math.floor(
+          Math.random() * brickColumnCount + 1
+        );
         for (let j = 0; j < brickRowCount; j++) {
-          const b = bricks[randomRowIndex][j];
+          const b = bricks[j][randomColumnIndex];
           if (b.status > 0) {
-            b.status == 0;
-            brickCnt--;
+            b.status--;
+            if (b.status === 0) {
+              brickCnt--;
+            }
           }
         }
         $("#skillAlert").text("Removed Random Column!!");
@@ -473,20 +482,20 @@ const play = (difficulty) => {
     }
   }
 
-  // 벽돌 그리기
   function drawBricks() {
-    // 난이도 따라 추가
     var fillColors = ["#000", "#D5FFD5", "#8FBC8B", "#53682A"];
-    for (let c = 0; c < brickColumnCount; c++) {
-      for (let r = 0; r < brickRowCount; r++) {
-        if (bricks[c][r].status) {
+
+    for (let r = 0; r < brickRowCount; r++) {
+      for (let c = 0; c < brickColumnCount; c++) {
+        if (bricks[r][c].status > 0) {
           const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
           const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-          bricks[c][r].x = brickX;
-          bricks[c][r].y = brickY;
+          bricks[r][c].x = brickX;
+          bricks[r][c].y = brickY;
+
           ctx.beginPath();
           ctx.rect(brickX, brickY, brickWidth, brickHeight);
-          ctx.fillStyle = fillColors[bricks[c][r].status];
+          ctx.fillStyle = fillColors[bricks[r][c].status];
           ctx.fill();
           ctx.closePath();
         }
@@ -495,33 +504,35 @@ const play = (difficulty) => {
   }
 
   function collisionDetection() {
-    for (let i = 0; i < brickColumnCount; i++) {
-      for (let j = 0; j < brickRowCount; j++) {
+    for (let i = 0; i < brickRowCount; i++) {
+      for (let j = 0; j < brickColumnCount; j++) {
         const b = bricks[i][j];
         if (b.status > 0) {
+          const brickX = b.x;
+          const brickY = b.y;
           if (
-            ballX + ballRadius > b.x &&
-            ballX - ballRadius < b.x + brickWidth &&
-            ballY + ballRadius > b.y &&
-            ballY - ballRadius < b.y + brickHeight
+            ballX + ballRadius > brickX &&
+            ballX - ballRadius < brickX + brickWidth &&
+            ballY + ballRadius > brickY &&
+            ballY - ballRadius < brickY + brickHeight
           ) {
-            const brickLeft = b.x;
-            const brickRight = b.x + brickWidth;
-            const brickTop = b.y;
-            const brickBottom = b.y + brickHeight;
+            const brickLeft = brickX;
+            const brickRight = brickX + brickWidth;
+            const brickTop = brickY;
+            const brickBottom = brickY + brickHeight;
 
             if (
               ballX + ballRadius > brickRight ||
               ballX - ballRadius < brickLeft
             ) {
-              // 충돌이 벽돌의 옆면에 있는 경우
-              ballDX = -ballDX; // x축 이동 방향을 반대로 변경
+              // Collision is on the side of the brick
+              ballDX = -ballDX; // Reverse the ball's horizontal direction
             } else if (
               ballY + ballRadius > brickTop &&
               ballY - ballRadius < brickBottom
             ) {
-              // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
-              ballDY = -ballDY; // y축 이동 방향을 반대로 변경
+              // Collision is on the top or bottom of the brick
+              ballDY = -ballDY; // Reverse the ball's vertical direction
             }
 
             b.status--;
@@ -673,10 +684,10 @@ const play = (difficulty) => {
 
     if (brickCnt > 0) {
       requestAnimationFrame(draw);
-    } else if ((brickCnt == 0) && (difficulty == 3)) {
+    } else if (brickCnt == 0 && difficulty == 3) {
       console.log("Hard Mode Cleared");
       clearStoryMode();
-    } else if((brickCnt == 0) && (difficulty < 3)) {
+    } else if (brickCnt == 0 && difficulty < 3) {
       storyPage = difficulty + 2;
       $("#gameCanvas").hide();
       $("#gameStatus").hide();
