@@ -312,6 +312,76 @@ const play = (difficulty) => {
   let spacePressed = false;
   let resetPaddleAngle = false; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화하기 위한 변수
 
+  function handleSkill() {
+    $("#skillAlertPage").show();
+    if (skillsLeft > 0) {
+      if (teamType === 1) {
+        var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
+        skill4SoundEffect.play();
+        var randomColumnIndex = Math.floor((Math.random() * 10) / brickColumnCount);
+        for (let j = 0; j < brickColumnCount; j++) {
+          const b = bricks[j][randomColumnIndex];
+          if (b.status > 0) {
+            b.status--;
+            brickCnt--;
+          }
+        }
+        $("#skillAlert").text("Removed Random Row!!");
+        setTimeout(hideSkillAlert, 3000);
+      } else if (teamType === 2) {
+        var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
+        skill4SoundEffect.play();
+        paddleWidth += 50;
+        paddleHeight += 25;
+        $("#skillAlert").text("The Bat Got Bigger!!");
+        setTimeout(skill2_backToNormal, 5000);
+        setTimeout(hideSkillAlert, 3000);
+      } else if (teamType === 3) {
+        var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
+        skill4SoundEffect.play();
+        ballRadius += 10;
+        setTimeout(skill3_backToNormal, 5000);
+        $("#skillAlert").text("The Ball Got Bigger!!");
+        setTimeout(hideSkillAlert, 3000);
+      } else if (teamType === 4) {
+        var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
+        skill4SoundEffect.play();
+        var randomRowIndex = Math.floor((Math.random() * 10) / brickRowCount);
+        for (let j = 0; j < brickRowCount; j++) {
+          const b = bricks[randomRowIndex][j];
+          if (b.status > 0) {
+            b.status--;
+            brickCnt--;
+          }
+        }
+        $("#skillAlert").text("Removed Random Column!!");
+        setTimeout(hideSkillAlert, 3000);
+      } else {
+        console.log("teamType not defined - handleSkill() Error");
+      }
+      skillsLeft--;
+      $("#skillsLeft").text(skillsLeft);
+      console.log("skill is used");
+    } else {
+      console.log("Out of skills");
+    }
+  }
+
+  function skill2_backToNormal(){
+    paddleWidth -= 50;
+    paddleHeight -= 25;
+  }
+
+  function skill3_backToNormal(){
+    ballRadius -= 10;
+  }
+
+  function hideSkillAlert() {
+    console.log("hide skill:" + $("#skillAlert").text());
+    $("#skillAlert").text("");
+    $("#skillAlertPage").hide();
+  }
+
   // 키보드 이벤트 리스너 추가
   $(document).keydown(keyDownHandler);
   $(document).keyup(keyUpHandler);
