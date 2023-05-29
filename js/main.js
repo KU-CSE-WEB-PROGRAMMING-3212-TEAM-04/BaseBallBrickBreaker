@@ -12,13 +12,13 @@ startBgm.volume -= 0.5;
 var bgm2 = new Audio("src/startbgm2.mp3");
 var hit = new Audio("src/click2.mp3");
 var bunt = new Audio("src/click1.mp3");
-var clickSound1 = new Audio('src/click1.mp3')
+var clickSound1 = new Audio("src/click1.mp3");
 var brickBreak = new Audio("src/brickBreak.mp3");
 var teamType = -1;
 var rankedGameScore = 0;
 
 //스토리
-var keyboardSound = new Audio('src/keyboard1.mp3');
+var keyboardSound = new Audio("src/keyboard1.mp3");
 var content1 = "남들보다 뒤늦게 시작한 야구...\n";
 content1 += "더 높은곳으로 가고 싶다...\n\n";
 content1 += "지금은 독립리그 결승전\n";
@@ -34,7 +34,6 @@ content2 += "수만명의 관객들의 나를 응원하고 있다...\n\n";
 content2 += "9회말 2아웃\n";
 content2 += "나는 타석에 올라간다...\n";
 content2 += "그를 꺾고 우승을 차지하겠다...";
-
 
 var content3 = "WBC 결승전\n";
 content3 = "영원의 라이벌, 운명의 상대\n";
@@ -209,7 +208,7 @@ $(document).ready(function () {
     $("#story").fadeIn();
     storyPage = 2;
     typingInterval = setInterval(typing, 100);
-    // playNormalMode(3); 
+    // playNormalMode(3);
   });
 
   $("#selectHardDifficulty").click(function () {
@@ -221,17 +220,11 @@ $(document).ready(function () {
     // playHardMode(3);
   });
 
-    
-
-
   function typing() {
     const text = $(".text");
-    if (storyPage == 1)
-      content = content1;    
-    else if (storyPage == 2)
-      content = content2;
-    else if (storyPage == 3)
-      content = content3;
+    if (storyPage == 1) content = content1;
+    else if (storyPage == 2) content = content2;
+    else if (storyPage == 3) content = content3;
     keyboardSound.play();
     keyboardSound.loop = true;
     let txt = content[i++];
@@ -251,21 +244,22 @@ $(document).ready(function () {
     clearInterval(typingInterval);
     keyboardSound.pause();
     $("#story").hide();
-    if (storyPage == 1)
-      playEasyMode(3);
-    else if (storyPage == 2)
-      playNormalMode(3);
-    else if (storyPage == 3)
-      playHardMode(3);
+    if (storyPage == 1) playEasyMode(3);
+    else if (storyPage == 2) playNormalMode(3);
+    else if (storyPage == 3) playHardMode(3);
   });
 
   function playEasyMode(storyModeLives) {
-    console.log("Starting Easy Story Game");
+    console.log("Starting Easy Story Game...");
     clearCanvas();
-    $("#gameCanvas").show();
     storyModeLives = 3;
+    var skillsLeft = 5;
+    $("#skillImg").attr("src", "src/skill" + teamType + ".png");
+    $("#gameCanvas").show();
     $("#gameStatus").show();
+    $("#skillStatusPage").show();
     $("#livesLeft").text(storyModeLives);
+    $("#skillsLeft").text(skillsLeft);
     $("#liveScore").text("");
 
     //variables about the paddle
@@ -300,12 +294,12 @@ $(document).ready(function () {
     let ballDX = 4;
     let ballDY = -4;
     const ballSpeed = 4;
-    let ballSpeedY = 4
+    let ballSpeedY = 4;
 
     // variables about the brick
     const brickRowCount = 4; // number of rows of bricks
     const brickColumnCount = 6; // number of rows of bricks
-    let brickCnt = brickRowCount*brickColumnCount;
+    let brickCnt = brickRowCount * brickColumnCount;
     const brickWidth = 80;
     const brickHeight = 30;
     const brickPadding = 1; // spacing between bricks
@@ -316,7 +310,6 @@ $(document).ready(function () {
     for (let i = 0; i < brickColumnCount; i++) {
       bricks[i] = new Array(brickColumnCount);
       for (let j = 0; j < brickRowCount; j++) {
-        
         bricks[i][j] = { x: 0, y: 0, status: 1 };
       }
     }
@@ -326,6 +319,37 @@ $(document).ready(function () {
     let leftPressed = false;
     let spacePressed = false;
     let resetPaddleAngle = false; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화하기 위한 변수
+
+    function usingSkillHandler() {
+      if (skillsLeft > 0) {
+        if (teamType === 1) {
+          storyModeLives++;
+        } else if (teamType === 2) {
+          paddleWidth += 10;
+          paddleHeight += 10;
+        } else if (teamType === 3) {
+          ballRadius += 5;
+        } else if (teamType === 4) {
+          var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
+          skill4SoundEffect.play();
+          var randomRowIndex = Math.floor((Math.random() * 10) / brickRowCount);
+          for (let j = 0; j < brickRowCount; j++) {
+            const b = bricks[randomRowIndex][j];
+            if (b.status > 0) {
+              b.status--;
+              brickCnt--;
+            }
+          }
+        } else {
+          console.log("teamType not defined - usingSkillHandler Error");
+        }
+        skillsLeft--;
+        $("#skillsLeft").text(skillsLeft);
+        console.log("skill is used");
+      } else {
+        console.log("Out of skills");
+      }
+    }
 
     // 키보드 이벤트 리스너 추가
     $(document).keydown(keyDownHandler);
@@ -353,6 +377,8 @@ $(document).ready(function () {
         spacePressed = false;
       } else if (event.key === "e") {
         resetPaddleAngle = false; // 'e' 키를 뗐을 때 패들 각도 초기화 플래그를 false로 설정
+      } else if (event.key === "r") {
+        usingSkillHandler();
       }
     }
 
@@ -397,7 +423,6 @@ $(document).ready(function () {
     function drawBricks() {
       for (let c = 0; c < brickColumnCount; c++) {
         for (let r = 0; r < brickRowCount; r++) {
-
           if (bricks[c][r].status === 1) {
             const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
             const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
@@ -408,8 +433,7 @@ $(document).ready(function () {
             ctx.fillStyle = "#D5FFD5";
             ctx.fill();
             ctx.closePath();
-          } 
-
+          }
         }
       }
     }
@@ -442,7 +466,6 @@ function collisionDetection() {
             // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
             ballDY = -ballDY; // y축 이동 방향을 반대로 변경
           }
-
           b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
           if (b.status===0) 
             brickCnt--;
@@ -493,7 +516,6 @@ function collisionDetection() {
 
     // 게임 루프
     function draw() {
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
@@ -586,16 +608,13 @@ function collisionDetection() {
         }
       }
 
-      if(brickCnt>0)
-        requestAnimationFrame(draw);
-      else
-        playNormalMode(storyModeLives);
+      if (brickCnt > 0) requestAnimationFrame(draw);
+      else playNormalMode(storyModeLives);
     }
 
     // 게임 루프 실행
-    
-          draw();
-    
+
+    draw();
 
     function endStoryMode() {
       clearCanvas();
@@ -677,7 +696,7 @@ function collisionDetection() {
     // 키보드 이벤트 리스너 추가
     $(document).keydown(keyDownHandler);
     $(document).keyup(keyUpHandler);
-    
+
     // 키보드 이벤트 처리 함수
     function keyDownHandler(event) {
       if (event.key === "Right" || event.key === "ArrowRight") {
@@ -764,7 +783,7 @@ function collisionDetection() {
             ctx.fillStyle = "#8FBC8B";
             ctx.fill();
             ctx.closePath();
-          } 
+          }
         }
       }
     }
@@ -818,7 +837,7 @@ function collisionDetection() {
       }
       return false;
     }
-    
+
     // Function to reset the ball and paddle positions
     function resetPositions() {
       paddleX = (canvas.width - paddleWidth) / 2;
@@ -938,10 +957,8 @@ function collisionDetection() {
         }
       }
 
-      if(brickCnt > 0)
-        requestAnimationFrame(draw);
-      else
-        playHardMode(storyModeLives);
+      if (brickCnt > 0) requestAnimationFrame(draw);
+      else playHardMode(storyModeLives);
     }
 
     // 게임 루프 실행
@@ -954,7 +971,6 @@ function collisionDetection() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
   }
-
 
   function playHardMode(storyModeLives) {
     console.log("Starting Hard Story Game");
@@ -1001,7 +1017,7 @@ function collisionDetection() {
     // variables about the brick
     const brickRowCount = 4; // number of rows of bricks
     const brickColumnCount = 6; // number of rows of bricks
-    let brickCnt = brickRowCount*brickColumnCount;
+    let brickCnt = brickRowCount * brickColumnCount;
     const brickWidth = 80;
     const brickHeight = 30;
     const brickPadding = 1; // spacing between bricks
@@ -1315,7 +1331,6 @@ function collisionDetection() {
     }
   }
 
-
   $("#selectRankedGameButton").click(function () {
     $("#gameTypeSelectingScreen").hide();
     $("#gameCanvas").show();
@@ -1331,15 +1346,16 @@ function collisionDetection() {
   }
 
   function playRankedGame() {
+    startBgm.pause();
     console.log("Starting Ranked game..");
     clearCanvas();
     $("#gameCanvas").show();
-    startBgm.pause();
     $("#gameStatus").show();
     var lives = 3;
     rankedGameScore = 0;
     $("#livesLeft").text(lives);
     $("#liveScore").text("SCORE: " + rankedGameScore);
+    $("#skillImg").src = "src/skill" + teamType + ".png";
 
     //variables about the paddle
     const paddleWidth = 134;
@@ -1381,7 +1397,7 @@ function collisionDetection() {
     const brickRowCount = 4; // number of rows of bricks
     const brickColumnCount = 6; // number of rows of bricks
     var maximumBrickRow = 7;
-    let brickCnt = brickRowCount*brickColumnCount;
+    let brickCnt = brickRowCount * brickColumnCount;
     const brickWidth = 80;
     const brickHeight = 30;
     const brickPadding = 1; // spacing between bricks
@@ -1455,6 +1471,7 @@ function collisionDetection() {
       ctx.drawImage(paddleImage, 0, 0, paddleWidth, paddleHeight);
       ctx.restore();
     }
+
     //타자 그리기
     function drawHitter() {
       ctx.save();
@@ -1503,7 +1520,7 @@ function collisionDetection() {
               ballY < b.y + brickHeight
             ) {
               ballDY = -ballDY;
-              b.status--; 
+              b.status--;
               brickBreak.play();
               rankedGameScore++;
               if (rankedGameScore % 10 === 0) {
@@ -1713,7 +1730,8 @@ function collisionDetection() {
     querySnapshot.forEach((doc) => {
       if (i >= 10) return;
       $("#rankingTable").html(
-        `${$("#rankingTable").html()}<tr><td>${++i}</td><td>${doc.id}</td><td>${doc.data().score
+        `${$("#rankingTable").html()}<tr><td>${++i}</td><td>${doc.id}</td><td>${
+          doc.data().score
         }</td></tr>`
       );
     });
