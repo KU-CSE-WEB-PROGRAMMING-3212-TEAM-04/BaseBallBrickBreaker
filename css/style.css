@@ -545,6 +545,13 @@ canvas {
   width: 800px;
   height: 600px;
 }
+#StroyClearPage {
+  background-color: "green;";
+  display: none;
+  text-align: center;
+  width: 800px;
+  height: 600px;
+}
 
 #rankedGameScore {
   margin: 80px auto;

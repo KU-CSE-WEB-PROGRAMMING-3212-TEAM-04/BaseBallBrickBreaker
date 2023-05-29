@@ -680,6 +680,12 @@ const play = (difficulty) => {
     // ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
+  function clearStoryMode(){
+    $("#gameStatus").hide();
+    $("#skillStatusPage").hide();
+    $("#StroyClearPage").fadeIn();
+  }
+
   $("#restartStorygameButton").on("click", function () {
     console.log("Restarting Ranked Game...");
     $("#StroyGameOverPage").hide();
