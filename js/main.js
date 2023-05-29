@@ -714,8 +714,10 @@ const play = (difficulty) => {
 
   $("#clearModalCloseButton").click(function () {
     console.log("Back To Home...");
-    $("#StroyClearPage").hide();
+    $("#StoryClearPage").hide();
     $("#gameCanvas").hide();
+    victorySound.pause();
+    startBgm.play();
     displayHomeScreen();
   });
 
