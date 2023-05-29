@@ -200,7 +200,6 @@ $(document).ready(function () {
     $("#story").fadeIn();
     storyPage = 1;
     typingInterval = setInterval(typing, 100);
-
     // playEasyMode(3);
   });
 
@@ -246,6 +245,7 @@ $(document).ready(function () {
       keyboardSound.pause();
     }
   }
+
   $("#nextBtn").click(function () {
     i = 0;
     clearInterval(typingInterval);
@@ -256,7 +256,7 @@ $(document).ready(function () {
     else if (storyPage == 2)
       playNormalMode(3);
     else if (storyPage == 3)
-      playHardMode(3)
+      playHardMode(3);
   });
 
   function playEasyMode(storyModeLives) {
@@ -563,7 +563,6 @@ $(document).ready(function () {
         requestAnimationFrame(draw);
       else
         playNormalMode(storyModeLives);
-
     }
 
     // 게임 루프 실행
@@ -1231,11 +1230,10 @@ $(document).ready(function () {
         }
       }
 
-      if(brickCnt>0)
+      if(brickCnt > 0)
         requestAnimationFrame(draw);
       else
-        console.log("Normal Mode Cleared!");
-        playHardMode(storyModeLives);
+        console.log("Hard Mode Cleared!");
     }
 
     // 게임 루프 실행
@@ -1265,9 +1263,9 @@ $(document).ready(function () {
   }
 
   function playRankedGame() {
-    $("#rankedGameEndingPage").hide();
+    console.log("Starting Ranked game..");
     clearCanvas();
-    console.log("starting ranked game..");
+    $("#gameCanvas").show();
     startBgm.pause();
     $("#gameStatus").show();
     var lives = 3;
@@ -1314,6 +1312,7 @@ $(document).ready(function () {
     // variables about the brick
     const brickRowCount = 4; // number of rows of bricks
     const brickColumnCount = 6; // number of rows of bricks
+    var maximumBrickRow = 7;
     let brickCnt = brickRowCount*brickColumnCount;
     const brickWidth = 80;
     const brickHeight = 30;
@@ -1325,8 +1324,7 @@ $(document).ready(function () {
     for (let i = 0; i < brickColumnCount; i++) {
       bricks[i] = new Array(brickColumnCount);
       for (let j = 0; j < brickRowCount; j++) {
-        var randomStatusValue = Math.floor(Math.random() * 3 + 1);
-        bricks[i][j] = { x: 0, y: 0, status: randomStatusValue };
+        bricks[i][j] = { x: 0, y: 0, status: 1 };
       }
     }
 
@@ -1339,6 +1337,31 @@ $(document).ready(function () {
     // 키보드 이벤트 리스너 추가
     $(document).keydown(keyDownHandler);
     $(document).keyup(keyUpHandler);
+
+    // 키보드 이벤트 처리 함수
+    function keyDownHandler(event) {
+      if (event.key === "Right" || event.key === "ArrowRight") {
+        rightPressed = true;
+      } else if (event.key === "Left" || event.key === "ArrowLeft") {
+        leftPressed = true;
+      } else if (event.key === " ") {
+        spacePressed = true;
+      } else if (event.key === "e") {
+        resetPaddleAngle = true; // 'e' 키를 누르면 패들 각도 초기화 플래그를 true로 설정
+      }
+    }
+
+    function keyUpHandler(event) {
+      if (event.key === "Right" || event.key === "ArrowRight") {
+        rightPressed = false;
+      } else if (event.key === "Left" || event.key === "ArrowLeft") {
+        leftPressed = false;
+      } else if (event.key === " ") {
+        spacePressed = false;
+      } else if (event.key === "e") {
+        resetPaddleAngle = false; // 'e' 키를 뗐을 때 패들 각도 초기화 플래그를 false로 설정
+      }
+    }
 
     // 공 그리기
     function drawBall() {
@@ -1379,33 +1402,12 @@ $(document).ready(function () {
         ballRotationAngle = 0;
       }
     }
-    // 왜안됨?
 
     // 벽돌 그리기
     function drawBricks() {
       for (let c = 0; c < brickColumnCount; c++) {
         for (let r = 0; r < brickRowCount; r++) {
           if (bricks[c][r].status === 1) {
-            const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-            const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-            bricks[c][r].x = brickX;
-            bricks[c][r].y = brickY;
-            ctx.beginPath();
-            ctx.rect(brickX, brickY, brickWidth, brickHeight);
-            ctx.fillStyle = "#D5FFD5";
-            ctx.fill();
-            ctx.closePath();
-          } else if (bricks[c][r].status === 2) {
-            const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-            const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-            bricks[c][r].x = brickX;
-            bricks[c][r].y = brickY;
-            ctx.beginPath();
-            ctx.rect(brickX, brickY, brickWidth, brickHeight);
-            ctx.fillStyle = "#8FBC8B";
-            ctx.fill();
-            ctx.closePath();
-          } else if (bricks[c][r].status === 3) {
             const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
             const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
             bricks[c][r].x = brickX;
@@ -1425,7 +1427,7 @@ $(document).ready(function () {
       for (let i = 0; i < brickColumnCount; i++) {
         for (let j = 0; j < brickRowCount; j++) {
           const b = bricks[i][j];
-          if (b.status > 0) {
+          if (b.status === 1) {
             if (
               ballX > b.x &&
               ballX < b.x + brickWidth &&
@@ -1433,7 +1435,7 @@ $(document).ready(function () {
               ballY < b.y + brickHeight
             ) {
               ballDY = -ballDY;
-              b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
+              b.status--; 
               brickBreak.play();
               rankedGameScore++;
               if (rankedGameScore % 10 === 0) {
@@ -1485,8 +1487,7 @@ $(document).ready(function () {
     function generateNewBrickRow() {
       const newRow = new Array(1);
       for (let i = 0; i < brickColumnCount; i++) {
-        var randomStatusValue = Math.floor(Math.random() * 3 + 1);
-        newRow[i] = { x: 0, y: 0, status: randomStatusValue };
+        newRow[i] = { x: 0, y: 0, status: 1 };
       }
 
       // Insert the new row at the beginning of the bricks array
@@ -1506,7 +1507,7 @@ $(document).ready(function () {
         bricks.pop();
       }
     }
-
+    var rowGeneratingInterval = 4000;
     function startNewBrickRowTimer() {
       setInterval(generateNewBrickRow, rowGeneratingInterval);
     }
