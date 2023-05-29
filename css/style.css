@@ -190,23 +190,24 @@ video {
 }
 
 #gameTypeSelectingScreen .gameType {
-  width: 500px;
-  max-width: 500px;
+  width: 400px;
+  max-width: 400px;
   height: 600px;
   background-size: auto 100%;
   background-position: 50% 50%;
   background-repeat: no-repeat;
   display: inline-block;
-  margin: 0 0.5rem;
+  margin: 0;
   filter: grayscale(1) opacity(0.1) contrast(200%);
   transition: 0.5s;
-  transform: skewY(-10deg);
+  transform: skewY(-10deg) scale(0.85);
   z-index: -1;
+  border-radius: 1rem;
 }
 
 .m_img {
-  height: 600px;
-  width: 450px;
+  height: 530px;
+  width: 400px;
   object-fit: none;
   object-position: center;
 }
@@ -226,9 +227,10 @@ video {
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 70px;
+  line-height: 70px;
   text-align: center;
   font-size: 60px;
-  font-weight: 900;
   color: white;
   text-shadow: 3px 3px #555;
 }
@@ -241,7 +243,7 @@ video {
 }
 #gameTypeSelectingScreen div:hover {
   filter: grayscale(0) opacity(1);
-  transform: scale(1.1);
+  transform: scale(1);
   box-shadow: 0 25px 50px black;
   z-index: 100;
 }
@@ -250,6 +252,7 @@ video {
 #teamSelectingScreen {
   display: none;
 }
+
 #teamSelectingScreen .selectTeamTypeButton {
   width: 250px;
   max-width: 250px;
@@ -258,31 +261,30 @@ video {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   display: inline-block;
-  margin: 0 0.5rem;
+  margin: 0;
   filter: grayscale(1) opacity(0.1) contrast(200%);
   transition: 0.5s;
-  transform: skewY(-10deg);
+  transform: skewY(-10deg) scale(0.85);
   z-index: -1;
+  border-radius: 1rem;
 }
 
 .t_img {
-  height: 600px;
-  width: 250px;
-  object-fit: none;
-  object-position: center;
+  width: 180px;
+  margin: 100px auto 0;
 }
 
 #teamSelectingScreen div:nth-child(1) {
-  background-color: dodgerblue;
+  background-color: hsl(240, 70%, 35%);
 }
 #teamSelectingScreen div:nth-child(2) {
   background-color: black;
 }
 #teamSelectingScreen div:nth-child(3) {
-  background-color: darkorange;
+  background-color: hsl(25, 65%, 36%);
 }
 #teamSelectingScreen div:nth-child(4) {
-  background-color: red;
+  background-color: hsl(4, 54%, 33%);
 }
 #teamSelectingScreen div:nth-child(1):after,
 #teamSelectingScreen div:nth-child(2):after,
@@ -293,6 +295,8 @@ video {
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 100px;
+  line-height: 100px;
   text-align: center;
   font-size: 60px;
   font-weight: 900;
@@ -330,11 +334,12 @@ video {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   display: inline-block;
-  margin: 0 0.5rem;
+  margin: 0;
   filter: grayscale(1) opacity(0.1) contrast(200%);
   transition: 0.5s;
-  transform: skewY(-10deg);
+  transform: skewY(-10deg) scale(0.85);
   z-index: -1;
+  border-radius: 1rem;
 }
 .l_img {
   height: 600px;
@@ -376,7 +381,7 @@ video {
 }
 #difficultyChoosingScreen div:hover {
   filter: grayscale(0) opacity(1);
-  transform: scale(1.1);
+  transform: scale(1);
   box-shadow: 0 25px 50px black;
   z-index: 100;
 }
