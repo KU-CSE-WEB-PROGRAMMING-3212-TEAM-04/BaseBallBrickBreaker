@@ -55,7 +55,7 @@ $(document).ready(function () {
   totalDuration = introDuration1 + introDuration2 - 2000;
 
   setTimeout(function () {
-    $("#gameIntroScreen").fadeOut();
+    $(".gameIntroScreen").hide();
     displayHomeScreen();
     startBgm.play();
     startBgm.loop = true;
@@ -85,15 +85,15 @@ $(document).ready(function () {
     $("#gameStatus").hide();
 
     //시작화면
-    $("#settingsButton").click(function () {
-      $("#settingsScreen").fadeIn();
+    $("#settingsButton").click(() => {
+      $("#settingModal").fadeIn();
       const updateBallColor = () => {
         ballColor = `hsl(${hue_value}, 100%, 50%)`;
         $("#setting_color").css("background-color", ballColor);
       };
       updateBallColor();
-      $("#hueRange").change(function (e) {
-        hue_value = $(this).val();
+      $("#hueRange").on("input", (e) => {
+        hue_value = $("#hueRange").val();
         updateBallColor();
       });
       
@@ -110,7 +110,7 @@ $(document).ready(function () {
           startBgm.pause();
           bgm2.pause();
         }
-        $("#settingsScreen").fadeOut();
+        $("#settingModal").fadeOut();
       });
 
       function updateColor() {
