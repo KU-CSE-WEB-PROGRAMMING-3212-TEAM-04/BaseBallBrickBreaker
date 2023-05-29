@@ -54,7 +54,7 @@ $(document).ready(function () {
   totalDuration = introDuration1 + introDuration2 - 2000;
 
   setTimeout(function () {
-    $("#gameIntroScreen").fadeOut();
+    $(".gameIntroScreen").hide();
     displayHomeScreen();
     startBgm.play();
     startBgm.loop = true;
@@ -82,15 +82,15 @@ $(document).ready(function () {
     console.log("Displaying Homescreen...");
     $("#homeScreen").fadeIn();
     //시작화면
-    $("#settingsButton").click(function () {
-      $("#settingsScreen").fadeIn();
+    $("#settingsButton").click(() => {
+      $("#settingModal").fadeIn();
       const updateBallColor = () => {
         ballColor = `hsl(${hue_value}, 100%, 50%)`;
         $("#setting_color").css("background-color", ballColor);
       };
       updateBallColor();
-      $("#hueRange").change(function (e) {
-        hue_value = $(this).val();
+      $("#hueRange").on("input", (e) => {
+        hue_value = $("#hueRange").val();
         updateBallColor();
       });
       $("#exitSettings").click(function () {
@@ -106,7 +106,7 @@ $(document).ready(function () {
           startBgm.pause();
           bgm2.pause();
         }
-        $("#settingsScreen").fadeOut();
+        $("#settingModal").fadeOut();
       });
     });
 
@@ -248,7 +248,7 @@ $(document).ready(function () {
     for (let i = 0; i < brickColumnCount; i++) {
       bricks[i] = new Array(brickColumnCount);
       for (let j = 0; j < brickRowCount; j++) {
-        var randomStatusValue = Math.floor((Math.random() * 3) + 1);
+        var randomStatusValue = Math.floor(Math.random() * 3 + 1);
         bricks[i][j] = { x: 0, y: 0, status: randomStatusValue };
       }
     }
@@ -433,7 +433,7 @@ $(document).ready(function () {
     function generateNewBrickRow() {
       const newRow = new Array(1);
       for (let i = 0; i < brickColumnCount; i++) {
-        var randomStatusValue = Math.floor((Math.random() * 3) + 1);
+        var randomStatusValue = Math.floor(Math.random() * 3 + 1);
         newRow[i] = { x: 0, y: 0, status: randomStatusValue };
       }
 

@@ -35,6 +35,7 @@
       <label> E </label>
       <label> A </label>
       <label> M </label>
+      <label> </label>
       <label> 4 </label>
     </div>
   </div>
@@ -49,38 +50,37 @@
     <!-- <input type="button" class="setting-button" id="contents"/> -->
     <!-- Start button -->
     <img src="src/startbtn.png" id="startGameButton" />
-  </div>
-
-  <div id="settingsScreen">
-    <div id="popmenu">
-      <div id="setting-main-text">Setting</div>
+    <div id="settingModal" class="modal">
+      <h1>설정</h1>
       <div id="music-onoff">
-        <div class="settingText">Music</div>
-        <label class="rad-label">
-          <input type="radio" class="rad-input" name="rad" value="b1" checked />
-          <div class="rad-design"></div>
-          <div class="rad-text">BGM1</div>
-        </label>
-        <label class="rad-label">
-          <input type="radio" class="rad-input" name="rad" value="b2" />
-          <div class="rad-design"></div>
-          <div class="rad-text">BGM2</div>
-        </label>
-        <label class="rad-label">
-          <input type="radio" class="rad-input" name="rad" value="off" />
-          <div class="rad-design"></div>
-          <div class="rad-text">Off</div>
-        </label>
+        <div class="settingText">배경 음악</div>
+        <div class="bgmSelector">
+          <label class="rad-label">
+            <input type="radio" class="rad-input" name="rad" value="b1" checked />
+            <div class="rad-design"></div>
+            <div class="rad-text">BGM 1</div>
+          </label>
+          <label class="rad-label">
+            <input type="radio" class="rad-input" name="rad" value="b2" />
+            <div class="rad-design"></div>
+            <div class="rad-text">BGM 2</div>
+          </label>
+          <label class="rad-label">
+            <input type="radio" class="rad-input" name="rad" value="off" />
+            <div class="rad-design"></div>
+            <div class="rad-text">끄기</div>
+          </label>
+        </div>
       </div>
       <div id="set_ballColor">
-        <div class="settingText">Ball Color</div>
+        <div class="settingText">공 색깔</div>
         <br />
         <div id="setting_color"></div>
         <div id="ballColor">
           <input type="range" id="hueRange" value="0" min="0" max="360" />
         </div>
       </div>
-      <div id="exitSettings">save</div>
+      <div id="exitSettings" class="pixelButton">저장</div>
     </div>
   </div>
 
@@ -142,12 +142,12 @@
     <div id="backToHomeButton" class="endingButton">Back To Home</div>
   </div>
 
-  <div class="page" id="rankingModal">
+  <div class="page" id="rankingModal" class="modal">
     <h1>RANKING</h1>
     <table id="rankingTable">
 
     </table>
-    <div id="rankingModalCloseButton">닫기</div>
+    <div id="rankingModalCloseButton" class="pixelButton">닫기</div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
