@@ -54,7 +54,7 @@ $(document).ready(function () {
 
   setTimeout(function () {
     $("#gameIntroScreen").fadeOut();
-    $("#homeScreen").fadeIn();
+    displayHomeScreen();
     startBgm.play();
     startBgm.loop = true;
   }, totalDuration);
@@ -79,6 +79,7 @@ $(document).ready(function () {
 
   function displayHomeScreen() {
     console.log("Displaying Homescreen...");
+    $("#homeScreen").fadeIn();
     //시작화면
     $("#settingsButton").click(function () {
       $("#settingsScreen").fadeIn();
@@ -121,11 +122,10 @@ $(document).ready(function () {
 
     $("#startGameButton").click(function () {
       $("#homeScreen").hide();
+      $("#gameTypeSelectingScreen").show();
       $("#gameSelectingScreen").fadeIn();
     });
   }
-
-  displayHomeScreen();
 
   function play() {
     var audio = $("#click_sound")[0];
