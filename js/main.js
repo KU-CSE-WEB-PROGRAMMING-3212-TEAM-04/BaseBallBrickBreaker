@@ -78,6 +78,13 @@ $(document).ready(function () {
   }
 
   function displayHomeScreen() {
+    setTimeout(function () {
+      $("#gameIntroScreen").fadeOut();
+      $("#homeScreen").fadeIn();
+      startBgm.play();
+      startBgm.loop = true;
+    }, totalDuration);
+
     console.log("Displaying Homescreen...");
     $("#homeScreen").fadeIn();
     //시작화면
@@ -127,46 +134,60 @@ $(document).ready(function () {
     });
   }
 
-  function play() {
-    var audio = $("#click_sound")[0];
-    if (audio.paused) {
-      audio.play();
-    } else {
-      audio.pause();
-      audio.currentTime = 0;
-    }
-  }
+  // #click_sound 소스 찾아서 html에 넣어야함.
+  // function play() {
+  //   var audio = $("#click_sound")[0];
+  //   if (audio.paused) {
+  //     audio.play();
+  //   } else {
+  //     audio.pause();
+  //     audio.currentTime = 0;
+  //   }
+  // }
 
   $("#selectStoryGameButton").click(function () {
     $("#gameTypeSelectingScreen").hide();
     $("#teamSelectingScreen").fadeIn();
-    play();
+    // play();
   });
 
   $("#selectTeam1").click(function () {
     teamType = 1;
     $("#teamSelectingScreen").hide();
     $("#difficultyChoosingScreen").fadeIn();
-    play();
+    // play();
   });
 
   $("#selectEasyDifficulty").click(function () {
     console.log("Storygame Difficulty: Easy");
+    $("#difficultyChoosingScreen").hide();
     storyGameDifficulty = 1;
-    play();
+    playEasyMode();
   });
 
   $("#selectNormalDifficulty").click(function () {
     console.log("Storygame Difficulty: Normal");
     storyGameDifficulty = 2;
-    play();
+    playNormalMode();
   });
 
   $("#selectHardDifficulty").click(function () {
     console.log("Storygame Difficulty: Hard");
     storyGameDifficulty = 3;
-    play();
+    playHardMode();
   });
+
+  function playEasyMode(){
+    console.log("Starting Easy Story Game");
+  }
+
+  function playNormalMode(){
+    console.log("Starting Normal Story Game");
+  }
+
+  function playHardMode(){
+    console.log("Starting Hard Story Game");
+  }
 
   $("#selectRankedGameButton").click(function () {
     $("#gameTypeSelectingScreen").hide();
