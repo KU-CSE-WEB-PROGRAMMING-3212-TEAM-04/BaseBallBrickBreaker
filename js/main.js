@@ -15,6 +15,8 @@ var bunt = new Audio("src/click1.mp3");
 var clickSound1 = new Audio("src/click1.mp3");
 var brickBreak = new Audio("src/brickBreak.mp3");
 var over = new Audio("src/gameover.wav");
+var clearSound = new Audio("src/clear.mp3");
+var victorySound = new Audio("src/victoryAudio.mp3");
 var teamType = -1;
 var rankedGameScore = 0;
 var lifeCount = 3;
@@ -658,7 +660,10 @@ const play = (difficulty) => {
     }
 
     if (brickCnt > 0) requestAnimationFrame(draw);
-    else if (difficulty > 2) console.log("Hard Mode Cleared");
+    else if (difficulty > 2) {
+      console.log("Hard Mode Cleared");
+      clearStoryMode();
+    }
     else {
       storyPage = difficulty + 2;
       $("#gameCanvas").hide();
@@ -683,26 +688,31 @@ const play = (difficulty) => {
   }
 
   function clearStoryMode(){
+    clearCanvas();
     $("#gameStatus").hide();
     $("#skillStatusPage").hide();
-    $("#StroyClearPage").fadeIn();
+    ctx.fillStyle = "Yellow";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    $("#StoryClearPage").fadeIn();
+    startBgm.pause();
+    bgm2.pause();
+    clearSound.play();
+    victorySound.play();
   }
 
-  $("#restartStorygameButton").on("click", function () {
-    console.log("Restarting Ranked Game...");
-    $("#StroyGameOverPage").hide();
-    $("#gameCanvas").hide();
-    clearCanvas();
-    i = 0;
-    $("#story").fadeIn();
-    clearInterval(typingInterval);
-    typingInterval = setInterval(typing, 100);
-    lifeCount = 3;
-  });
+  
 
   $("#backToHomeButton_story").click(function () {
     console.log("Back To Home...");
     $("#StroyGameOverPage").hide();
+    $("#gameCanvas").hide();
+    displayHomeScreen();
+  });
+
+
+  $("#clearModalCloseButton").click(function () {
+    console.log("Back To Home...");
+    $("#StroyClearPage").hide();
     $("#gameCanvas").hide();
     displayHomeScreen();
   });
@@ -1106,7 +1116,7 @@ function endRankedGame() {
   $("#gameStatus").hide();
   uploadScoreToDB(rankedGameScore);
   $("#rankedGameScore").text("SCORE: " + rankedGameScore);
-  ctx.fillStyle = "white";
+  ctx.fillStyle = "Yellow";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   $("#rankedGameEndingPage").show();
 }
@@ -1165,6 +1175,7 @@ $("#backToHomeButton").click(function () {
   console.log("Back To Home...");
   $("#rankedGameEndingPage").hide();
   $("#gameCanvas").hide();
+  startBgm.play();
   displayHomeScreen();
 });
 

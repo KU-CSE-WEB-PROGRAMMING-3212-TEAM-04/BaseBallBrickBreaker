@@ -545,13 +545,7 @@ canvas {
   width: 800px;
   height: 600px;
 }
-#StroyClearPage {
-  background-color: "green;";
-  display: none;
-  text-align: center;
-  width: 800px;
-  height: 600px;
-}
+
 
 #rankedGameScore {
   margin: 80px auto;
@@ -665,6 +659,17 @@ canvas {
   background-color: #da0000;
   color: white;
   font-size: 3rem;
+  text-shadow: -3.8px 0 #990100, 0 3.5px #990100, 3.8px 0 #990100,
+    0 -3.5px #990100;
+}
+
+ h2 {
+  position: relative;
+  margin: -25px auto 30px;
+  padding: 15px 0;
+  text-align: center;
+  color: white;
+  font-size: 2rem;
   text-shadow: -3.8px 0 #990100, 0 3.5px #990100, 3.8px 0 #990100,
     0 -3.5px #990100;
 }
