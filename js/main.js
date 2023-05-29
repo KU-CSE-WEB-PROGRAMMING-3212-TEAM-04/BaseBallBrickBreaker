@@ -1663,7 +1663,7 @@ $(document).ready(function () {
 
   $("#restartRankedgameButton").on("click", function () {
     console.log("Restarting Ranked Game...");
-    $("#rankedGameEndedPage").hide();
+    $("#rankedGameEndingPage").hide();
     clearCanvas();
     rankedGameScore = 0;
     playRankedGame();
