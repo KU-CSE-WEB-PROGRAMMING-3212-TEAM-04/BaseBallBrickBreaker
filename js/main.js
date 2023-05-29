@@ -78,13 +78,6 @@ $(document).ready(function () {
   }
 
   function displayHomeScreen() {
-    setTimeout(function () {
-      $("#gameIntroScreen").fadeOut();
-      $("#homeScreen").fadeIn();
-      startBgm.play();
-      startBgm.loop = true;
-    }, totalDuration);
-
     console.log("Displaying Homescreen...");
     $("#homeScreen").fadeIn();
     //시작화면
@@ -177,15 +170,15 @@ $(document).ready(function () {
     playHardMode();
   });
 
-  function playEasyMode(){
+  function playEasyMode() {
     console.log("Starting Easy Story Game");
   }
 
-  function playNormalMode(){
+  function playNormalMode() {
     console.log("Starting Normal Story Game");
   }
 
-  function playHardMode(){
+  function playHardMode() {
     console.log("Starting Hard Story Game");
   }
 
