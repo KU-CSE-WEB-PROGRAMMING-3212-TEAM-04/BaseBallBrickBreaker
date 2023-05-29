@@ -1016,9 +1016,21 @@ function endRankedGame() {
 }
 
 const uploadScoreToDB = (score) => {
-  rankingRef.doc(playerName).set({
-    score: score,
-  });
+  rankingRef
+    .doc(playerName)
+    .get()
+    .then((doc) => {
+      if (doc.exists && doc.data().score > score) {
+        console.log("Ranking not updated");
+      } else {
+        rankingRef.doc(playerName).set({
+          score: score,
+        });
+      }
+    })
+    .catch((error) => {
+      console.log("Error getting document:", error);
+    });
 };
 
 rankingRef.orderBy("score", "desc").onSnapshot((querySnapshot) => {
