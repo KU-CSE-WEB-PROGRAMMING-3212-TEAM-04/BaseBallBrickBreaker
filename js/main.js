@@ -587,6 +587,7 @@ function draw() {
       $("#gameStatus").hide();
       
       $("#story").fadeIn();
+      clearInterval(typingInterval);
       typingInterval = setInterval(typing, 100);
     } //play(difficulty + 1, lifeCount);
   }
@@ -611,10 +612,11 @@ function draw() {
     clearCanvas();
     i=0;
     $("#story").fadeIn();
+    clearInterval(typingInterval);
     typingInterval = setInterval(typing, 100);
     lifeCount = 3;
   });
-  
+
   $("#backToHomeButton_story").click(function () {
     console.log("Back To Home...");
     $("#StroyGameOverPage").hide();
