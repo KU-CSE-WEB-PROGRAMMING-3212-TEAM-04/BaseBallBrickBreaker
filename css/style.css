@@ -411,48 +411,6 @@ canvas {
   margin: 0;
 }
 
-#playRankedGameButton {
-  background-color: #da0000;
-  width: 180px;
-  height: 70px;
-  line-height: 70px;
-  margin: 2rem auto;
-  color: white;
-  font-size: 2rem;
-  cursor: pointer;
-  position: relative;
-}
-
-#playRankedGameButton:hover,
-#playRankedGameButton:hover::before,
-#playRankedGameButton:hover::after {
-  background-color: hsl(0, 100%, 47%);
-}
-
-#playRankedGameButton::before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 15px;
-  bottom: 15px;
-  left: -15px;
-  right: -15px;
-  background-color: #da0000;
-  z-index: -1;
-}
-
-#playRankedGameButton::after {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 7px;
-  bottom: 7px;
-  left: -9px;
-  right: -9px;
-  background: #da0000;
-  z-index: -1;
-}
-
 #rankedGameStatus {
   display: none;
   width: 800px;
@@ -501,6 +459,7 @@ canvas {
   font-size: 2rem;
   cursor: pointer;
   position: relative;
+  z-index: 1;
 }
 
 .endingButton:hover,
