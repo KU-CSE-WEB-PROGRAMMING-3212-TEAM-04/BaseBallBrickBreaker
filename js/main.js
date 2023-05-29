@@ -6,9 +6,7 @@ var introDuration2;
 var totalDuration;
 
 //시작화면
-var red_value = 0;
-var green_value = 0;
-var blue_value = 0;
+var hue_value = 0;
 var startBgm = new Audio("src/startbgm1.mp3");
 startBgm.volume -= 0.5;
 var bgm2 = new Audio("src/startbgm2.mp3");
@@ -86,20 +84,15 @@ $(document).ready(function () {
     //시작화면
     $("#settingsButton").click(function () {
       $("#settingsScreen").fadeIn();
-      updateColor();
-      $("#Red").change(function (e) {
-        red_value = $(this).val();
-        updateColor();
+      const updateBallColor = () => {
+        ballColor = `hsl(${hue_value}, 100%, 50%)`;
+        $("#setting_color").css("background-color", ballColor);
+      };
+      updateBallColor();
+      $("#hueRange").change(function (e) {
+        hue_value = $(this).val();
+        updateBallColor();
       });
-      $("#Green").change(function (e) {
-        green_value = $(this).val();
-        updateColor();
-      });
-      $("#Blue").change(function (e) {
-        blue_value = $(this).val();
-        updateColor();
-      });
-
       $("#exitSettings").click(function () {
         if ($('input[name="rad"]:checked').val() == "b1") {
           bgm2.pause();
@@ -115,12 +108,6 @@ $(document).ready(function () {
         }
         $("#settingsScreen").fadeOut();
       });
-
-      function updateColor() {
-        ballColor =
-          "rgb(" + red_value + "," + green_value + "," + blue_value + ")";
-        $("#setting_color").css("background-color", ballColor);
-      }
     });
 
     $("#startGameButton").click(function () {
@@ -221,14 +208,13 @@ $(document).ready(function () {
     const paddleImage = new Image();
     paddleImage.src = "src/batWithHands.png";
 
-
-    //타자 
+    //타자
     const hitterImage = new Image();
-    hitterImage.src="src/hitter1.png";
-    const hitterWidth=80;
-    const hitterHeight=120;
-    let hitterX=paddleX-70;
-    let hitterY=paddleY-65;
+    hitterImage.src = "src/hitter1.png";
+    const hitterWidth = 80;
+    const hitterHeight = 120;
+    let hitterX = paddleX - 70;
+    let hitterY = paddleY - 65;
 
     // variables about the ball
     const ballImage = new Image();
@@ -237,7 +223,7 @@ $(document).ready(function () {
     // 배경 이미지 그리기
     const backgroundImage = new Image();
     backgroundImage.src = "src/ground.jpg";
-    
+
     let ballRotationAngle = 0;
     const ballRadius = 8;
     let ballX = canvas.width / 2;
@@ -245,7 +231,7 @@ $(document).ready(function () {
     let ballDX = 4;
     let ballDY = -5;
     const ballSpeed = 5;
-    let ballSpeedY=5;
+    let ballSpeedY = 5;
 
     // variables about the brick
     const brickRowCount = 4; // number of rows of bricks
@@ -307,6 +293,7 @@ $(document).ready(function () {
       ctx.save();
       ctx.translate(ballX, ballY);
       ctx.rotate((Math.PI / 180) * ballRotationAngle); // 회전 각도 적용
+      ctx.filter = `hue-rotate(${hue_value}deg)`;
       ctx.drawImage(
         ballImage,
         -ballRadius,
@@ -326,10 +313,10 @@ $(document).ready(function () {
       ctx.restore();
     }
     //타자 그리기
-    function drawHitter(){
+    function drawHitter() {
       ctx.save();
-      ctx.translate(hitterX,hitterY);
-      ctx.drawImage(hitterImage,0,0,hitterWidth,hitterHeight);
+      ctx.translate(hitterX, hitterY);
+      ctx.drawImage(hitterImage, 0, 0, hitterWidth, hitterHeight);
       ctx.restore();
     }
 
@@ -341,7 +328,6 @@ $(document).ready(function () {
       }
     }
     // 왜안됨?
-    
 
     // 벽돌 그리기
     function drawBricks() {
@@ -357,7 +343,7 @@ $(document).ready(function () {
             ctx.fillStyle = "#D5FFD5";
             ctx.fill();
             ctx.closePath();
-          } else if(bricks[c][r].status === 2){
+          } else if (bricks[c][r].status === 2) {
             const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
             const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
             bricks[c][r].x = brickX;
@@ -367,7 +353,7 @@ $(document).ready(function () {
             ctx.fillStyle = "#8FBC8B";
             ctx.fill();
             ctx.closePath();
-          } else if(bricks[c][r].status === 3) {
+          } else if (bricks[c][r].status === 3) {
             const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
             const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
             bricks[c][r].x = brickX;
@@ -388,19 +374,23 @@ $(document).ready(function () {
         for (let j = 0; j < brickRowCount; j++) {
           const b = bricks[i][j];
           if (b.status > 0) {
-            if ((ballX > b.x) && (ballX < b.x + brickWidth) && (ballY > b.y) && (ballY < b.y + brickHeight)) {
+            if (
+              ballX > b.x &&
+              ballX < b.x + brickWidth &&
+              ballY > b.y &&
+              ballY < b.y + brickHeight
+            ) {
               ballDY = -ballDY;
               b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
               brickBreak.play();
               rankedGameScore++;
-              if(rankedGameScore%10===0){
-                ballDY+=1;
-                ballSpeedY+=1;
+              if (rankedGameScore % 10 === 0) {
+                ballDY += 1;
+                ballSpeedY += 1;
               }
               $("#rankedGameLiveScore").text("SCORE: " + rankedGameScore);
             }
           } else {
-
           }
         }
       }
@@ -418,8 +408,8 @@ $(document).ready(function () {
     function resetPositions() {
       paddleX = (canvas.width - paddleWidth) / 2;
       paddleY = canvas.height - paddleHeight - 45;
-      hitterX=paddleX-70;
-      hitterY=paddleY-65;
+      hitterX = paddleX - 70;
+      hitterY = paddleY - 65;
       ballX = canvas.width / 2;
       ballY = paddleY - ballRadius;
       ballDX = 4;
