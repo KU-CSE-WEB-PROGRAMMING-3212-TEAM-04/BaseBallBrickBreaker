@@ -562,6 +562,23 @@ canvas {
   padding: 10px;
 }
 
+#skillAlertPage {
+  display: none;
+  position: absolute;
+  width: 800px;
+  height: 600px;
+  text-align: center;
+}
+
+#skillAlert {
+  margin-top: 40px;
+  display: block;
+  font-size: 50px;
+  text-align: center;
+  color: black;
+  text-shadow: -1.5px 0 #fff, 0 1.5px #fff, 1.5px 0 #fff, 0 -1.5px #fff;
+}
+
 .endingButton {
   background-color: #da0000;
   width: 300px;
