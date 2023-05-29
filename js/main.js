@@ -52,6 +52,13 @@ $(document).ready(function () {
   introDuration2 = animateLabels(introLabel2, introDuration1);
   totalDuration = introDuration1 + introDuration2 - 2000;
 
+  setTimeout(function () {
+    $("#gameIntroScreen").fadeOut();
+    displayHomeScreen();
+    startBgm.play();
+    startBgm.loop = true;
+  }, totalDuration);
+
   function animateLabels(inputs, initialDelay) {
     var totalDuration = initialDelay;
     for (var i = 0; i < inputs.length; i++) {
@@ -79,6 +86,7 @@ $(document).ready(function () {
     }, totalDuration);
 
     console.log("Displaying Homescreen...");
+    $("#homeScreen").fadeIn();
     //시작화면
     $("#settingsButton").click(function () {
       $("#settingsScreen").fadeIn();
@@ -121,11 +129,10 @@ $(document).ready(function () {
 
     $("#startGameButton").click(function () {
       $("#homeScreen").hide();
+      $("#gameTypeSelectingScreen").show();
       $("#gameSelectingScreen").fadeIn();
     });
   }
-
-  displayHomeScreen();
 
   // #click_sound 소스 찾아서 html에 넣어야함.
   // function play() {
