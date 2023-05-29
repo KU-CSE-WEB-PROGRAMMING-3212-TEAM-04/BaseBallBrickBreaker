@@ -29,7 +29,7 @@ content1 += "더 높은곳으로 가고 싶다...\n\n";
 content1 += "지금은 독립리그 결승전\n";
 content1 += "9회말 2아웃 만루\n";
 content1 += "나는 타석에 올라간다...\n\n";
-content1 += "나에 안타 한번에\n";
+content1 += "나의 안타 한번에\n";
 content1 += "팀의 승리가 걸려있다...";
 
 //노말 모드 스토리
@@ -251,8 +251,13 @@ $("#nextBtn").click(function () {
   play(storyPage - 1);
 });
 
+var isStoryGameOver = true;
+
 const play = (difficulty) => {
   console.log(`Starting Game with difficulty ${difficulty}`);
+
+  isStoryGameOver = false;
+
   clearCanvas();
   $("#gameCanvas").show();
   $("#gameStatus").show();
@@ -528,9 +533,15 @@ const play = (difficulty) => {
     }
   }
 
+  function removeKeyUpHandler() {
+    $(document).off("keyup", keyUpHandler);
+  }
+
   function gameOver() {
     if (lifeCount === 0) {
       console.log("Died While Playing " + difficulty);
+      removeKeyUpHandler();
+      console.log("Removed KeyUp Handler");
       over.play();
       endStoryMode();
       return true;
@@ -608,6 +619,7 @@ const play = (difficulty) => {
 
     // ground collision detection
     if (ballY > canvas.height) {
+      console.log("Ball touched the ground");
       handleGameOver();
       return;
     }
@@ -663,8 +675,7 @@ const play = (difficulty) => {
     else if (difficulty > 2) {
       console.log("Hard Mode Cleared");
       clearStoryMode();
-    }
-    else {
+    } else {
       storyPage = difficulty + 2;
       $("#gameCanvas").hide();
       $("#gameStatus").hide();
@@ -688,21 +699,17 @@ const play = (difficulty) => {
     // ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-
   function clearStoryMode() {
-
     $("#gameStatus").hide();
     $("#skillStatusPage").hide();
     ctx.fillStyle = "Yellow";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     $("#StoryClearPage").fadeIn();
     startBgm.pause();
     bgm2.pause();
     clearSound.play();
     victorySound.play();
   }
-
-  
 
   $("#backToHomeButton_story").click(function () {
     console.log("Back To Home...");
@@ -712,14 +719,12 @@ const play = (difficulty) => {
   });
 
   $("#restartStorygameButton").on("click", function () {
-  console.log("Restarting Story Game...");
-  $("#StroyGameOverPage").hide();
-  lifeCount=3;
-  brickCnt=brickRowCount*brickColumnCount;
-  play(difficulty);
-  
-});
-
+    console.log("Restarting Story Game...");
+    $("#StroyGameOverPage").hide();
+    lifeCount = 3;
+    brickCnt = brickRowCount * brickColumnCount;
+    play(difficulty);
+  });
 
   $("#clearModalCloseButton").click(function () {
     console.log("Back To Home...");
