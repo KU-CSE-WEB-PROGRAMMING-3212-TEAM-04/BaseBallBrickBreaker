@@ -715,6 +715,7 @@ const play = (difficulty) => {
   console.log("Restarting Story Game...");
   $("#StroyGameOverPage").hide();
   lifeCount=3;
+  brickCnt=brickRowCount*brickColumnCount;
   play(difficulty);
   
 });
