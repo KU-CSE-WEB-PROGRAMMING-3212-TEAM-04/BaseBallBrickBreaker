@@ -400,6 +400,12 @@ canvas {
   height: 600px;
 }
 
+#storyModeEndingPage {
+  display: none;
+  width: 800px;
+  height: 600px;
+}
+
 #beforePlayingRankedGamePage {
   display: none;
   width: 800px;
@@ -435,7 +441,7 @@ canvas {
   margin-left: 10px;
 }
 
-#rankedGameLiveScore {
+#liveScore {
   float: left;
   font-size: 25px;
   margin-left: 30px;
