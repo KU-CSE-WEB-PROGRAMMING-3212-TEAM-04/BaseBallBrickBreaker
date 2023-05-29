@@ -17,6 +17,7 @@ var brickBreak = new Audio("src/brickBreak.mp3");
 var teamType = -1;
 var rankedGameScore = 0;
 var lifeCount = 3;
+var playerName = "익명의 플레이어";
 
 //이지 모드 스토리
 var keyboardSound = new Audio("src/keyboard1.mp3");
@@ -121,9 +122,10 @@ function displayHomeScreen() {
   //시작화면
   $("#settingsButton").click(() => {
     $("#settingModal").fadeIn();
+    $("#nameInput").val(playerName);
     const updateBallColor = () => {
       ballColor = `hsl(${hue_value}, 100%, 50%)`;
-      $("#setting_color").css("background-color", ballColor);
+      $("#setting_color").css("filter", `hue-rotate(${hue_value}deg)`);
     };
     updateBallColor();
     $("#hueRange").on("input", (e) => {
@@ -144,6 +146,7 @@ function displayHomeScreen() {
         startBgm.pause();
         bgm2.pause();
       }
+      playerName = $("#nameInput").val();
       $("#settingModal").fadeOut();
     });
   });
@@ -252,9 +255,14 @@ const play = (difficulty) => {
   $("#livesLeft").text(lifeCount);
   $("#liveScore").text("");
 
+  var skillsLeft = 5;
+  $("#skillImg").attr("src", "src/skill" + teamType + ".png");
+  $("#skillStatusPage").show();
+  $("#skillsLeft").text(skillsLeft);
+
   //variables about the paddle
-  const paddleWidth = 134;
-  const paddleHeight = 18;
+  var paddleWidth = 134;
+  var paddleHeight = 18;
   const paddleSpeed = 7;
   const paddleMaxAngle = 105; // 최대 회전 각도 (방망이 휘두르는 각도)
   let paddleX = (canvas.width - paddleWidth) / 2;
@@ -278,7 +286,7 @@ const play = (difficulty) => {
   backgroundImage.src = "src/ground.jpg";
 
   let ballRotationAngle = 0;
-  const ballRadius = 8;
+  var ballRadius = 8;
   let ballX = canvas.width / 2;
   let ballY = paddleY - ballRadius;
   let ballDX = 4 + difficulty;
@@ -312,6 +320,76 @@ const play = (difficulty) => {
   let spacePressed = false;
   let resetPaddleAngle = false; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화하기 위한 변수
 
+  function handleSkill() {
+    $("#skillAlertPage").show();
+    if (skillsLeft > 0) {
+      if (teamType === 1) {
+        var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
+        skill4SoundEffect.play();
+        var randomColumnIndex = Math.floor((Math.random() * 10) / brickColumnCount);
+        for (let j = 0; j < brickColumnCount; j++) {
+          const b = bricks[j][randomColumnIndex];
+          if (b.status > 0) {
+            b.status--;
+            brickCnt--;
+          }
+        }
+        $("#skillAlert").text("Removed Random Row!!");
+        setTimeout(hideSkillAlert, 3000);
+      } else if (teamType === 2) {
+        var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
+        skill4SoundEffect.play();
+        paddleWidth += 50;
+        paddleHeight += 25;
+        $("#skillAlert").text("The Bat Got Bigger!!");
+        setTimeout(skill2_backToNormal, 8000);
+        setTimeout(hideSkillAlert, 3000);
+      } else if (teamType === 3) {
+        var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
+        skill4SoundEffect.play();
+        ballRadius += 10;
+        setTimeout(skill3_backToNormal, 5000);
+        $("#skillAlert").text("The Ball Got Bigger!!");
+        setTimeout(hideSkillAlert, 3000);
+      } else if (teamType === 4) {
+        var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
+        skill4SoundEffect.play();
+        var randomRowIndex = Math.floor((Math.random() * 10) / brickRowCount);
+        for (let j = 0; j < brickRowCount; j++) {
+          const b = bricks[randomRowIndex][j];
+          if (b.status > 0) {
+            b.status--;
+            brickCnt--;
+          }
+        }
+        $("#skillAlert").text("Removed Random Column!!");
+        setTimeout(hideSkillAlert, 3000);
+      } else {
+        console.log("teamType not defined - handleSkill() Error");
+      }
+      skillsLeft--;
+      $("#skillsLeft").text(skillsLeft);
+      console.log("skill is used");
+    } else {
+      console.log("Out of skills");
+    }
+  }
+
+  function skill2_backToNormal(){
+    paddleWidth -= 50;
+    paddleHeight -= 25;
+  }
+
+  function skill3_backToNormal(){
+    ballRadius -= 10;
+  }
+
+  function hideSkillAlert() {
+    console.log("hide skill:" + $("#skillAlert").text());
+    $("#skillAlert").text("");
+    $("#skillAlertPage").hide();
+  }
+
   // 키보드 이벤트 리스너 추가
   $(document).keydown(keyDownHandler);
   $(document).keyup(keyUpHandler);
@@ -338,9 +416,8 @@ const play = (difficulty) => {
       spacePressed = false;
     } else if (event.key === "e") {
       resetPaddleAngle = false; // 'e' 키를 뗐을 때 패들 각도 초기화 플래그를 false로 설정
-
     } else if (event.key === "r") {
-      usingSkillHandler();
+      handleSkill();
     } else if (event.key === "Escape") {
       brickCnt = 0;
     }
@@ -1029,10 +1106,21 @@ function endRankedGame() {
 }
 
 const uploadScoreToDB = (score) => {
-  const name = "NAME";
-  rankingRef.doc(name).set({
-    score: score,
-  });
+  rankingRef
+    .doc(playerName)
+    .get()
+    .then((doc) => {
+      if (doc.exists && doc.data().score > score) {
+        console.log("Ranking not updated");
+      } else {
+        rankingRef.doc(playerName).set({
+          score: score,
+        });
+      }
+    })
+    .catch((error) => {
+      console.log("Error getting document:", error);
+    });
 };
 
 rankingRef.orderBy("score", "desc").onSnapshot((querySnapshot) => {
