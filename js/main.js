@@ -10,6 +10,7 @@ var red_value = 0;
 var green_value = 0;
 var blue_value = 0;
 var startBgm = new Audio("src/startbgm1.mp3");
+startBgm.volume -= 0.5;
 var bgm2 = new Audio("src/startbgm2.mp3");
 
 var teamType = -1;
@@ -245,11 +246,12 @@ $(document).ready(function () {
     const brickOffsetTop = 30;
     const brickOffsetLeft = 215;
 
-    const bricks = [];
-    for (let c = 0; c < brickColumnCount; c++) {
-      bricks[c] = [];
-      for (let r = 0; r < brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 1 }; // status: 1이면 벽돌이 존재하는 상태
+    var bricks = new Array(brickRowCount);
+    for (let i = 0; i < brickColumnCount; i++) {
+      bricks[i] = new Array(brickColumnCount);
+      for (let j = 0; j < brickRowCount; j++) {
+        var randomStatusValue = Math.floor((Math.random() * 3) + 1);
+        bricks[i][j] = { x: 0, y: 0, status: randomStatusValue }; // status: 1이면 벽돌이 존재하는 상태
       }
     }
 
@@ -319,6 +321,8 @@ $(document).ready(function () {
         ballRotationAngle = 0;
       }
     }
+    // 왜안됨?
+    
 
     // 벽돌 그리기
     function drawBricks() {
@@ -331,7 +335,27 @@ $(document).ready(function () {
             bricks[c][r].y = brickY;
             ctx.beginPath();
             ctx.rect(brickX, brickY, brickWidth, brickHeight);
-            ctx.fillStyle = "#556B2F";
+            ctx.fillStyle = "DarkOliveGreen";
+            ctx.fill();
+            ctx.closePath();
+          } else if(bricks[c][r].status === 2){
+            const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+            const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+            bricks[c][r].x = brickX;
+            bricks[c][r].y = brickY;
+            ctx.beginPath();
+            ctx.rect(brickX, brickY, brickWidth, brickHeight);
+            ctx.fillStyle = "#DarkSeaGreen";
+            ctx.fill();
+            ctx.closePath();
+          } else if(bricks[c][r].status === 3) {
+            const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+            const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+            bricks[c][r].x = brickX;
+            bricks[c][r].y = brickY;
+            ctx.beginPath();
+            ctx.rect(brickX, brickY, brickWidth, brickHeight);
+            ctx.fillStyle = "#LightGreen";
             ctx.fill();
             ctx.closePath();
           }
@@ -341,21 +365,18 @@ $(document).ready(function () {
 
     // 충돌 감지 및 벽돌 제거
     function collisionDetection() {
-      for (let c = 0; c < brickColumnCount; c++) {
-        for (let r = 0; r < brickRowCount; r++) {
-          const b = bricks[c][r];
-          if (b.status === 1) {
-            if (
-              ballX > b.x &&
-              ballX < b.x + brickWidth &&
-              ballY > b.y &&
-              ballY < b.y + brickHeight
-            ) {
+      for (let i = 0; i < brickColumnCount; i++) {
+        for (let j = 0; j < brickRowCount; j++) {
+          const b = bricks[i][j];
+          if (b.status > 0) {
+            if ((ballX > b.x) && (ballX < b.x + brickWidth) && (ballY > b.y) && (ballY < b.y + brickHeight)) {
               ballDY = -ballDY;
-              b.status = 0; // 벽돌을 제거하기 위해 상태를 0으로 변경
+              b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
               rankedGameScore++;
               $("#rankedGameLiveScore").text("SCORE: " + rankedGameScore);
             }
+          } else {
+
           }
         }
       }
