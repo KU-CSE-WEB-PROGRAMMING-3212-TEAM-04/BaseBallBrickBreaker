@@ -371,6 +371,8 @@ const play = (difficulty) => {
       resetPaddleAngle = false; // 'e' 키를 뗐을 때 패들 각도 초기화 플래그를 false로 설정
     } else if (event.key === "r") {
       usingSkillHandler();
+    } else if (event.key === "Escape") {
+      brickCnt = 0;
     }
   }
 
