@@ -12,10 +12,43 @@ startBgm.volume -= 0.5;
 var bgm2 = new Audio("src/startbgm2.mp3");
 var hit = new Audio("src/click2.mp3");
 var bunt = new Audio("src/click1.mp3");
-var clickSound1 = new Audio('source/click1.mp3')
+var clickSound1 = new Audio('src/click1.mp3')
 var brickBreak = new Audio("src/brickBreak.mp3");
 var teamType = -1;
 var rankedGameScore = 0;
+
+//스토리
+var keyboardSound = new Audio('src/keyboard1.mp3');
+var content1 = "남들보다 뒤늦게 시작한 야구...\n";
+content1 += "더 높은곳으로 가고 싶다...\n\n";
+content1 += "지금은 독립리그 결승전\n";
+content1 += "9회말 2아웃 만루\n";
+content1 += "나는 타석에 올라간다...\n\n";
+content1 += "나에 안타 한번에\n";
+content1 += "팀의 승리가 걸려있다...";
+
+var content2 = "한국 시리즈 결승전에서\n";
+content2 += "막강한 적을 만났다.\n";
+content2 += "상대는 ACE투수 이율원...\n\n";
+content2 += "수만명의 관객들의 나를 응원하고 있다...\n\n";
+content2 += "9회말 2아웃\n";
+content2 += "나는 타석에 올라간다...\n";
+content2 += "그를 꺾고 우승을 차지하겠다...";
+
+
+var content3 = "WBC 결승전\n";
+content3 = "영원의 라이벌, 운명의 상대\n";
+content3 = "일본을 만났다.\n\n";
+content3 = "상대 투수는 일본 최고의 선수\n";
+content3 = "율타니 쇼헤이...\n\n";
+content3 += "9회말 2아웃\n";
+content3 += "나는 타석에 올라간다...\n";
+content3 += "대한민국의 우승을 위해";
+content3 += "그를 꺾고 우승을 차지하겠다...";
+var content;
+var storyPage;
+var i = 0;
+var typingInterval;
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -55,7 +88,7 @@ $(document).ready(function () {
   totalDuration = introDuration1 + introDuration2 - 2000;
 
   setTimeout(function () {
-    $("#gameIntroScreen").fadeOut();
+    $(".gameIntroScreen").hide();
     displayHomeScreen();
     startBgm.play();
     startBgm.loop = true;
@@ -85,18 +118,18 @@ $(document).ready(function () {
     $("#gameStatus").hide();
 
     //시작화면
-    $("#settingsButton").click(function () {
-      $("#settingsScreen").fadeIn();
+    $("#settingsButton").click(() => {
+      $("#settingModal").fadeIn();
       const updateBallColor = () => {
         ballColor = `hsl(${hue_value}, 100%, 50%)`;
         $("#setting_color").css("background-color", ballColor);
       };
       updateBallColor();
-      $("#hueRange").change(function (e) {
-        hue_value = $(this).val();
+      $("#hueRange").on("input", (e) => {
+        hue_value = $("#hueRange").val();
         updateBallColor();
       });
-      
+
       $("#exitSettings").click(function () {
         if ($('input[name="rad"]:checked').val() == "b1") {
           bgm2.pause();
@@ -110,7 +143,7 @@ $(document).ready(function () {
           startBgm.pause();
           bgm2.pause();
         }
-        $("#settingsScreen").fadeOut();
+        $("#settingModal").fadeOut();
       });
 
       function updateColor() {
@@ -127,17 +160,17 @@ $(document).ready(function () {
     });
   }
 
-    $("#selectStoryGameButton").click(function () {
+  $("#selectStoryGameButton").click(function () {
     $("#gameTypeSelectingScreen").hide();
     $("#teamSelectingScreen").fadeIn();
-    // clickSound1.play();
+    clickSound1.play();
   });
 
   $("#selectTeam1").click(function () {
     teamType = 1;
     $("#teamSelectingScreen").hide();
     $("#difficultyChoosingScreen").fadeIn();
-    // clickSound1.play();
+    clickSound1.play();
   });
 
   $("#selectTeam2").click(function () {
@@ -164,19 +197,66 @@ $(document).ready(function () {
   $("#selectEasyDifficulty").click(function () {
     console.log("Storygame Difficulty: Easy");
     $("#difficultyChoosingScreen").hide();
-    playEasyMode(3);
+    $("#story").fadeIn();
+    storyPage = 1;
+    typingInterval = setInterval(typing, 100);
+
+    // playEasyMode(3);
   });
 
   $("#selectNormalDifficulty").click(function () {
     console.log("Storygame Difficulty: Normal");
     $("#difficultyChoosingScreen").hide();
-    playNormalMode(3);
+    $("#story").fadeIn();
+    storyPage = 2;
+    typingInterval = setInterval(typing, 100);
+    // playNormalMode(3); 
   });
 
   $("#selectHardDifficulty").click(function () {
     console.log("Storygame Difficulty: Hard");
     $("#difficultyChoosingScreen").hide();
-    playHardMode(3);
+    $("#story").fadeIn();
+    storyPage = 3;
+    typingInterval = setInterval(typing, 100);
+    // playHardMode(3);
+  });
+
+    
+
+
+  function typing() {
+    const text = $(".text");
+    if (storyPage == 1)
+      content = content1;    
+    else if (storyPage == 2)
+      content = content2;
+    else if (storyPage == 3)
+      content = content3;
+    keyboardSound.play();
+    keyboardSound.loop = true;
+    let txt = content[i++];
+    if (txt === "\n") {
+      text.html(text.html() + "<br/>");
+    } else {
+      text.html(text.html() + txt);
+    }
+    if (i >= content.length) {
+      clearInterval(typingInterval);
+      keyboardSound.pause();
+    }
+  }
+  $("#nextBtn").click(function () {
+    i = 0;
+    clearInterval(typingInterval);
+    keyboardSound.pause();
+    $("#story").hide();
+    if (storyPage == 1)
+      playEasyMode(3);
+    else if (storyPage == 2)
+      playNormalMode(3);
+    else if (storyPage == 3)
+      playHardMode(3)
   });
 
   function playEasyMode(storyModeLives) {
@@ -900,7 +980,7 @@ $(document).ready(function () {
     // 키보드 이벤트 리스너 추가
     $(document).keydown(keyDownHandler);
     $(document).keyup(keyUpHandler);
-    
+
     // 키보드 이벤트 처리 함수
     function keyDownHandler(event) {
       if (event.key === "Right" || event.key === "ArrowRight") {
@@ -1031,7 +1111,7 @@ $(document).ready(function () {
       }
       return false;
     }
-    
+
     // Function to reset the ball and paddle positions
     function resetPositions() {
       paddleX = (canvas.width - paddleWidth) / 2;
@@ -1565,8 +1645,7 @@ $(document).ready(function () {
     querySnapshot.forEach((doc) => {
       if (i >= 10) return;
       $("#rankingTable").html(
-        `${$("#rankingTable").html()}<tr><td>${++i}</td><td>${doc.id}</td><td>${
-          doc.data().score
+        `${$("#rankingTable").html()}<tr><td>${++i}</td><td>${doc.id}</td><td>${doc.data().score
         }</td></tr>`
       );
     });
