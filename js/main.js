@@ -366,13 +366,15 @@ $(document).ready(function () {
       for (let i = 0; i < brickColumnCount; i++) {
         for (let j = 0; j < brickRowCount; j++) {
           const b = bricks[i][j];
-          if (b.status >0) {
+          if (b.status > 0) {
             if ((ballX > b.x) && (ballX < b.x + brickWidth) && (ballY > b.y) && (ballY < b.y + brickHeight)) {
               ballDY = -ballDY;
               b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
               rankedGameScore++;
               $("#rankedGameLiveScore").text("SCORE: " + rankedGameScore);
             }
+          } else {
+            
           }
         }
       }
