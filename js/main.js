@@ -201,7 +201,6 @@ $(document).ready(function () {
     storyPage = 1;
     typingInterval = setInterval(typing, 100);
 
-    // playEasyMode(3);
   });
 
   $("#selectNormalDifficulty").click(function () {
@@ -210,7 +209,7 @@ $(document).ready(function () {
     $("#story").fadeIn();
     storyPage = 2;
     typingInterval = setInterval(typing, 100);
-    // playNormalMode(3); 
+
   });
 
   $("#selectHardDifficulty").click(function () {
@@ -219,7 +218,7 @@ $(document).ready(function () {
     $("#story").fadeIn();
     storyPage = 3;
     typingInterval = setInterval(typing, 100);
-    // playHardMode(3);
+
   });
 
     
