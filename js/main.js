@@ -14,6 +14,7 @@ var hit = new Audio("src/click2.mp3");
 var bunt = new Audio("src/click1.mp3");
 var clickSound1 = new Audio("src/click1.mp3");
 var brickBreak = new Audio("src/brickBreak.mp3");
+var over = new Audio("src/gameover.wav");
 var teamType = -1;
 var rankedGameScore = 0;
 var lifeCount = 3;
@@ -528,6 +529,7 @@ const play = (difficulty) => {
   function gameOver() {
     if (lifeCount === 0) {
       console.log("Died While Playing " + difficulty);
+      over.play();
       endStoryMode();
       return true;
     }
@@ -928,6 +930,7 @@ function playRankedGame() {
 
   function gameOver() {
     if (lives === 0) {
+      over.play();
       endRankedGame();
       return true;
     }
