@@ -200,7 +200,6 @@ $(document).ready(function () {
     $("#story").fadeIn();
     storyPage = 1;
     typingInterval = setInterval(typing, 100);
-    // playEasyMode(3);
   });
 
   $("#selectNormalDifficulty").click(function () {
@@ -209,7 +208,6 @@ $(document).ready(function () {
     $("#story").fadeIn();
     storyPage = 2;
     typingInterval = setInterval(typing, 100);
-    // playNormalMode(3); 
   });
 
   $("#selectHardDifficulty").click(function () {
@@ -218,7 +216,6 @@ $(document).ready(function () {
     $("#story").fadeIn();
     storyPage = 3;
     typingInterval = setInterval(typing, 100);
-    // playHardMode(3);
   });
 
     
@@ -561,8 +558,13 @@ $(document).ready(function () {
 
       if(brickCnt>0)
         requestAnimationFrame(draw);
-      else
-        playNormalMode(storyModeLives);
+      else{
+        $("#story").fadeIn();
+        $("#gameCanvas").hide();
+        $("#gameStatus").hide();
+        storyPage = 2;
+        typingInterval = setInterval(typing, 100);
+      }
     }
 
     // 게임 루프 실행
@@ -890,11 +892,15 @@ $(document).ready(function () {
           ballDY = -ballSpeedY; // 수직 방향은 항상 위쪽으로 설정
         }
       }
-
-      if(brickCnt > 0)
+      if(brickCnt>0)
         requestAnimationFrame(draw);
-      else
-        playHardMode(storyModeLives);
+      else{
+        $("#story").fadeIn();
+        $("#gameCanvas").hide();
+        $("#gameStatus").hide();
+        storyPage = 3;
+        typingInterval = setInterval(typing, 100);
+      }
     }
 
     // 게임 루프 실행
