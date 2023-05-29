@@ -10,6 +10,7 @@ var red_value = 0;
 var green_value = 0;
 var blue_value = 0;
 var startBgm = new Audio("src/startbgm1.mp3");
+startBgm -= 0.5;
 var bgm2 = new Audio("src/startbgm2.mp3");
 
 var teamType = -1;
@@ -110,15 +111,15 @@ $(document).ready(function () {
   displayHomeScreen();
 
   // #click_sound 소스 찾아서 html에 넣어야함.
-  // function play() {
-  //   var audio = $("#click_sound")[0];
-  //   if (audio.paused) {
-  //     audio.play();
-  //   } else {
-  //     audio.pause();
-  //     audio.currentTime = 0;
-  //   }
-  // }
+  function play() {
+    var audio = $("#click_sound")[0];
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  }
 
   $("#selectStoryGameButton").click(function () {
     $("#gameTypeSelectingScreen").hide();
