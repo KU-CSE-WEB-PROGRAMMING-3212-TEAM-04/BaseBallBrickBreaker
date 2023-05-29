@@ -128,6 +128,25 @@ video {
   z-index: 1;
 }
 
+#nameInput {
+  width: 150px;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+  text-shadow: -1.5px 0 #fff, 0 1.5px #fff, 1.5px 0 #fff, 0 -1.5px #fff;
+  text-align: center;
+  font-family: "bitbit", sans-serif;
+  font-size: 1.2rem;
+  padding: 0.5rem 0;
+  margin: 0.25rem 0 1.75rem;
+}
+
+#nameInput:focus {
+  outline: 0;
+  border: 0;
+  border-bottom: 2px solid #da0000;
+}
+
 .rad-input {
   display: none;
 }
@@ -171,14 +190,16 @@ video {
 }
 
 #setting_color {
-  width: 80px;
-  height: 80px;
-  border: 3px solid white;
-  margin: 0 auto 1.2rem;
+  width: 30px;
+  height: 30px;
+  margin-right: 1rem;
 }
 
-#ballColor {
-  margin-bottom: 2.2rem;
+#ballColorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2.5rem;
 }
 
 /* @@@@@@@@@@@@모드 선택@@@@@@@@@@@@ */
@@ -203,6 +224,7 @@ video {
   transform: skewY(-10deg) scale(0.85);
   z-index: -1;
   border-radius: 1rem;
+  overflow: hidden;
 }
 
 .m_img {
@@ -267,6 +289,7 @@ video {
   transform: skewY(-10deg) scale(0.85);
   z-index: -1;
   border-radius: 1rem;
+  overflow: hidden;
 }
 
 .t_img {
@@ -299,7 +322,6 @@ video {
   line-height: 100px;
   text-align: center;
   font-size: 60px;
-  font-weight: 900;
   color: white;
   text-shadow: 3px 3px #555;
 }
@@ -340,6 +362,7 @@ video {
   transform: skewY(-10deg) scale(0.85);
   z-index: -1;
   border-radius: 1rem;
+  overflow: hidden;
 }
 .l_img {
   height: 600px;
@@ -366,7 +389,6 @@ video {
   width: 100%;
   text-align: center;
   font-size: 60px;
-  font-weight: 900;
   color: white;
   text-shadow: 3px 3px #555;
 }
@@ -383,11 +405,11 @@ video {
   filter: grayscale(0) opacity(1);
   transform: scale(1);
   box-shadow: 0 25px 50px black;
-  z-index: 100; 
+  z-index: 100;
 }
 
 /* 스토리 */
-#story{
+#story {
   display: none;
 }
 #text_box {
@@ -403,7 +425,7 @@ video {
 }
 @keyframes blink {
   to {
-      opacity: 0;
+    opacity: 0;
   }
 }
 #nextBtn {
@@ -421,13 +443,13 @@ video {
   text-decoration: none;
 }
 #nextBtn::before {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 50%;
   left: 0px;
   width: 100%;
   height: 1px;
-  background: #6098FF;
+  background: #6098ff;
   display: block;
   -webkit-transform-origin: left top;
   -ms-transform-origin: left top;
@@ -436,7 +458,7 @@ video {
   -ms-transform: scale(0, 1);
   transform: scale(0, 1);
   -webkit-transition: transform 0.4s cubic-bezier(1, 0, 0, 1);
-  transition: transform 0.4s cubic-bezier(1, 0, 0, 1)
+  transition: transform 0.4s cubic-bezier(1, 0, 0, 1);
 }
 
 #nextBtn:hover::before {
@@ -445,11 +467,8 @@ video {
   transform-origin: right top;
   -webkit-transform: scale(1, 1);
   -ms-transform: scale(1, 1);
-  transform: scale(1, 1)
+  transform: scale(1, 1);
 }
-
-
-
 
 /* =================== */
 
@@ -600,6 +619,7 @@ canvas {
   border: 4px solid #cea61e;
   border-radius: 1rem;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 0.375rem 1.625rem;
+  z-index: 2;
 }
 
 .modal h1 {

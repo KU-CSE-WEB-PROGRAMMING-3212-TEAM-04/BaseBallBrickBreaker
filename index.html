@@ -52,6 +52,8 @@
     <img src="src/startbtn.png" id="startGameButton" />
     <div id="settingModal" class="modal">
       <h1>설정</h1>
+      <div class="settingText">닉네임</div>
+      <input type="text" id="nameInput" />
       <div id="music-onoff">
         <div class="settingText">배경 음악</div>
         <div class="bgmSelector">
@@ -75,8 +77,8 @@
       <div id="set_ballColor">
         <div class="settingText">공 색깔</div>
         <br />
-        <div id="setting_color"></div>
-        <div id="ballColor">
+        <div id="ballColorContainer">
+          <img src="src/ball.png" id="setting_color"></img>
           <input type="range" id="hueRange" value="0" min="0" max="360" />
         </div>
       </div>
@@ -132,7 +134,7 @@
   </div>
 
   <div class="page" id="storyModeEndingPage">
-    <div id="rankedGameScore">User's Score</div>
+    <!-- <div id="rankedGameScore">User's Score</div> -->
   </div>
 
   <canvas id="gameCanvas" width="800" height="600"></canvas>
@@ -143,7 +145,7 @@
   </div>
 
   <div class="page" id="gameStatus">
-    <img id="heartImg" src="src/heart.png" >
+    <img id="heartImg" src="src/heart.png">
     <div id="livesLeft">LivesLeft</div>
     <div id="liveScore">SCORE</div>
   </div>
