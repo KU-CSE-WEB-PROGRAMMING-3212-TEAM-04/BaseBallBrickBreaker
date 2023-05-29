@@ -49,7 +49,7 @@ content3 += "상대 투수는 일본 최고의 선수\n";
 content3 += "율타니 쇼헤이...\n\n";
 content3 += "9회말 2아웃\n";
 content3 += "나는 타석에 올라간다...\n";
-content3 += "대한민국의 명예을 위해\n";
+content3 += "대한민국의 명예를 위해\n";
 content3 += "그를 꺾고 우승을 차지하겠다...";
 var content;
 var storyPage;
@@ -308,11 +308,11 @@ const play = (difficulty) => {
   const brickRowCount = 4; // number of rows of bricks
   const brickColumnCount = 6; // number of rows of bricks
   let brickCnt = brickRowCount * brickColumnCount;
-  const brickWidth = 80;
+  const brickWidth = 60;
   const brickHeight = 30;
-  const brickPadding = 1; // spacing between bricks
+  const brickPadding = 30; // spacing between bricks
   const brickOffsetTop = 30;
-  const brickOffsetLeft = 160;
+  const brickOffsetLeft = 150;
 
   var bricks = new Array(brickRowCount);
   for (let i = 0; i < brickColumnCount; i++) {
@@ -494,6 +494,7 @@ const play = (difficulty) => {
       }
     }
   }
+
   function collisionDetection() {
     for (let i = 0; i < brickColumnCount; i++) {
       for (let j = 0; j < brickRowCount; j++) {
