@@ -343,7 +343,7 @@ const play = (difficulty) => {
     ctx.save();
     ctx.translate(ballX, ballY);
     ctx.rotate((Math.PI / 180) * ballRotationAngle); // 회전 각도 적용
-    // HUE 적용
+    ctx.filter = `hue-rotate(${hue_value}deg)`;
     ctx.drawImage(
       ballImage,
       -ballRadius,
@@ -414,6 +414,11 @@ const play = (difficulty) => {
             brickBreak.play();
             if (!b.status) brickCnt--;
           }
+
+          b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
+          if (b.status===0) 
+            brickCnt--;
+          brickBreak.play();
         }
       }
     }
@@ -558,7 +563,6 @@ const play = (difficulty) => {
       typingInterval = setInterval(typing, 100);
     } //play(difficulty + 1, lifeCount);
   }
-
   // 게임 루프 실행
 
   draw();
@@ -959,7 +963,6 @@ function endRankedGame() {
 
 const uploadScoreToDB = (score) => {
   const name = "NAME";
-
   rankingRef.doc(name).set({
     score: score,
   });
