@@ -17,6 +17,7 @@ var brickBreak = new Audio("src/brickBreak.mp3");
 var teamType = -1;
 var rankedGameScore = 0;
 var lifeCount = 3;
+var playerName = "익명의 플레이어";
 
 //이지 모드 스토리
 var keyboardSound = new Audio("src/keyboard1.mp3");
@@ -121,9 +122,10 @@ function displayHomeScreen() {
   //시작화면
   $("#settingsButton").click(() => {
     $("#settingModal").fadeIn();
+    $("#nameInput").val(playerName);
     const updateBallColor = () => {
       ballColor = `hsl(${hue_value}, 100%, 50%)`;
-      $("#setting_color").css("background-color", ballColor);
+      $("#setting_color").css("filter", `hue-rotate(${hue_value}deg)`);
     };
     updateBallColor();
     $("#hueRange").on("input", (e) => {
@@ -144,6 +146,7 @@ function displayHomeScreen() {
         startBgm.pause();
         bgm2.pause();
       }
+      playerName = $("#nameInput").val();
       $("#settingModal").fadeOut();
     });
   });
@@ -1077,10 +1080,21 @@ function endRankedGame() {
 }
 
 const uploadScoreToDB = (score) => {
-  const name = "NAME";
-  rankingRef.doc(name).set({
-    score: score,
-  });
+  rankingRef
+    .doc(playerName)
+    .get()
+    .then((doc) => {
+      if (doc.exists && doc.data().score > score) {
+        console.log("Ranking not updated");
+      } else {
+        rankingRef.doc(playerName).set({
+          score: score,
+        });
+      }
+    })
+    .catch((error) => {
+      console.log("Error getting document:", error);
+    });
 };
 
 rankingRef.orderBy("score", "desc").onSnapshot((querySnapshot) => {
