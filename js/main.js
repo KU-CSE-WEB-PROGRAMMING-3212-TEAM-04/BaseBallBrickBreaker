@@ -711,6 +711,14 @@ const play = (difficulty) => {
     displayHomeScreen();
   });
 
+  $("#restartStorygameButton").on("click", function () {
+  console.log("Restarting Story Game...");
+  $("#StroyGameOverPage").hide();
+  lifeCount=3;
+  play(difficulty);
+  
+});
+
 
   $("#clearModalCloseButton").click(function () {
     console.log("Back To Home...");
