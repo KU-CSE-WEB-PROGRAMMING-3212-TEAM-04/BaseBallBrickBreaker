@@ -1,7 +1,7 @@
 @font-face {
   font-family: "bitbit";
-  src: url("//cdn.df.nexon.com/img/common/font/DNFBitBit-Regular.woff"),
-    url("//cdn.df.nexon.com/img/common/font/DNFBitBit-Regular.woff2");
+  src: url("https://cdn.df.nexon.com/img/common/font/DNFBitBit-Regular.woff"),
+    url("https://cdn.df.nexon.com/img/common/font/DNFBitBit-Regular.woff2");
 }
 
 html,
@@ -426,20 +426,85 @@ video {
   text-shadow: 3px 3px #555;
 }
 #difficultyChoosingScreen div:nth-child(1):after {
-  content: "LEVEL 1";
+  content: "독립리그";
 }
 #difficultyChoosingScreen div:nth-child(2):after {
-  content: "LEVEL 2";
+  content: "한국시리즈";
 }
 #difficultyChoosingScreen div:nth-child(3):after {
-  content: "LEVEL 3";
+  content: "국가대표";
 }
 #difficultyChoosingScreen div:hover {
   filter: grayscale(0) opacity(1);
   transform: scale(1.1);
   box-shadow: 0 25px 50px black;
-  z-index: 100;
+  z-index: 100; 
 }
+
+/* 스토리 */
+#story{
+  display: none;
+}
+#text_box {
+  font-size: 30px;
+  text-align: center;
+  font-family: "bitbit", sans-serif;
+
+  color: white;
+}
+.blink {
+  animation: blink 0.5s infinite;
+  font-size: 30px;
+}
+@keyframes blink {
+  to {
+      opacity: 0;
+  }
+}
+#nextBtn {
+  padding: 15px 100px;
+  margin: 10px 4px;
+  font-size: 20px;
+  color: #fff;
+  font-family: "bitbit", sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  position: fixed;
+  bottom: 15%;
+  left: 50%; /* 가운데 정렬을 위해 추가 */
+  transform: translateX(-50%); /* 가운데 정렬을 위해 추가 */
+  text-decoration: none;
+}
+#nextBtn::before {
+  content: '';
+  position: absolute;
+  bottom: 50%;
+  left: 0px;
+  width: 100%;
+  height: 1px;
+  background: #6098FF;
+  display: block;
+  -webkit-transform-origin: left top;
+  -ms-transform-origin: left top;
+  transform-origin: left top;
+  -webkit-transform: scale(0, 1);
+  -ms-transform: scale(0, 1);
+  transform: scale(0, 1);
+  -webkit-transition: transform 0.4s cubic-bezier(1, 0, 0, 1);
+  transition: transform 0.4s cubic-bezier(1, 0, 0, 1)
+}
+
+#nextBtn:hover::before {
+  -webkit-transform-origin: right top;
+  -ms-transform-origin: right top;
+  transform-origin: right top;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1)
+}
+
+
+
 
 /* =================== */
 
