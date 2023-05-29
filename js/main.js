@@ -664,6 +664,7 @@ const play = (difficulty) => {
       $("#gameCanvas").hide();
       $("#gameStatus").hide();
       $("#skillStatusPage").hide();
+      $("#skillAlertPage").hide();
       $("#story").fadeIn();
       clearInterval(typingInterval);
       typingInterval = setInterval(typing, 100);
@@ -682,7 +683,7 @@ const play = (difficulty) => {
     // ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  function clearStoryMode(){
+  function clearStoryMode() {
     $("#gameStatus").hide();
     $("#skillStatusPage").hide();
     $("#StroyClearPage").fadeIn();
