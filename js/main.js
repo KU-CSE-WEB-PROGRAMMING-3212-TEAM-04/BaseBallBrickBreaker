@@ -248,8 +248,8 @@ $(document).ready(function () {
     for (let i = 0; i < brickColumnCount; i++) {
       bricks[i] = new Array(brickColumnCount);
       for (let j = 0; j < brickRowCount; j++) {
-        var randomStatusValue = Math.floor(Math.random() * 3 + 1);
-        bricks[i][j] = { x: 0, y: 0, status: randomStatusValue }; // status: 1이면 벽돌이 존재하는 상태
+        var randomStatusValue = Math.floor((Math.random() * 3) + 1);
+        bricks[i][j] = { x: 0, y: 0, status: randomStatusValue };
       }
     }
 
@@ -340,7 +340,7 @@ $(document).ready(function () {
             bricks[c][r].y = brickY;
             ctx.beginPath();
             ctx.rect(brickX, brickY, brickWidth, brickHeight);
-            ctx.fillStyle = "DarkOliveGreen";
+            ctx.fillStyle = "#D5FFD5";
             ctx.fill();
             ctx.closePath();
           } else if (bricks[c][r].status === 2) {
@@ -350,7 +350,7 @@ $(document).ready(function () {
             bricks[c][r].y = brickY;
             ctx.beginPath();
             ctx.rect(brickX, brickY, brickWidth, brickHeight);
-            ctx.fillStyle = "#DarkSeaGreen";
+            ctx.fillStyle = "#8FBC8B";
             ctx.fill();
             ctx.closePath();
           } else if (bricks[c][r].status === 3) {
@@ -360,7 +360,7 @@ $(document).ready(function () {
             bricks[c][r].y = brickY;
             ctx.beginPath();
             ctx.rect(brickX, brickY, brickWidth, brickHeight);
-            ctx.fillStyle = "#LightGreen";
+            ctx.fillStyle = "#53682A";
             ctx.fill();
             ctx.closePath();
           }
@@ -431,20 +431,20 @@ $(document).ready(function () {
 
     // Function to generate new brick row
     function generateNewBrickRow() {
-      // Create a new row of bricks
-      const newRow = [];
-      for (let c = 0; c < brickColumnCount; c++) {
-        newRow[c] = { x: 0, y: 0, status: 1 };
+      const newRow = new Array(1);
+      for (let i = 0; i < brickColumnCount; i++) {
+        var randomStatusValue = Math.floor((Math.random() * 3) + 1);
+        newRow[i] = { x: 0, y: 0, status: randomStatusValue };
       }
 
       // Insert the new row at the beginning of the bricks array
       bricks.unshift(newRow);
 
       // Update the Y positions of existing rows
-      for (let r = 1; r < bricks.length; r++) {
-        for (let c = 0; c < brickColumnCount; c++) {
-          if (bricks[r][c]) {
-            bricks[r][c].y += brickHeight + brickPadding;
+      for (let j = 1; j < bricks.length; j++) {
+        for (let i = 0; i < brickColumnCount; i++) {
+          if (bricks[j][i]) {
+            bricks[j][i].y += brickHeight + brickPadding;
           }
         }
       }
