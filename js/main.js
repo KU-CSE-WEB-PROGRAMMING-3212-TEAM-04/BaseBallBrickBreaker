@@ -430,6 +430,7 @@ $(document).ready(function () {
     function gameOver() {
       if (storyModeLives === 0) {
         console.log("Died Playing Easy Mode");
+
         endStoryMode();
         return true;
       }
@@ -574,10 +575,11 @@ $(document).ready(function () {
     
 
     function endStoryMode() {
-      clearCanvas();
-      $("#gameStatus").hide();
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      $("#gameoverModal").fadeIn();
+      // clearCanvas();
+      // $("#gameStatus").hide();
+      // ctx.fillStyle = "white";
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     // 벽돌이 다 깨졌는지 확인하고, 다 깨졌으면, playNormalMode(storyModeLives); 실행
@@ -908,10 +910,10 @@ $(document).ready(function () {
     draw();
 
     function endStoryMode() {
-      clearCanvas();
       $("#gameStatus").hide();
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      clearCanvas();
+      // ctx.fillStyle = "white";
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
   }
 
@@ -1247,10 +1249,10 @@ $(document).ready(function () {
     draw();
 
     function endStoryMode() {
-      clearCanvas();
-      $("#gameStatus").hide();
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // clearCanvas();
+      // $("#gameStatus").hide();
+      // ctx.fillStyle = "white";
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
   }
 
