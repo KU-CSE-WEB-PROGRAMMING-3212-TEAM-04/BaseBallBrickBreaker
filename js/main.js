@@ -369,7 +369,7 @@ const play = (difficulty) => {
         for (let j = 0; j < brickRowCount; j++) {
           const b = bricks[randomRowIndex][j];
           if (b.status > 0) {
-            b.status--;
+            b.status == 0;
             brickCnt--;
           }
         }
@@ -396,7 +396,6 @@ const play = (difficulty) => {
   }
 
   function hideSkillAlert() {
-    console.log("hide skill:" + $("#skillAlert").text());
     $("#skillAlert").text("");
     $("#skillAlertPage").hide();
   }
@@ -672,11 +671,12 @@ const play = (difficulty) => {
       }
     }
 
-    if (brickCnt > 0) requestAnimationFrame(draw);
-    else if (difficulty > 2) {
+    if (brickCnt > 0) {
+      requestAnimationFrame(draw);
+    } else if ((brickCnt == 0) && (difficulty == 3)) {
       console.log("Hard Mode Cleared");
       clearStoryMode();
-    } else {
+    } else if((brickCnt == 0) && (difficulty < 3)) {
       storyPage = difficulty + 2;
       $("#gameCanvas").hide();
       $("#gameStatus").hide();
@@ -685,19 +685,20 @@ const play = (difficulty) => {
       $("#story").fadeIn();
       clearInterval(typingInterval);
       typingInterval = setInterval(typing, 100);
-    } //play(difficulty + 1, lifeCount);
+    } else {
+      console.log("Story Game Error");
+    }
   }
-  // 게임 루프 실행
 
-  draw();
+  draw(); // loop the game
 
   function endStoryMode() {
+    // died while playing story mode
+    removeKeyUpHandler();
     clearCanvas();
     $("#gameStatus").hide();
     $("#skillStatusPage").hide();
     $("#StroyGameOverPage").fadeIn();
-    // ctx.fillStyle = "white";
-    // ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   function clearStoryMode() {
