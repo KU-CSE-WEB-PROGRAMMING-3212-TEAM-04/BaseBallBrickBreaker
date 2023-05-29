@@ -321,6 +321,8 @@ $(document).ready(function () {
         ballRotationAngle = 0;
       }
     }
+    // 왜안됨?
+    
 
     // 벽돌 그리기
     function drawBricks() {
@@ -374,7 +376,7 @@ $(document).ready(function () {
               $("#rankedGameLiveScore").text("SCORE: " + rankedGameScore);
             }
           } else {
-            
+
           }
         }
       }
