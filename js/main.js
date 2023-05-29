@@ -46,7 +46,7 @@ content3 += "상대 투수는 일본 최고의 선수\n";
 content3 += "율타니 쇼헤이...\n\n";
 content3 += "9회말 2아웃\n";
 content3 += "나는 타석에 올라간다...\n";
-content3 += "대한민국의 우승을 위해";
+content3 += "대한민국의 우승을 위해\n";
 content3 += "그를 꺾고 우승을 차지하겠다...";
 var content;
 var storyPage;
@@ -420,7 +420,9 @@ const play = (difficulty) => {
       handleSkill();
     } else if (event.key === "Escape") {
       brickCnt = 0;
-
+    }
+    else if (event.key === "m") {
+      lifeCount = 1;
     }
   }
 
@@ -660,7 +662,9 @@ function draw() {
       storyPage = difficulty + 2;
       $("#gameCanvas").hide();
       $("#gameStatus").hide();
+      
       $("#story").fadeIn();
+      clearInterval(typingInterval);
       typingInterval = setInterval(typing, 100);
     } //play(difficulty + 1, lifeCount);
   }
@@ -671,9 +675,31 @@ function draw() {
   function endStoryMode() {
     clearCanvas();
     $("#gameStatus").hide();
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    $("#StroyGameOverPage").fadeIn();
+    // ctx.fillStyle = "white";
+    // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   }
+
+
+  $("#restartStorygameButton").on("click", function () {
+    console.log("Restarting Ranked Game...");
+    $("#StroyGameOverPage").hide();
+    $("#gameCanvas").hide();
+    clearCanvas();
+    i=0;
+    $("#story").fadeIn();
+    clearInterval(typingInterval);
+    typingInterval = setInterval(typing, 100);
+    lifeCount = 3;
+  });
+
+  $("#backToHomeButton_story").click(function () {
+    console.log("Back To Home...");
+    $("#StroyGameOverPage").hide();
+    $("#gameCanvas").hide();
+    displayHomeScreen();
+  });
 
   // 벽돌이 다 깨졌는지 확인하고, 다 깨졌으면, playNormalMode(storyModeLives); 실행
 };
