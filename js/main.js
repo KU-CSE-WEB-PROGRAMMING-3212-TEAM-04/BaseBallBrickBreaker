@@ -6,14 +6,13 @@ var introDuration2;
 var totalDuration;
 
 //시작화면
-var red_value = 0;
-var green_value = 0;
-var blue_value = 0;
+var hue_value = 0;
 var startBgm = new Audio("src/startbgm1.mp3");
 startBgm.volume -= 0.5;
 var bgm2 = new Audio("src/startbgm2.mp3");
 var hit = new Audio("src/click2.mp3");
 var bunt = new Audio("src/click1.mp3");
+var clickSound1 = new Audio('source/click1.mp3')
 var brickBreak = new Audio("src/brickBreak.mp3");
 var teamType = -1;
 var rankedGameScore = 0;
@@ -88,20 +87,16 @@ $(document).ready(function () {
     //시작화면
     $("#settingsButton").click(function () {
       $("#settingsScreen").fadeIn();
-      updateColor();
-      $("#Red").change(function (e) {
-        red_value = $(this).val();
-        updateColor();
+      const updateBallColor = () => {
+        ballColor = `hsl(${hue_value}, 100%, 50%)`;
+        $("#setting_color").css("background-color", ballColor);
+      };
+      updateBallColor();
+      $("#hueRange").change(function (e) {
+        hue_value = $(this).val();
+        updateBallColor();
       });
-      $("#Green").change(function (e) {
-        green_value = $(this).val();
-        updateColor();
-      });
-      $("#Blue").change(function (e) {
-        blue_value = $(this).val();
-        updateColor();
-      });
-
+      
       $("#exitSettings").click(function () {
         if ($('input[name="rad"]:checked').val() == "b1") {
           bgm2.pause();
@@ -132,37 +127,38 @@ $(document).ready(function () {
     });
   }
 
-  $("#selectStoryGameButton").click(function () {
+    $("#selectStoryGameButton").click(function () {
     $("#gameTypeSelectingScreen").hide();
     $("#teamSelectingScreen").fadeIn();
+    clickSound1.play();
   });
 
   $("#selectTeam1").click(function () {
     teamType = 1;
     $("#teamSelectingScreen").hide();
     $("#difficultyChoosingScreen").fadeIn();
-    // play();
+    clickSound1.play();
   });
 
   $("#selectTeam2").click(function () {
     teamType = 2;
     $("#teamSelectingScreen").hide();
     $("#difficultyChoosingScreen").fadeIn();
-    // play();
+    clickSound1.play();
   });
 
   $("#selectTeam3").click(function () {
     teamType = 3;
     $("#teamSelectingScreen").hide();
     $("#difficultyChoosingScreen").fadeIn();
-    // play();
+    clickSound1.play();
   });
 
   $("#selectTeam4").click(function () {
     teamType = 4;
     $("#teamSelectingScreen").hide();
     $("#difficultyChoosingScreen").fadeIn();
-    // play();
+    clickSound1.play();
   });
 
   $("#selectEasyDifficulty").click(function () {
@@ -721,7 +717,7 @@ $(document).ready(function () {
       }
       return false;
     }
-
+    
     // Function to reset the ball and paddle positions
     function resetPositions() {
       paddleX = (canvas.width - paddleWidth) / 2;
@@ -955,6 +951,7 @@ $(document).ready(function () {
       ctx.save();
       ctx.translate(ballX, ballY);
       ctx.rotate((Math.PI / 180) * ballRotationAngle); // 회전 각도 적용
+      ctx.filter = `hue-rotate(${hue_value}deg)`;
       ctx.drawImage(
         ballImage,
         -ballRadius,
