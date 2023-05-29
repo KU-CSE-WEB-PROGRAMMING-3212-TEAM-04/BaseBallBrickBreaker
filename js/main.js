@@ -12,7 +12,9 @@ var blue_value = 0;
 var startBgm = new Audio("src/startbgm1.mp3");
 startBgm.volume -= 0.5;
 var bgm2 = new Audio("src/startbgm2.mp3");
-
+var hit = new Audio("src/click2.mp3");
+var bunt = new Audio("src/click1.mp3");
+var brickBreak = new Audio("src/brickBreak.mp3");
 var teamType = -1;
 var storyGameDifficulty = -1;
 var rankedGameScore = 0;
@@ -214,10 +216,19 @@ $(document).ready(function () {
     const paddleSpeed = 7;
     const paddleMaxAngle = 105; // 최대 회전 각도 (방망이 휘두르는 각도)
     let paddleX = (canvas.width - paddleWidth) / 2;
-    let paddleY = canvas.height - paddleHeight - 30;
+    let paddleY = canvas.height - paddleHeight - 45;
     let paddleAngle = -25; // 현재 방망이 회전 각도
     const paddleImage = new Image();
-    paddleImage.src = "src/bat.png";
+    paddleImage.src = "src/batWithHands.png";
+
+
+    //타자 
+    const hitterImage = new Image();
+    hitterImage.src="src/hitter1.png";
+    const hitterWidth=80;
+    const hitterHeight=120;
+    let hitterX=paddleX-70;
+    let hitterY=paddleY-65;
 
     // variables about the ball
     const ballImage = new Image();
@@ -226,7 +237,7 @@ $(document).ready(function () {
     // 배경 이미지 그리기
     const backgroundImage = new Image();
     backgroundImage.src = "src/ground.jpg";
-
+    
     let ballRotationAngle = 0;
     const ballRadius = 8;
     let ballX = canvas.width / 2;
@@ -234,6 +245,7 @@ $(document).ready(function () {
     let ballDX = 4;
     let ballDY = -5;
     const ballSpeed = 5;
+    let ballSpeedY=5;
 
     // variables about the brick
     const brickRowCount = 4; // number of rows of bricks
@@ -313,6 +325,13 @@ $(document).ready(function () {
       ctx.drawImage(paddleImage, 0, 0, paddleWidth, paddleHeight);
       ctx.restore();
     }
+    //타자 그리기
+    function drawHitter(){
+      ctx.save();
+      ctx.translate(hitterX,hitterY);
+      ctx.drawImage(hitterImage,0,0,hitterWidth,hitterHeight);
+      ctx.restore();
+    }
 
     // 공 이미지 회전 함수
     function rotateBallImage() {
@@ -372,7 +391,12 @@ $(document).ready(function () {
             if ((ballX > b.x) && (ballX < b.x + brickWidth) && (ballY > b.y) && (ballY < b.y + brickHeight)) {
               ballDY = -ballDY;
               b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
+              brickBreak.play();
               rankedGameScore++;
+              if(rankedGameScore%10===0){
+                ballDY+=1;
+                ballSpeedY+=1;
+              }
               $("#rankedGameLiveScore").text("SCORE: " + rankedGameScore);
             }
           } else {
@@ -393,7 +417,9 @@ $(document).ready(function () {
     // Function to reset the ball and paddle positions
     function resetPositions() {
       paddleX = (canvas.width - paddleWidth) / 2;
-      paddleY = canvas.height - paddleHeight - 30;
+      paddleY = canvas.height - paddleHeight - 45;
+      hitterX=paddleX-70;
+      hitterY=paddleY-65;
       ballX = canvas.width / 2;
       ballY = paddleY - ballRadius;
       ballDX = 4;
@@ -453,6 +479,8 @@ $(document).ready(function () {
 
       drawPaddle();
 
+      drawHitter();
+
       drawBall();
 
       rotateBallImage();
@@ -465,8 +493,10 @@ $(document).ready(function () {
       // 패들 이동
       if (rightPressed && paddleX < canvas.width - paddleWidth) {
         paddleX += paddleSpeed;
+        hitterX += paddleSpeed;
       } else if (leftPressed && paddleX > 0) {
         paddleX -= paddleSpeed;
+        hitterX -= paddleSpeed;
       }
 
       // 방망이 휘두르는 모션
@@ -526,6 +556,7 @@ $(document).ready(function () {
           if (resetPaddleAngle) {
             // 'e' 키가 눌려 있는 경우
             ballDX = 0; // 가로 속도를 0으로 설정하여 멈춤
+            bunt.play();
           } else {
             // 충돌 시 패들과의 상대적인 충돌 위치 계산
             const collisionPoint = ballX - (paddleX + paddleWidth / 2);
@@ -535,8 +566,9 @@ $(document).ready(function () {
             const bounceAngle =
               (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
             ballDX = ballSpeed * Math.sin(bounceAngle);
+            hit.play();
           }
-          ballDY = -ballSpeed; // 수직 방향은 항상 위쪽으로 설정
+          ballDY = -ballSpeedY; // 수직 방향은 항상 위쪽으로 설정
         }
       }
 
