@@ -118,6 +118,7 @@ function displayHomeScreen() {
   console.log("Displaying Homescreen...");
   $("#homeScreen").fadeIn();
   $("#gameStatus").hide();
+  $("#skillStatusPage").hide();
 
   //시작화면
   $("#settingsButton").click(() => {
@@ -675,6 +676,7 @@ function draw() {
   function endStoryMode() {
     clearCanvas();
     $("#gameStatus").hide();
+    $("#skillStatusPage").hide();
     $("#StroyGameOverPage").fadeIn();
     // ctx.fillStyle = "white";
     // ctx.fillRect(0, 0, canvas.width, canvas.height);
