@@ -1,4 +1,5 @@
 //인트로
+var introDuration1;
 var introLabel2;
 var introDuration1;
 var introDuration2;
@@ -17,7 +18,7 @@ var teamType = -1;
 var rankedGameScore = 0;
 var lifeCount = 3;
 
-//스토리
+//이지 모드 스토리
 var keyboardSound = new Audio("src/keyboard1.mp3");
 var content1 = "남들보다 뒤늦게 시작한 야구...\n";
 content1 += "더 높은곳으로 가고 싶다...\n\n";
@@ -27,6 +28,7 @@ content1 += "나는 타석에 올라간다...\n\n";
 content1 += "나에 안타 한번에\n";
 content1 += "팀의 승리가 걸려있다...";
 
+//노말 모드 스토리
 var content2 = "한국 시리즈 결승전에서\n";
 content2 += "막강한 적을 만났다.\n";
 content2 += "상대는 ACE투수 이율원...\n\n";
@@ -35,6 +37,7 @@ content2 += "9회말 2아웃\n";
 content2 += "나는 타석에 올라간다...\n";
 content2 += "그를 꺾고 우승을 차지하겠다...";
 
+//하드 모드 스토리
 var content3 = "WBC 결승전\n";
 content3 += "영원의 라이벌, 운명의 상대\n";
 content3 += "일본을 만났다.\n\n";
@@ -101,7 +104,7 @@ function animateLabels(inputs, initialDelay) {
     $(inputs[i]).css(
       "-animation",
       "anim 3s " + (initialDelay + time) + "ms ease-in-out"
-    );
+      );
   }
   setTimeout(function () {
     $("#introAudio")[0].play();
@@ -244,13 +247,9 @@ $("#nextBtn").click(function () {
 const play = (difficulty) => {
   console.log(`Starting Game with difficulty ${difficulty}`);
   clearCanvas();
-  var skillsLeft = 5;
-  $("#skillImg").attr("src", "src/skill" + teamType + ".png");
   $("#gameCanvas").show();
   $("#gameStatus").show();
-  $("#skillStatusPage").show();
   $("#livesLeft").text(lifeCount);
-  $("#skillsLeft").text(skillsLeft);
   $("#liveScore").text("");
 
   //variables about the paddle
@@ -283,6 +282,7 @@ const play = (difficulty) => {
   let ballX = canvas.width / 2;
   let ballY = paddleY - ballRadius;
   let ballDX = 4 + difficulty;
+  // 난이도 따라 수정
   let ballDY = -ballDX;
   const ballSpeed = 4 + difficulty;
   let ballSpeedY = 4 + difficulty;
@@ -312,37 +312,6 @@ const play = (difficulty) => {
   let spacePressed = false;
   let resetPaddleAngle = false; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화하기 위한 변수
 
-  function usingSkillHandler() {
-    if (skillsLeft > 0) {
-      if (teamType === 1) {
-        lifeCount++;
-      } else if (teamType === 2) {
-        paddleWidth += 10;
-        paddleHeight += 10;
-      } else if (teamType === 3) {
-        ballRadius += 5;
-      } else if (teamType === 4) {
-        var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
-        skill4SoundEffect.play();
-        var randomRowIndex = Math.floor((Math.random() * 10) / brickRowCount);
-        for (let j = 0; j < brickRowCount; j++) {
-          const b = bricks[randomRowIndex][j];
-          if (b.status > 0) {
-            b.status--;
-            brickCnt--;
-          }
-        }
-      } else {
-        console.log("teamType not defined - usingSkillHandler Error");
-      }
-      skillsLeft--;
-      $("#skillsLeft").text(skillsLeft);
-      console.log("skill is used");
-    } else {
-      console.log("Out of skills");
-    }
-  }
-
   // 키보드 이벤트 리스너 추가
   $(document).keydown(keyDownHandler);
   $(document).keyup(keyUpHandler);
@@ -369,8 +338,6 @@ const play = (difficulty) => {
       spacePressed = false;
     } else if (event.key === "e") {
       resetPaddleAngle = false; // 'e' 키를 뗐을 때 패들 각도 초기화 플래그를 false로 설정
-    } else if (event.key === "r") {
-      usingSkillHandler();
     }
   }
 
@@ -385,7 +352,7 @@ const play = (difficulty) => {
       -ballRadius,
       ballRadius * 2,
       ballRadius * 2
-    );
+      );
     ctx.restore();
   }
 
@@ -432,7 +399,6 @@ const play = (difficulty) => {
       }
     }
   }
-
   function collisionDetection() {
     for (let i = 0; i < brickColumnCount; i++) {
       for (let j = 0; j < brickRowCount; j++) {
@@ -443,92 +409,96 @@ const play = (difficulty) => {
             ballX - ballRadius < b.x + brickWidth &&
             ballY + ballRadius > b.y &&
             ballY - ballRadius < b.y + brickHeight
-          ) {
+            ) {
             const brickLeft = b.x;
-            const brickRight = b.x + brickWidth;
-            const brickTop = b.y;
-            const brickBottom = b.y + brickHeight;
+          const brickRight = b.x + brickWidth;
+          const brickTop = b.y;
+          const brickBottom = b.y + brickHeight;
 
-            if (
-              ballX + ballRadius > brickRight ||
-              ballX - ballRadius < brickLeft
+          if (
+            ballX + ballRadius > brickRight ||
+            ballX - ballRadius < brickLeft
             ) {
-              // 충돌이 벽돌의 옆면에 있는 경우
-              ballDX = -ballDX; // x축 이동 방향을 반대로 변경
-            } else if (
-              ballY + ballRadius > brickTop &&
-              ballY - ballRadius < brickBottom
-            ) {
-              // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
-              ballDY = -ballDY; // y축 이동 방향을 반대로 변경
-            }
-            b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
-            if (b.status === 0) brickCnt--;
-            brickBreak.play();
+            // 충돌이 벽돌의 옆면에 있는 경우
+            ballDX = -ballDX; // x축 이동 방향을 반대로 변경
+        } else if (
+          ballY + ballRadius > brickTop &&
+          ballY - ballRadius < brickBottom
+          ) {
+            // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
+            ballDY = -ballDY; // y축 이동 방향을 반대로 변경
           }
+
+          b.status--; 
+          if(b.status===0)
+            brickCnt--;
+          brickBreak.play();
         }
       }
     }
   }
+}
 
-  function gameOver() {
-    if (lifeCount === 0) {
-      console.log("Died While Playing " + difficulty);
-      endStoryMode();
-      return true;
-    }
-    return false;
+
+
+function gameOver() {
+  if (lifeCount === 0) {
+    console.log("Died While Playing " + difficulty);
+    endStoryMode();
+    return true;
   }
+  return false;
+}
 
   // Function to reset the ball and paddle positions
-  function resetPositions() {
-    paddleX = (canvas.width - paddleWidth) / 2;
-    paddleY = canvas.height - paddleHeight - 45;
-    hitterX = paddleX - 70;
-    hitterY = paddleY - 65;
-    ballX = canvas.width / 2;
-    ballY = paddleY - ballRadius;
+function resetPositions() {
+  paddleX = (canvas.width - paddleWidth) / 2;
+  paddleY = canvas.height - paddleHeight - 45;
+  hitterX = paddleX - 70;
+  hitterY = paddleY - 65;
+  ballX = canvas.width / 2;
+  ballY = paddleY - ballRadius;
     // 난이도 따라 수정
-    ballDX = 4 + difficulty;
-    ballDY = -ballDX;
-  }
+  ballDX = 4 + difficulty;
+  ballDY = -ballDX;
+}
 
   // Game over and reset function
-  function handleGameOver() {
-    resetPositions();
-    lifeCount--;
-    $("#livesLeft").text(lifeCount);
-    console.log("Lives: " + lifeCount);
-    if (!gameOver()) {
-      setTimeout(function () {
-        draw();
-      }, 1000);
-    }
+function handleGameOver() {
+  resetPositions();
+  lifeCount--;
+  $("#livesLeft").text(lifeCount);
+  console.log("Lives: " + lifeCount);
+  if (!gameOver()) {
+    setTimeout(function () {
+      draw();
+    }, 1000);
   }
+}
 
   // 게임 루프
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
-    drawPaddle();
-    drawHitter();
-    drawBall();
-    rotateBallImage();
-    drawBricks();
-    collisionDetection();
+  drawPaddle();
+  drawHitter();
+  drawBall();
+  rotateBallImage();
+  drawBricks();
+  collisionDetection();
 
     // 패들 이동
-    if (rightPressed && paddleX < canvas.width - paddleWidth) {
-      paddleX += paddleSpeed;
-      hitterX += paddleSpeed;
-    } else if (leftPressed && paddleX > 0) {
-      paddleX -= paddleSpeed;
-      hitterX -= paddleSpeed;
-    }
+  if (rightPressed && paddleX < canvas.width - paddleWidth) {
+    paddleX += paddleSpeed;
+    hitterX += paddleSpeed;
+  } else if (leftPressed && paddleX > 0) {
+    paddleX -= paddleSpeed;
+    hitterX -= paddleSpeed;
+  }
 
     // 방망이 휘두르는 모션
-    if (spacePressed) {
+  if (spacePressed) {
       paddleAngle = Math.min(paddleAngle + 15, paddleMaxAngle); // 최대 각도까지 회전
     } else if (resetPaddleAngle) {
       paddleAngle = 0; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화
@@ -541,7 +511,7 @@ const play = (difficulty) => {
     ballY += ballDY;
 
     // 벽과 충돌 감지
-    if (ballX + ballRadius > canvas.width || ballX - ballRadius < 0) {
+    if (ballX + ballRadius > canvas.width-1 || ballX - ballRadius < 1) {
       ballDX = -ballDX; // x 방향 반대로 변경하여 튕김
     }
     if (ballY - ballRadius < 0) {
@@ -560,30 +530,31 @@ const play = (difficulty) => {
       ballY + ballRadius > paddleY && // 공이 패들의 y 좌표 범위에 있을 때
       ballX > paddleX &&
       ballX < paddleX + paddleWidth // 공이 패들의 x 좌표 범위에 있을 때
-    ) {
+      ) {
       // 패들과 충돌 판정을 위한 충돌 박스 계산
       const paddleCenterX = paddleX + paddleWidth / 2;
-      const paddleTopY = paddleY;
-      const paddleBox = {
-        x: paddleCenterX - paddleWidth / 2,
-        y: paddleTopY,
-        width: paddleWidth,
-        height: paddleHeight,
-      };
+    const paddleTopY = paddleY;
+    const paddleBox = {
+      x: paddleCenterX - paddleWidth / 2,
+      y: paddleTopY,
+      width: paddleWidth,
+      height: paddleHeight,
+    };
 
       // 공과 충돌 판정을 위한 충돌 박스 계산
-      const ballBox = {
-        x: ballX - ballRadius,
-        y: ballY - ballRadius,
-        width: ballRadius * 2,
-        height: ballRadius * 2,
-      };
+    const ballBox = {
+      x: ballX - ballRadius,
+      y: ballY - ballRadius,
+      width: ballRadius * 2,
+      height: ballRadius * 2,
+    };
 
       // 충돌 판정
-      if (checkCollision(paddleBox, ballBox)) {
-        if (resetPaddleAngle) {
+    if (checkCollision(paddleBox, ballBox)) {
+      if (resetPaddleAngle) {
           // 'e' 키가 눌려 있는 경우
-          ballDX = 0; // 가로 속도를 0으로 설정하여 멈춤
+
+          ballDX = (Math.random() * 2) - 1; // 가로 속도를 -1~1중 램덤으로 설정
           bunt.play();
         } else {
           // 충돌 시 패들과의 상대적인 충돌 위치 계산
@@ -592,7 +563,7 @@ const play = (difficulty) => {
           // 상대적인 충돌 위치에 따라 공의 속도와 방향을 조절
           const maxBounceAngle = (paddleMaxAngle * Math.PI) / 180;
           const bounceAngle =
-            (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
+          (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
           ballDX = ballSpeed * Math.sin(bounceAngle);
           hit.play();
         }
@@ -606,7 +577,6 @@ const play = (difficulty) => {
       storyPage = difficulty + 2;
       $("#gameCanvas").hide();
       $("#gameStatus").hide();
-      $("#skillStatusPage").hide();
       $("#story").fadeIn();
       typingInterval = setInterval(typing, 100);
     } //play(difficulty + 1, lifeCount);
@@ -625,1076 +595,6 @@ const play = (difficulty) => {
   // 벽돌이 다 깨졌는지 확인하고, 다 깨졌으면, playNormalMode(storyModeLives); 실행
 };
 
-function playEasyMode(storyModeLives) {
-  console.log("Starting Easy Story Game...");
-  clearCanvas();
-  storyModeLives = 3;
-  var skillsLeft = 5;
-  $("#skillImg").attr("src", "src/skill" + teamType + ".png");
-  $("#gameCanvas").show();
-  $("#gameStatus").show();
-  $("#skillStatusPage").show();
-  $("#livesLeft").text(storyModeLives);
-  $("#skillsLeft").text(skillsLeft);
-  $("#liveScore").text("");
-
-  //variables about the paddle
-  const paddleWidth = 134;
-  const paddleHeight = 18;
-  const paddleSpeed = 7;
-  const paddleMaxAngle = 105; // 최대 회전 각도 (방망이 휘두르는 각도)
-  let paddleX = (canvas.width - paddleWidth) / 2;
-  let paddleY = canvas.height - paddleHeight - 45;
-  let paddleAngle = -25; // 현재 방망이 회전 각도
-  const paddleImage = new Image();
-  paddleImage.src = "src/batWithHands.png";
-
-  //타자
-  const hitterImage = new Image();
-  hitterImage.src = "src/hitter" + teamType + ".png";
-  const hitterWidth = 80;
-  const hitterHeight = 120;
-  let hitterX = paddleX - 70;
-  let hitterY = paddleY - 65;
-
-  const ballImage = new Image();
-  ballImage.src = "src/ball.png";
-
-  const backgroundImage = new Image();
-  backgroundImage.src = "src/ground.jpg";
-
-  let ballRotationAngle = 0;
-  const ballRadius = 8;
-  let ballX = canvas.width / 2;
-  let ballY = paddleY - ballRadius;
-  let ballDX = 4;
-  let ballDY = -4;
-  const ballSpeed = 4;
-  let ballSpeedY = 4;
-
-  // variables about the brick
-  const brickRowCount = 4; // number of rows of bricks
-  const brickColumnCount = 6; // number of rows of bricks
-  let brickCnt = brickRowCount * brickColumnCount;
-  const brickWidth = 80;
-  const brickHeight = 30;
-  const brickPadding = 1; // spacing between bricks
-  const brickOffsetTop = 30;
-  const brickOffsetLeft = 160;
-
-  var bricks = new Array(brickRowCount);
-  for (let i = 0; i < brickColumnCount; i++) {
-    bricks[i] = new Array(brickColumnCount);
-    for (let j = 0; j < brickRowCount; j++) {
-      bricks[i][j] = { x: 0, y: 0, status: 1 };
-    }
-  }
-
-  // 키보드 이벤트 처리를 위한 변수 선언
-  let rightPressed = false;
-  let leftPressed = false;
-  let spacePressed = false;
-  let resetPaddleAngle = false; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화하기 위한 변수
-
-  function usingSkillHandler() {
-    if (skillsLeft > 0) {
-      if (teamType === 1) {
-        storyModeLives++;
-      } else if (teamType === 2) {
-        paddleWidth += 10;
-        paddleHeight += 10;
-      } else if (teamType === 3) {
-        ballRadius += 5;
-      } else if (teamType === 4) {
-        var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
-        skill4SoundEffect.play();
-        var randomRowIndex = Math.floor((Math.random() * 10) / brickRowCount);
-        for (let j = 0; j < brickRowCount; j++) {
-          const b = bricks[randomRowIndex][j];
-          if (b.status > 0) {
-            b.status--;
-            brickCnt--;
-          }
-        }
-      } else {
-        console.log("teamType not defined - usingSkillHandler Error");
-      }
-      skillsLeft--;
-      $("#skillsLeft").text(skillsLeft);
-      console.log("skill is used");
-    } else {
-      console.log("Out of skills");
-    }
-  }
-
-  // 키보드 이벤트 리스너 추가
-  $(document).keydown(keyDownHandler);
-  $(document).keyup(keyUpHandler);
-
-  // 키보드 이벤트 처리 함수
-  function keyDownHandler(event) {
-    if (event.key === "Right" || event.key === "ArrowRight") {
-      rightPressed = true;
-    } else if (event.key === "Left" || event.key === "ArrowLeft") {
-      leftPressed = true;
-    } else if (event.key === " ") {
-      spacePressed = true;
-    } else if (event.key === "e") {
-      resetPaddleAngle = true; // 'e' 키를 누르면 패들 각도 초기화 플래그를 true로 설정
-    }
-  }
-
-  function keyUpHandler(event) {
-    if (event.key === "Right" || event.key === "ArrowRight") {
-      rightPressed = false;
-    } else if (event.key === "Left" || event.key === "ArrowLeft") {
-      leftPressed = false;
-    } else if (event.key === " ") {
-      spacePressed = false;
-    } else if (event.key === "e") {
-      resetPaddleAngle = false; // 'e' 키를 뗐을 때 패들 각도 초기화 플래그를 false로 설정
-    } else if (event.key === "r") {
-      usingSkillHandler();
-    }
-  }
-
-  function drawBall() {
-    ctx.save();
-    ctx.translate(ballX, ballY);
-    ctx.rotate((Math.PI / 180) * ballRotationAngle); // 회전 각도 적용
-    ctx.drawImage(
-      ballImage,
-      -ballRadius,
-      -ballRadius,
-      ballRadius * 2,
-      ballRadius * 2
-    );
-    ctx.restore();
-  }
-
-  function drawPaddle() {
-    ctx.save();
-    ctx.translate(paddleX, paddleY);
-    ctx.rotate((-Math.PI / 180) * paddleAngle); // 각도를 라디안으로 변환하여 회전
-    ctx.drawImage(paddleImage, 0, 0, paddleWidth, paddleHeight);
-    ctx.restore();
-  }
-
-  function drawHitter() {
-    ctx.save();
-    ctx.translate(hitterX, hitterY);
-    ctx.drawImage(hitterImage, 0, 0, hitterWidth, hitterHeight);
-    ctx.restore();
-  }
-
-  // 공 이미지 회전 함수
-  function rotateBallImage() {
-    ballRotationAngle += 15; // 회전 속도 조절
-    if (ballRotationAngle >= 360) {
-      ballRotationAngle = 0;
-    }
-  }
-
-  // 벽돌 그리기
-  function drawBricks() {
-    for (let c = 0; c < brickColumnCount; c++) {
-      for (let r = 0; r < brickRowCount; r++) {
-        if (bricks[c][r].status === 1) {
-          const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-          const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-          bricks[c][r].x = brickX;
-          bricks[c][r].y = brickY;
-          ctx.beginPath();
-          ctx.rect(brickX, brickY, brickWidth, brickHeight);
-          ctx.fillStyle = "#D5FFD5";
-          ctx.fill();
-          ctx.closePath();
-        }
-      }
-    }
-  }
-  function collisionDetection() {
-    for (let i = 0; i < brickColumnCount; i++) {
-      for (let j = 0; j < brickRowCount; j++) {
-        const b = bricks[i][j];
-        if (b.status > 0) {
-          if (
-            ballX + ballRadius > b.x &&
-            ballX - ballRadius < b.x + brickWidth &&
-            ballY + ballRadius > b.y &&
-            ballY - ballRadius < b.y + brickHeight
-          ) {
-            const brickLeft = b.x;
-            const brickRight = b.x + brickWidth;
-            const brickTop = b.y;
-            const brickBottom = b.y + brickHeight;
-
-            if (
-              ballX + ballRadius > brickRight ||
-              ballX - ballRadius < brickLeft
-            ) {
-              // 충돌이 벽돌의 옆면에 있는 경우
-              ballDX = -ballDX; // x축 이동 방향을 반대로 변경
-            } else if (
-              ballY + ballRadius > brickTop &&
-              ballY - ballRadius < brickBottom
-            ) {
-              // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
-              ballDY = -ballDY; // y축 이동 방향을 반대로 변경
-            }
-            b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
-            if (b.status === 0) brickCnt--;
-            brickBreak.play();
-          }
-        }
-      }
-    }
-  }
-
-  function gameOver() {
-    if (storyModeLives === 0) {
-      console.log("Died Playing Easy Mode");
-      endStoryMode();
-      return true;
-    }
-    return false;
-  }
-
-  // Function to reset the ball and paddle positions
-  function resetPositions() {
-    paddleX = (canvas.width - paddleWidth) / 2;
-    paddleY = canvas.height - paddleHeight - 45;
-    hitterX = paddleX - 70;
-    hitterY = paddleY - 65;
-    ballX = canvas.width / 2;
-    ballY = paddleY - ballRadius;
-    ballDX = 4;
-    ballDY = -4;
-  }
-
-  // Game over and reset function
-  function handleGameOver() {
-    resetPositions();
-    storyModeLives--;
-    $("#livesLeft").text(storyModeLives);
-    console.log("Lives: " + storyModeLives);
-    if (!gameOver()) {
-      setTimeout(function () {
-        draw();
-      }, 1000);
-    }
-  }
-
-  // 게임 루프
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
-    drawPaddle();
-    drawHitter();
-    drawBall();
-    rotateBallImage();
-    drawBricks();
-    collisionDetection();
-
-    // 패들 이동
-    if (rightPressed && paddleX < canvas.width - paddleWidth) {
-      paddleX += paddleSpeed;
-      hitterX += paddleSpeed;
-    } else if (leftPressed && paddleX > 0) {
-      paddleX -= paddleSpeed;
-      hitterX -= paddleSpeed;
-    }
-
-    // 방망이 휘두르는 모션
-    if (spacePressed) {
-      paddleAngle = Math.min(paddleAngle + 15, paddleMaxAngle); // 최대 각도까지 회전
-    } else if (resetPaddleAngle) {
-      paddleAngle = 0; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화
-    } else {
-      paddleAngle = -25; // 스페이스바를 뗐을 때 각도 초기화
-    }
-
-    // 공 위치 업데이트
-    ballX += ballDX;
-    ballY += ballDY;
-
-    // 벽과 충돌 감지
-    if (ballX + ballRadius > canvas.width || ballX - ballRadius < 0) {
-      ballDX = -ballDX; // x 방향 반대로 변경하여 튕김
-    }
-    if (ballY - ballRadius < 0) {
-      ballDY = -ballDY; // y 방향 반대로 변경하여 튕김
-    }
-
-    // ground collision detection
-    if (ballY > canvas.height) {
-      handleGameOver();
-      return;
-    }
-
-    // 패들과 충돌 감지
-    if (
-      (spacePressed || resetPaddleAngle) &&
-      ballY + ballRadius > paddleY && // 공이 패들의 y 좌표 범위에 있을 때
-      ballX > paddleX &&
-      ballX < paddleX + paddleWidth // 공이 패들의 x 좌표 범위에 있을 때
-    ) {
-      // 패들과 충돌 판정을 위한 충돌 박스 계산
-      const paddleCenterX = paddleX + paddleWidth / 2;
-      const paddleTopY = paddleY;
-      const paddleBox = {
-        x: paddleCenterX - paddleWidth / 2,
-        y: paddleTopY,
-        width: paddleWidth,
-        height: paddleHeight,
-      };
-
-      // 공과 충돌 판정을 위한 충돌 박스 계산
-      const ballBox = {
-        x: ballX - ballRadius,
-        y: ballY - ballRadius,
-        width: ballRadius * 2,
-        height: ballRadius * 2,
-      };
-
-      // 충돌 판정
-      if (checkCollision(paddleBox, ballBox)) {
-        if (resetPaddleAngle) {
-          // 'e' 키가 눌려 있는 경우
-          ballDX = 0; // 가로 속도를 0으로 설정하여 멈춤
-          bunt.play();
-        } else {
-          // 충돌 시 패들과의 상대적인 충돌 위치 계산
-          const collisionPoint = ballX - (paddleX + paddleWidth / 2);
-
-          // 상대적인 충돌 위치에 따라 공의 속도와 방향을 조절
-          const maxBounceAngle = (paddleMaxAngle * Math.PI) / 180;
-          const bounceAngle =
-            (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
-          ballDX = ballSpeed * Math.sin(bounceAngle);
-          hit.play();
-        }
-        ballDY = -ballSpeedY; // 수직 방향은 항상 위쪽으로 설정
-      }
-    }
-
-    if (brickCnt > 0) requestAnimationFrame(draw);
-    else playNormalMode(storyModeLives);
-  }
-
-  // 게임 루프 실행
-
-  draw();
-
-  function endStoryMode() {
-    clearCanvas();
-    $("#gameStatus").hide();
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-
-  // 벽돌이 다 깨졌는지 확인하고, 다 깨졌으면, playNormalMode(storyModeLives); 실행
-}
-
-function playNormalMode(storyModeLives) {
-  console.log("Starting Normal Story Game");
-  clearCanvas();
-  $("#gameCanvas").show();
-  $("#gameStatus").show();
-  $("#livesLeft").text(storyModeLives);
-  $("#liveScore").text("");
-
-  //variables about the paddle
-  const paddleWidth = 134;
-  const paddleHeight = 18;
-  const paddleSpeed = 7;
-  const paddleMaxAngle = 105; // 최대 회전 각도 (방망이 휘두르는 각도)
-  let paddleX = (canvas.width - paddleWidth) / 2;
-  let paddleY = canvas.height - paddleHeight - 45;
-  let paddleAngle = -25; // 현재 방망이 회전 각도
-  const paddleImage = new Image();
-  paddleImage.src = "src/batWithHands.png";
-
-  //타자
-  const hitterImage = new Image();
-  hitterImage.src = "src/hitter" + teamType + ".png";
-  const hitterWidth = 80;
-  const hitterHeight = 120;
-  let hitterX = paddleX - 70;
-  let hitterY = paddleY - 65;
-
-  const ballImage = new Image();
-  ballImage.src = "src/ball.png";
-
-  const backgroundImage = new Image();
-  backgroundImage.src = "src/ground.jpg";
-
-  let ballRotationAngle = 0;
-  const ballRadius = 8;
-  let ballX = canvas.width / 2;
-  let ballY = paddleY - ballRadius;
-  let ballDX = 4;
-  let ballDY = -5;
-  const ballSpeed = 5;
-  let ballSpeedY = 5;
-
-  // variables about the brick
-  const brickRowCount = 1; // number of rows of bricks
-  const brickColumnCount = 1; // number of rows of bricks
-  let brickCnt = brickRowCount * brickColumnCount;
-  const brickWidth = 80;
-  const brickHeight = 30;
-  const brickPadding = 1; // spacing between bricks
-  const brickOffsetTop = 30;
-  const brickOffsetLeft = 160;
-
-  var bricks = new Array(brickRowCount);
-  for (let i = 0; i < brickColumnCount; i++) {
-    bricks[i] = new Array(brickColumnCount);
-    for (let j = 0; j < brickRowCount; j++) {
-      var randomStatusValue = Math.floor(Math.random() * 2 + 1);
-      bricks[i][j] = { x: 0, y: 0, status: randomStatusValue };
-    }
-  }
-
-  // 키보드 이벤트 처리를 위한 변수 선언
-  let rightPressed = false;
-  let leftPressed = false;
-  let spacePressed = false;
-  let resetPaddleAngle = false; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화하기 위한 변수
-
-  // 키보드 이벤트 리스너 추가
-  $(document).keydown(keyDownHandler);
-  $(document).keyup(keyUpHandler);
-
-  // 키보드 이벤트 처리 함수
-  function keyDownHandler(event) {
-    if (event.key === "Right" || event.key === "ArrowRight") {
-      rightPressed = true;
-    } else if (event.key === "Left" || event.key === "ArrowLeft") {
-      leftPressed = true;
-    } else if (event.key === " ") {
-      spacePressed = true;
-    } else if (event.key === "e") {
-      resetPaddleAngle = true; // 'e' 키를 누르면 패들 각도 초기화 플래그를 true로 설정
-    }
-  }
-
-  function keyUpHandler(event) {
-    if (event.key === "Right" || event.key === "ArrowRight") {
-      rightPressed = false;
-    } else if (event.key === "Left" || event.key === "ArrowLeft") {
-      leftPressed = false;
-    } else if (event.key === " ") {
-      spacePressed = false;
-    } else if (event.key === "e") {
-      resetPaddleAngle = false; // 'e' 키를 뗐을 때 패들 각도 초기화 플래그를 false로 설정
-    }
-  }
-
-  function drawBall() {
-    ctx.save();
-    ctx.translate(ballX, ballY);
-    ctx.rotate((Math.PI / 180) * ballRotationAngle); // 회전 각도 적용
-    ctx.drawImage(
-      ballImage,
-      -ballRadius,
-      -ballRadius,
-      ballRadius * 2,
-      ballRadius * 2
-    );
-    ctx.restore();
-  }
-
-  function drawPaddle() {
-    ctx.save();
-    ctx.translate(paddleX, paddleY);
-    ctx.rotate((-Math.PI / 180) * paddleAngle); // 각도를 라디안으로 변환하여 회전
-    ctx.drawImage(paddleImage, 0, 0, paddleWidth, paddleHeight);
-    ctx.restore();
-  }
-
-  function drawHitter() {
-    ctx.save();
-    ctx.translate(hitterX, hitterY);
-    ctx.drawImage(hitterImage, 0, 0, hitterWidth, hitterHeight);
-    ctx.restore();
-  }
-
-  // 공 이미지 회전 함수
-  function rotateBallImage() {
-    ballRotationAngle += 15; // 회전 속도 조절
-    if (ballRotationAngle >= 360) {
-      ballRotationAngle = 0;
-    }
-  }
-
-  // 벽돌 그리기
-  function drawBricks() {
-    for (let c = 0; c < brickColumnCount; c++) {
-      for (let r = 0; r < brickRowCount; r++) {
-        if (bricks[c][r].status === 1) {
-          const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-          const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-          bricks[c][r].x = brickX;
-          bricks[c][r].y = brickY;
-          ctx.beginPath();
-          ctx.rect(brickX, brickY, brickWidth, brickHeight);
-          ctx.fillStyle = "#D5FFD5";
-          ctx.fill();
-          ctx.closePath();
-        } else if (bricks[c][r].status === 2) {
-          const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-          const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-          bricks[c][r].x = brickX;
-          bricks[c][r].y = brickY;
-          ctx.beginPath();
-          ctx.rect(brickX, brickY, brickWidth, brickHeight);
-          ctx.fillStyle = "#8FBC8B";
-          ctx.fill();
-          ctx.closePath();
-        }
-      }
-    }
-  }
-
-  function collisionDetection() {
-    for (let i = 0; i < brickColumnCount; i++) {
-      for (let j = 0; j < brickRowCount; j++) {
-        const b = bricks[i][j];
-        if (b.status > 0) {
-          if (
-            ballX + ballRadius > b.x &&
-            ballX - ballRadius < b.x + brickWidth &&
-            ballY + ballRadius > b.y &&
-            ballY - ballRadius < b.y + brickHeight
-          ) {
-            const brickLeft = b.x;
-            const brickRight = b.x + brickWidth;
-            const brickTop = b.y;
-            const brickBottom = b.y + brickHeight;
-
-            if (
-              ballX + ballRadius > brickRight ||
-              ballX - ballRadius < brickLeft
-            ) {
-              // 충돌이 벽돌의 옆면에 있는 경우
-              ballDX = -ballDX; // x축 이동 방향을 반대로 변경
-            } else if (
-              ballY + ballRadius > brickTop &&
-              ballY - ballRadius < brickBottom
-            ) {
-              // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
-              ballDY = -ballDY; // y축 이동 방향을 반대로 변경
-            }
-
-            b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
-            if (b.status === 0) brickCnt--;
-            brickBreak.play();
-          }
-        }
-      }
-    }
-  }
-
-  function gameOver() {
-    if (storyModeLives === 0) {
-      console.log("Died Playing Normal Mode");
-      endStoryMode();
-      return true;
-    }
-    return false;
-  }
-
-  // Function to reset the ball and paddle positions
-  function resetPositions() {
-    paddleX = (canvas.width - paddleWidth) / 2;
-    paddleY = canvas.height - paddleHeight - 45;
-    hitterX = paddleX - 70;
-    hitterY = paddleY - 65;
-    ballX = canvas.width / 2;
-    ballY = paddleY - ballRadius;
-    ballDX = 5;
-    ballDY = -5;
-  }
-
-  // Game over and reset function
-  function handleGameOver() {
-    resetPositions();
-    storyModeLives--;
-    $("#livesLeft").text(storyModeLives);
-    console.log("Lives: " + storyModeLives);
-    if (!gameOver()) {
-      setTimeout(function () {
-        draw();
-      }, 1000);
-    }
-  }
-
-  // 게임 루프
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
-    drawPaddle();
-    drawHitter();
-    drawBall();
-    rotateBallImage();
-    drawBricks();
-    collisionDetection();
-
-    // 패들 이동
-    if (rightPressed && paddleX < canvas.width - paddleWidth) {
-      paddleX += paddleSpeed;
-      hitterX += paddleSpeed;
-    } else if (leftPressed && paddleX > 0) {
-      paddleX -= paddleSpeed;
-      hitterX -= paddleSpeed;
-    }
-
-    // 방망이 휘두르는 모션
-    if (spacePressed) {
-      paddleAngle = Math.min(paddleAngle + 15, paddleMaxAngle); // 최대 각도까지 회전
-    } else if (resetPaddleAngle) {
-      paddleAngle = 0; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화
-    } else {
-      paddleAngle = -25; // 스페이스바를 뗐을 때 각도 초기화
-    }
-
-    // 공 위치 업데이트
-    ballX += ballDX;
-    ballY += ballDY;
-
-    // 벽과 충돌 감지
-    if (ballX + ballRadius > canvas.width || ballX - ballRadius < 0) {
-      ballDX = -ballDX; // x 방향 반대로 변경하여 튕김
-    }
-    if (ballY - ballRadius < 0) {
-      ballDY = -ballDY; // y 방향 반대로 변경하여 튕김
-    }
-
-    // ground collision detection
-    if (ballY > canvas.height) {
-      handleGameOver();
-      return;
-    }
-
-    // 패들과 충돌 감지
-    if (
-      (spacePressed || resetPaddleAngle) &&
-      ballY + ballRadius > paddleY && // 공이 패들의 y 좌표 범위에 있을 때
-      ballX > paddleX &&
-      ballX < paddleX + paddleWidth // 공이 패들의 x 좌표 범위에 있을 때
-    ) {
-      // 패들과 충돌 판정을 위한 충돌 박스 계산
-      const paddleCenterX = paddleX + paddleWidth / 2;
-      const paddleTopY = paddleY;
-      const paddleBox = {
-        x: paddleCenterX - paddleWidth / 2,
-        y: paddleTopY,
-        width: paddleWidth,
-        height: paddleHeight,
-      };
-
-      // 공과 충돌 판정을 위한 충돌 박스 계산
-      const ballBox = {
-        x: ballX - ballRadius,
-        y: ballY - ballRadius,
-        width: ballRadius * 2,
-        height: ballRadius * 2,
-      };
-
-      // 충돌 판정
-      if (checkCollision(paddleBox, ballBox)) {
-        if (resetPaddleAngle) {
-          // 'e' 키가 눌려 있는 경우
-          ballDX = 0; // 가로 속도를 0으로 설정하여 멈춤
-          bunt.play();
-        } else {
-          // 충돌 시 패들과의 상대적인 충돌 위치 계산
-          const collisionPoint = ballX - (paddleX + paddleWidth / 2);
-
-          // 상대적인 충돌 위치에 따라 공의 속도와 방향을 조절
-          const maxBounceAngle = (paddleMaxAngle * Math.PI) / 180;
-          const bounceAngle =
-            (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
-          ballDX = ballSpeed * Math.sin(bounceAngle);
-          hit.play();
-        }
-        ballDY = -ballSpeedY; // 수직 방향은 항상 위쪽으로 설정
-      }
-    }
-
-    if (brickCnt > 0) requestAnimationFrame(draw);
-    else playHardMode(storyModeLives);
-  }
-
-  // 게임 루프 실행
-  draw();
-
-  function endStoryMode() {
-    clearCanvas();
-    $("#gameStatus").hide();
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-}
-
-function playHardMode(storyModeLives) {
-  console.log("Starting Hard Story Game");
-  clearCanvas();
-  $("#gameCanvas").show();
-  $("#gameStatus").show();
-  $("#livesLeft").text(storyModeLives);
-  $("#liveScore").text("");
-
-  //variables about the paddle
-  const paddleWidth = 134;
-  const paddleHeight = 18;
-  const paddleSpeed = 7;
-  const paddleMaxAngle = 105; // 최대 회전 각도 (방망이 휘두르는 각도)
-  let paddleX = (canvas.width - paddleWidth) / 2;
-  let paddleY = canvas.height - paddleHeight - 45;
-  let paddleAngle = -25; // 현재 방망이 회전 각도
-  const paddleImage = new Image();
-  paddleImage.src = "src/batWithHands.png";
-
-  //타자
-  const hitterImage = new Image();
-  hitterImage.src = "src/hitter" + teamType + ".png";
-  const hitterWidth = 80;
-  const hitterHeight = 120;
-  let hitterX = paddleX - 70;
-  let hitterY = paddleY - 65;
-
-  const ballImage = new Image();
-  ballImage.src = "src/ball.png";
-
-  const backgroundImage = new Image();
-  backgroundImage.src = "src/ground.jpg";
-
-  let ballRotationAngle = 0;
-  const ballRadius = 8;
-  let ballX = canvas.width / 2;
-  let ballY = paddleY - ballRadius;
-  let ballDX = 6;
-  let ballDY = -6;
-  const ballSpeed = 6;
-  let ballSpeedY = 6;
-
-  // variables about the brick
-  const brickRowCount = 4; // number of rows of bricks
-  const brickColumnCount = 6; // number of rows of bricks
-  let brickCnt = brickRowCount * brickColumnCount;
-  const brickWidth = 80;
-  const brickHeight = 30;
-  const brickPadding = 1; // spacing between bricks
-  const brickOffsetTop = 30;
-  const brickOffsetLeft = 160;
-
-  var bricks = new Array(brickRowCount);
-  for (let i = 0; i < brickColumnCount; i++) {
-    bricks[i] = new Array(brickColumnCount);
-    for (let j = 0; j < brickRowCount; j++) {
-      var randomStatusValue = Math.floor(Math.random() * 3 + 1);
-      bricks[i][j] = { x: 0, y: 0, status: randomStatusValue };
-    }
-  }
-
-  // 키보드 이벤트 처리를 위한 변수 선언
-  let rightPressed = false;
-  let leftPressed = false;
-  let spacePressed = false;
-  let resetPaddleAngle = false; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화하기 위한 변수
-
-  // 키보드 이벤트 리스너 추가
-  $(document).keydown(keyDownHandler);
-  $(document).keyup(keyUpHandler);
-
-  // 키보드 이벤트 처리 함수
-  function keyDownHandler(event) {
-    if (event.key === "Right" || event.key === "ArrowRight") {
-      rightPressed = true;
-    } else if (event.key === "Left" || event.key === "ArrowLeft") {
-      leftPressed = true;
-    } else if (event.key === " ") {
-      spacePressed = true;
-    } else if (event.key === "e") {
-      resetPaddleAngle = true; // 'e' 키를 누르면 패들 각도 초기화 플래그를 true로 설정
-    }
-  }
-
-  function keyUpHandler(event) {
-    if (event.key === "Right" || event.key === "ArrowRight") {
-      rightPressed = false;
-    } else if (event.key === "Left" || event.key === "ArrowLeft") {
-      leftPressed = false;
-    } else if (event.key === " ") {
-      spacePressed = false;
-    } else if (event.key === "e") {
-      resetPaddleAngle = false; // 'e' 키를 뗐을 때 패들 각도 초기화 플래그를 false로 설정
-    }
-  }
-
-  function drawBall() {
-    ctx.save();
-    ctx.translate(ballX, ballY);
-    ctx.rotate((Math.PI / 180) * ballRotationAngle); // 회전 각도 적용
-    ctx.drawImage(
-      ballImage,
-      -ballRadius,
-      -ballRadius,
-      ballRadius * 2,
-      ballRadius * 2
-    );
-    ctx.restore();
-  }
-
-  function drawPaddle() {
-    ctx.save();
-    ctx.translate(paddleX, paddleY);
-    ctx.rotate((-Math.PI / 180) * paddleAngle); // 각도를 라디안으로 변환하여 회전
-    ctx.drawImage(paddleImage, 0, 0, paddleWidth, paddleHeight);
-    ctx.restore();
-  }
-
-  function drawHitter() {
-    ctx.save();
-    ctx.translate(hitterX, hitterY);
-    ctx.drawImage(hitterImage, 0, 0, hitterWidth, hitterHeight);
-    ctx.restore();
-  }
-
-  // 공 이미지 회전 함수
-  function rotateBallImage() {
-    ballRotationAngle += 15; // 회전 속도 조절
-    if (ballRotationAngle >= 360) {
-      ballRotationAngle = 0;
-    }
-  }
-
-  // 벽돌 그리기
-  function drawBricks() {
-    for (let c = 0; c < brickColumnCount; c++) {
-      for (let r = 0; r < brickRowCount; r++) {
-        if (bricks[c][r].status === 1) {
-          const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-          const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-          bricks[c][r].x = brickX;
-          bricks[c][r].y = brickY;
-          ctx.beginPath();
-          ctx.rect(brickX, brickY, brickWidth, brickHeight);
-          ctx.fillStyle = "#D5FFD5";
-          ctx.fill();
-          ctx.closePath();
-        } else if (bricks[c][r].status === 2) {
-          const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-          const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-          bricks[c][r].x = brickX;
-          bricks[c][r].y = brickY;
-          ctx.beginPath();
-          ctx.rect(brickX, brickY, brickWidth, brickHeight);
-          ctx.fillStyle = "#8FBC8B";
-          ctx.fill();
-          ctx.closePath();
-        } else if (bricks[c][r].status === 3) {
-          const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-          const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-          bricks[c][r].x = brickX;
-          bricks[c][r].y = brickY;
-          ctx.beginPath();
-          ctx.rect(brickX, brickY, brickWidth, brickHeight);
-          ctx.fillStyle = "#53682A";
-          ctx.fill();
-          ctx.closePath();
-        }
-      }
-    }
-  }
-
-  function collisionDetection() {
-    for (let i = 0; i < brickColumnCount; i++) {
-      for (let j = 0; j < brickRowCount; j++) {
-        const b = bricks[i][j];
-        if (b.status > 0) {
-          if (
-            ballX + ballRadius > b.x &&
-            ballX - ballRadius < b.x + brickWidth &&
-            ballY + ballRadius > b.y &&
-            ballY - ballRadius < b.y + brickHeight
-          ) {
-            const brickLeft = b.x;
-            const brickRight = b.x + brickWidth;
-            const brickTop = b.y;
-            const brickBottom = b.y + brickHeight;
-
-            if (
-              ballX + ballRadius > brickRight ||
-              ballX - ballRadius < brickLeft
-            ) {
-              // 충돌이 벽돌의 옆면에 있는 경우
-              ballDX = -ballDX; // x축 이동 방향을 반대로 변경
-            } else if (
-              ballY + ballRadius > brickTop &&
-              ballY - ballRadius < brickBottom
-            ) {
-              // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
-              ballDY = -ballDY; // y축 이동 방향을 반대로 변경
-            }
-
-            b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
-            if (b.status === 0) brickCnt--;
-            brickBreak.play();
-          }
-        }
-      }
-    }
-  }
-
-  function gameOver() {
-    if (storyModeLives === 0) {
-      console.log("Died Playing Easy Mode");
-      endStoryMode();
-      return true;
-    }
-    return false;
-  }
-
-  // Function to reset the ball and paddle positions
-  function resetPositions() {
-    paddleX = (canvas.width - paddleWidth) / 2;
-    paddleY = canvas.height - paddleHeight - 45;
-    hitterX = paddleX - 70;
-    hitterY = paddleY - 65;
-    ballX = canvas.width / 2;
-    ballY = paddleY - ballRadius;
-    ballDX = 6;
-    ballDY = -6;
-  }
-
-  // Game over and reset function
-  function handleGameOver() {
-    resetPositions();
-    storyModeLives--;
-    $("#livesLeft").text(storyModeLives);
-    console.log("Lives: " + storyModeLives);
-    if (!gameOver()) {
-      setTimeout(function () {
-        draw();
-      }, 1000);
-    }
-  }
-
-  // 게임 루프
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
-    drawPaddle();
-    drawHitter();
-    drawBall();
-    rotateBallImage();
-    drawBricks();
-    collisionDetection();
-
-    // 패들 이동
-    if (rightPressed && paddleX < canvas.width - paddleWidth) {
-      paddleX += paddleSpeed;
-      hitterX += paddleSpeed;
-    } else if (leftPressed && paddleX > 0) {
-      paddleX -= paddleSpeed;
-      hitterX -= paddleSpeed;
-    }
-
-    // 방망이 휘두르는 모션
-    if (spacePressed) {
-      paddleAngle = Math.min(paddleAngle + 15, paddleMaxAngle); // 최대 각도까지 회전
-    } else if (resetPaddleAngle) {
-      paddleAngle = 0; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화
-    } else {
-      paddleAngle = -25; // 스페이스바를 뗐을 때 각도 초기화
-    }
-
-    // 공 위치 업데이트
-    ballX += ballDX;
-    ballY += ballDY;
-
-    // 벽과 충돌 감지
-    if (ballX + ballRadius > canvas.width || ballX - ballRadius < 0) {
-      ballDX = -ballDX; // x 방향 반대로 변경하여 튕김
-    }
-    if (ballY - ballRadius < 0) {
-      ballDY = -ballDY; // y 방향 반대로 변경하여 튕김
-    }
-
-    // ground collision detection
-    if (ballY > canvas.height) {
-      handleGameOver();
-      return;
-    }
-
-    // 패들과 충돌 감지
-    if (
-      (spacePressed || resetPaddleAngle) &&
-      ballY + ballRadius > paddleY && // 공이 패들의 y 좌표 범위에 있을 때
-      ballX > paddleX &&
-      ballX < paddleX + paddleWidth // 공이 패들의 x 좌표 범위에 있을 때
-    ) {
-      // 패들과 충돌 판정을 위한 충돌 박스 계산
-      const paddleCenterX = paddleX + paddleWidth / 2;
-      const paddleTopY = paddleY;
-      const paddleBox = {
-        x: paddleCenterX - paddleWidth / 2,
-        y: paddleTopY,
-        width: paddleWidth,
-        height: paddleHeight,
-      };
-
-      // 공과 충돌 판정을 위한 충돌 박스 계산
-      const ballBox = {
-        x: ballX - ballRadius,
-        y: ballY - ballRadius,
-        width: ballRadius * 2,
-        height: ballRadius * 2,
-      };
-
-      // 충돌 판정
-      if (checkCollision(paddleBox, ballBox)) {
-        if (resetPaddleAngle) {
-          // 'e' 키가 눌려 있는 경우
-          ballDX = 0; // 가로 속도를 0으로 설정하여 멈춤
-          bunt.play();
-        } else {
-          // 충돌 시 패들과의 상대적인 충돌 위치 계산
-          const collisionPoint = ballX - (paddleX + paddleWidth / 2);
-
-          // 상대적인 충돌 위치에 따라 공의 속도와 방향을 조절
-          const maxBounceAngle = (paddleMaxAngle * Math.PI) / 180;
-          const bounceAngle =
-            (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
-          ballDX = ballSpeed * Math.sin(bounceAngle);
-          hit.play();
-        }
-        ballDY = -ballSpeedY; // 수직 방향은 항상 위쪽으로 설정
-      }
-    }
-
-    if (brickCnt > 0) requestAnimationFrame(draw);
-    else playHardMode(storyModeLives);
-  }
-
-  // 게임 루프 실행
-  draw();
-
-  function endStoryMode() {
-    clearCanvas();
-    $("#gameStatus").hide();
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-}
-
 $("#selectRankedGameButton").click(function () {
   $("#gameTypeSelectingScreen").hide();
   $("#gameCanvas").show();
@@ -1710,16 +610,15 @@ function beforePlayingRankedGame() {
 }
 
 function playRankedGame() {
-  startBgm.pause();
   console.log("Starting Ranked game..");
   clearCanvas();
   $("#gameCanvas").show();
+  startBgm.pause();
   $("#gameStatus").show();
   var lives = 3;
   rankedGameScore = 0;
   $("#livesLeft").text(lives);
   $("#liveScore").text("SCORE: " + rankedGameScore);
-  $("#skillImg").src = "src/skill" + teamType + ".png";
 
   //variables about the paddle
   const paddleWidth = 134;
@@ -1823,7 +722,7 @@ function playRankedGame() {
       -ballRadius,
       ballRadius * 2,
       ballRadius * 2
-    );
+      );
     ctx.restore();
   }
 
@@ -1835,7 +734,6 @@ function playRankedGame() {
     ctx.drawImage(paddleImage, 0, 0, paddleWidth, paddleHeight);
     ctx.restore();
   }
-
   //타자 그리기
   function drawHitter() {
     ctx.save();
@@ -1871,127 +769,145 @@ function playRankedGame() {
     }
   }
 
-  // 충돌 감지 및 벽돌 제거
+  
   function collisionDetection() {
     for (let i = 0; i < brickColumnCount; i++) {
       for (let j = 0; j < brickRowCount; j++) {
         const b = bricks[i][j];
-        if (b.status === 1) {
+        if (b.status > 0) {
           if (
-            ballX > b.x &&
-            ballX < b.x + brickWidth &&
-            ballY > b.y &&
-            ballY < b.y + brickHeight
+            ballX + ballRadius > b.x &&
+            ballX - ballRadius < b.x + brickWidth &&
+            ballY + ballRadius > b.y &&
+            ballY - ballRadius < b.y + brickHeight
+            ) {
+            const brickLeft = b.x;
+          const brickRight = b.x + brickWidth;
+          const brickTop = b.y;
+          const brickBottom = b.y + brickHeight;
+
+          if (
+            ballX + ballRadius > brickRight ||
+            ballX - ballRadius < brickLeft
+            ) {
+            // 충돌이 벽돌의 옆면에 있는 경우
+            ballDX = -ballDX; // x축 이동 방향을 반대로 변경
+        } else if (
+          ballY + ballRadius > brickTop &&
+          ballY - ballRadius < brickBottom
           ) {
-            ballDY = -ballDY;
-            b.status--;
-            brickBreak.play();
-            rankedGameScore++;
-            if (rankedGameScore % 10 === 0) {
-              ballDY += 1;
-              ballSpeedY += 1;
-            }
-            $("#liveScore").text("SCORE: " + rankedGameScore);
+            // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
+            ballDY = -ballDY; // y축 이동 방향을 반대로 변경
           }
+
+          b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
+          brickBreak.play();
+          rankedGameScore++;
+          if (rankedGameScore % 10 === 0) {
+            ballDY += 1;
+            ballSpeedY += 1;
+          }
+          $("#liveScore").text("SCORE: " + rankedGameScore);
         }
       }
     }
   }
+}
 
-  function gameOver() {
-    if (lives === 0) {
-      endRankedGame();
-      return true;
-    }
-    return false;
+function gameOver() {
+  if (lives === 0) {
+    endRankedGame();
+    return true;
   }
+  return false;
+}
 
   // Function to reset the ball and paddle positions
-  function resetPositions() {
-    paddleX = (canvas.width - paddleWidth) / 2;
-    paddleY = canvas.height - paddleHeight - 45;
-    hitterX = paddleX - 70;
-    hitterY = paddleY - 65;
-    ballX = canvas.width / 2;
-    ballY = paddleY - ballRadius;
-    ballDX = 4;
-    ballDY = -5;
-  }
+function resetPositions() {
+  paddleX = (canvas.width - paddleWidth) / 2;
+  paddleY = canvas.height - paddleHeight - 45;
+  hitterX = paddleX - 70;
+  hitterY = paddleY - 65;
+  ballX = canvas.width / 2;
+  ballY = paddleY - ballRadius;
+  ballDX = 4;
+  ballDY = -5;
+}
 
   // Game over and reset function
-  function handleGameOver() {
-    resetPositions();
-    lives--;
-    $("#livesLeft").text(lives);
-    console.log("Lives: " + lives);
-    if (!gameOver()) {
-      setTimeout(function () {
-        draw();
-      }, 1000);
-    }
+function handleGameOver() {
+  resetPositions();
+  lives--;
+  $("#livesLeft").text(lives);
+  console.log("Lives: " + lives);
+  if (!gameOver()) {
+    setTimeout(function () {
+      draw();
+    }, 1000);
   }
+}
 
   // Function to generate new brick row
-  function generateNewBrickRow() {
-    const newRow = new Array(1);
-    for (let i = 0; i < brickColumnCount; i++) {
-      newRow[i] = { x: 0, y: 0, status: 1 };
-    }
+function generateNewBrickRow() {
+  const newRow = new Array(1);
+  for (let i = 0; i < brickColumnCount; i++) {
+    newRow[i] = { x: 0, y: 0, status: 1 };
+  }
 
     // Insert the new row at the beginning of the bricks array
-    bricks.unshift(newRow);
+  bricks.unshift(newRow);
 
     // Update the Y positions of existing rows
-    for (let j = 1; j < bricks.length; j++) {
-      for (let i = 0; i < brickColumnCount; i++) {
-        if (bricks[j][i]) {
-          bricks[j][i].y += brickHeight + brickPadding;
-        }
+  for (let j = 1; j < bricks.length; j++) {
+    for (let i = 0; i < brickColumnCount; i++) {
+      if (bricks[j][i]) {
+        bricks[j][i].y += brickHeight + brickPadding;
       }
     }
+  }
 
     // Remove the last row if the total number of rows exceeds brickRowCount
-    if (bricks.length > maximumBrickRow) {
-      bricks.pop();
-    }
+  if (bricks.length > maximumBrickRow) {
+    bricks.pop();
   }
-  var rowGeneratingInterval = 4000;
-  function startNewBrickRowTimer() {
-    setInterval(generateNewBrickRow, rowGeneratingInterval);
-  }
+}
+var rowGeneratingInterval = 4000;
+function startNewBrickRowTimer() {
+  setInterval(generateNewBrickRow, rowGeneratingInterval);
+}
 
   // Call the function to start the timer
-  startNewBrickRowTimer();
+startNewBrickRowTimer();
 
   // 게임 루프
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
-    drawPaddle();
+  drawPaddle();
 
-    drawHitter();
+  drawHitter();
 
-    drawBall();
+  drawBall();
 
-    rotateBallImage();
+  rotateBallImage();
 
-    drawBricks();
+  drawBricks();
 
     // 충돌 감지 및 벽돌 제거
-    collisionDetection();
+  collisionDetection();
 
     // 패들 이동
-    if (rightPressed && paddleX < canvas.width - paddleWidth) {
-      paddleX += paddleSpeed;
-      hitterX += paddleSpeed;
-    } else if (leftPressed && paddleX > 0) {
-      paddleX -= paddleSpeed;
-      hitterX -= paddleSpeed;
-    }
+  if (rightPressed && paddleX < canvas.width - paddleWidth) {
+    paddleX += paddleSpeed;
+    hitterX += paddleSpeed;
+  } else if (leftPressed && paddleX > 0) {
+    paddleX -= paddleSpeed;
+    hitterX -= paddleSpeed;
+  }
 
     // 방망이 휘두르는 모션
-    if (spacePressed) {
+  if (spacePressed) {
       paddleAngle = Math.min(paddleAngle + 15, paddleMaxAngle); // 최대 각도까지 회전
     } else if (resetPaddleAngle) {
       paddleAngle = 0; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화
@@ -2023,30 +939,30 @@ function playRankedGame() {
       ballY + ballRadius > paddleY && // 공이 패들의 y 좌표 범위에 있을 때
       ballX > paddleX &&
       ballX < paddleX + paddleWidth // 공이 패들의 x 좌표 범위에 있을 때
-    ) {
+      ) {
       // 패들과 충돌 판정을 위한 충돌 박스 계산
       const paddleCenterX = paddleX + paddleWidth / 2;
-      const paddleTopY = paddleY;
-      const paddleBox = {
-        x: paddleCenterX - paddleWidth / 2,
-        y: paddleTopY,
-        width: paddleWidth,
-        height: paddleHeight,
-      };
+    const paddleTopY = paddleY;
+    const paddleBox = {
+      x: paddleCenterX - paddleWidth / 2,
+      y: paddleTopY,
+      width: paddleWidth,
+      height: paddleHeight,
+    };
 
       // 공과 충돌 판정을 위한 충돌 박스 계산
-      const ballBox = {
-        x: ballX - ballRadius,
-        y: ballY - ballRadius,
-        width: ballRadius * 2,
-        height: ballRadius * 2,
-      };
+    const ballBox = {
+      x: ballX - ballRadius,
+      y: ballY - ballRadius,
+      width: ballRadius * 2,
+      height: ballRadius * 2,
+    };
 
       // 충돌 판정
-      if (checkCollision(paddleBox, ballBox)) {
-        if (resetPaddleAngle) {
+    if (checkCollision(paddleBox, ballBox)) {
+      if (resetPaddleAngle) {
           // 'e' 키가 눌려 있는 경우
-          ballDX = 0; // 가로 속도를 0으로 설정하여 멈춤
+          ballDX = (Math.random() * 2) - 1; // 가로 속도를 -1~1로 설정
           bunt.play();
         } else {
           // 충돌 시 패들과의 상대적인 충돌 위치 계산
@@ -2055,7 +971,7 @@ function playRankedGame() {
           // 상대적인 충돌 위치에 따라 공의 속도와 방향을 조절
           const maxBounceAngle = (paddleMaxAngle * Math.PI) / 180;
           const bounceAngle =
-            (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
+          (collisionPoint / (paddleWidth / 2)) * maxBounceAngle;
           ballDX = ballSpeed * Math.sin(bounceAngle);
           hit.play();
         }
@@ -2082,7 +998,6 @@ function endRankedGame() {
 
 const uploadScoreToDB = (score) => {
   const name = "NAME";
-
   rankingRef.doc(name).set({
     score: score,
   });
@@ -2097,17 +1012,19 @@ rankingRef.orderBy("score", "desc").onSnapshot((querySnapshot) => {
       `${$("#rankingTable").html()}<tr><td>${++i}</td><td>${doc.id}</td><td>${
         doc.data().score
       }</td></tr>`
-    );
+      );
   });
 });
 
 $("#rankingBoardButton").on("click", () => {
   console.log("Displaying Ranking Modal");
+  $("#rankedGameEndingPage").hide();
   $("#rankingModal").show();
 });
 
 $("#rankingModalCloseButton").on("click", () => {
   $("#rankingModal").hide();
+  $("#rankedGameEndingPage").show();
 });
 
 $("#restartRankedgameButton").on("click", function () {
@@ -2132,5 +1049,5 @@ function checkCollision(rect1, rect2) {
     rect1.x + rect1.width > rect2.x &&
     rect1.y < rect2.y + rect2.height &&
     rect1.y + rect1.height > rect2.y
-  );
+    );
 }
