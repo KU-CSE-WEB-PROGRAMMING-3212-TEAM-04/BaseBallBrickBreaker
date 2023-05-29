@@ -558,6 +558,7 @@ $(document).ready(function () {
 
       if(brickCnt>0)
         requestAnimationFrame(draw);
+        
       else{
         $("#story").fadeIn();
         $("#gameCanvas").hide();
