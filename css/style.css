@@ -1,12 +1,19 @@
+@font-face {
+  font-family: "bitbit";
+  src: url("//cdn.df.nexon.com/img/common/font/DNFBitBit-Regular.woff"),
+    url("//cdn.df.nexon.com/img/common/font/DNFBitBit-Regular.woff2");
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
   background: #222;
-  font-family: sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: "bitbit", sans-serif;
+  font-weight: normal;
 }
 
 .gameIntroScreen {
@@ -240,11 +247,10 @@ video {
   place-items: center;
   height: 600px;
   text-align: center;
-  font-family: sans-serif;
 }
 
 #gameTypeSelectingScreen .gameType {
-  width: 80vw;
+  width: 500px;
   max-width: 500px;
   height: 600px;
   background-size: auto 100%;
@@ -260,15 +266,17 @@ video {
 
 .m_img {
   height: 600px;
-  width: 50vh;
+  width: 450px;
+  object-fit: none;
+  object-position: center;
 }
 
 #gameTypeSelectingScreen div:nth-child(1) {
-  background-color: blue;
+  background-color: #2563e1;
 }
 
 #gameTypeSelectingScreen div:nth-child(2) {
-  background-color: red;
+  background-color: #fe2a2d;
 }
 
 #gameTypeSelectingScreen div:nth-child(1):after,
@@ -303,9 +311,9 @@ video {
   display: none;
 }
 #teamSelectingScreen .selectTeamTypeButton {
-  width: 20vw;
+  width: 250px;
   max-width: 250px;
-  height: 75vh;
+  height: 600px;
   background-size: auto 100%;
   background-position: 50% 50%;
   background-repeat: no-repeat;
@@ -318,8 +326,10 @@ video {
 }
 
 .t_img {
-  height: 65vh;
-  width: 25vh;
+  height: 600px;
+  width: 250px;
+  object-fit: none;
+  object-position: center;
 }
 
 #teamSelectingScreen div:nth-child(1) {
@@ -373,9 +383,9 @@ video {
   display: none;
 }
 #difficultyChoosingScreen .difficulty {
-  width: 30vw;
-  max-width: 350px;
-  height: 75vh;
+  width: calc(800px / 3);
+  max-width: calc(800px / 3);
+  height: 600px;
   background-size: auto 100%;
   background-position: 50% 50%;
   background-repeat: no-repeat;
@@ -387,8 +397,10 @@ video {
   z-index: -1;
 }
 .l_img {
-  height: 65vh;
-  width: 35vh;
+  height: 600px;
+  width: calc(800px / 3);
+  object-fit: none;
+  object-position: center;
 }
 #difficultyChoosingScreen div:nth-child(1) {
   background-color: dodgerblue;
@@ -450,30 +462,58 @@ canvas {
   display: none;
   width: 800px;
   height: 600px;
-  background-color: #555;
+  background-color: #74bf77;
   text-align: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #beforePlayingRankedGamePage h1 {
   font-size: 40px;
+  line-height: 70px;
+  margin: 0;
 }
 
 #playRankedGameButton {
+  background-color: #da0000;
   width: 180px;
   height: 70px;
   line-height: 70px;
-  background-color: rgb(63, 63, 63);
+  margin: 2rem auto;
   color: white;
-  font-size: 25px;
-  text-align: center;
-  margin: 0 auto;
+  font-size: 2rem;
+  cursor: pointer;
+  position: relative;
 }
 
-#playRankedGameButton:hover {
-  width: 200px;
-  height: 100px;
-  background-color: white;
-  color: black;
+#playRankedGameButton:hover,
+#playRankedGameButton:hover::before,
+#playRankedGameButton:hover::after {
+  background-color: hsl(0, 100%, 47%);
+}
+
+#playRankedGameButton::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 15px;
+  bottom: 15px;
+  left: -15px;
+  right: -15px;
+  background-color: #da0000;
+  z-index: -1;
+}
+
+#playRankedGameButton::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 7px;
+  bottom: 7px;
+  left: -9px;
+  right: -9px;
+  background: #da0000;
+  z-index: -1;
 }
 
 #rankedGameStatus {
@@ -502,6 +542,7 @@ canvas {
 }
 
 #rankedGameEndingPage {
+  background-color: #74bf77;
   display: none;
   text-align: center;
   width: 800px;
@@ -509,48 +550,172 @@ canvas {
 }
 
 #rankedGameScore {
-  margin: 50px auto;
-  font-size: 30px;
+  margin: 80px auto;
+  font-size: 60px;
 }
 
-#rankingBoardButton {
-  text-align: center;
-  border: 1px solid black;
-  margin: 50px auto;
+.endingButton {
+  background-color: #da0000;
   width: 300px;
-  height: 100px;
-  line-height: 100px;
-  font-size: 30px;
+  height: 70px;
+  line-height: 70px;
+  margin: 2rem auto;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  position: relative;
 }
 
-#rankingBoardButton:hover {
-  background-color: lightsalmon;
+.endingButton:hover,
+.endingButton:hover::before,
+.endingButton:hover::after {
+  background-color: hsl(0, 100%, 47%);
 }
- 
-#restartRankedgameButton {
+
+.endingButton::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 15px;
+  bottom: 15px;
+  left: -15px;
+  right: -15px;
+  background-color: #da0000;
+  z-index: -1;
+}
+
+.endingButton::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 7px;
+  bottom: 7px;
+  left: -9px;
+  right: -9px;
+  background: #da0000;
+  z-index: -1;
+}
+
+#rankingModal {
+  display: none;
   text-align: center;
-  border: 1px solid black;
-  margin: 50px auto;
-  width: 300px;
-  height: 100px;
-  line-height: 100px;
-  font-size: 30px;
+  width: 400px;
+  height: 500px;
+  margin-top: 50px;
+  background-color: #ffd42a;
+  border: 4px solid #cea61e;
 }
 
-#restartRankedgameButton:hover {
-  background-color: lightsalmon;
-}
-
-#backToHomeButton {
+#rankingModal h1 {
+  position: relative;
+  margin: -25px auto 30px;
+  padding: 15px 0;
   text-align: center;
-  border: 1px solid black;
-  margin: 50px auto;
-  width: 300px;
-  height: 100px;
-  line-height: 100px;
-  font-size: 30px;
+  background-color: #da0000;
+  color: white;
+  font-size: 3rem;
+  text-shadow: -3.8px 0 #990100, 0 3.5px #990100, 3.8px 0 #990100,
+    0 -3.5px #990100;
 }
 
-#backToHomeButton:hover {
-  background-color: lightsalmon;
+#rankingModal h1::before,
+#rankingModal h1::after {
+  content: "";
+  width: 80px;
+  height: 100%;
+  background-color: #990100;
+
+  position: absolute;
+  z-index: -1;
+  top: 20px;
+
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 25% 50%);
+
+  background-image: linear-gradient(45deg, transparent 50%, #690000 50%);
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+}
+
+#rankingModal h1::before {
+  left: -60px;
+}
+
+#rankingModal h1::after {
+  right: -60px;
+  transform: scaleX(-1);
+}
+
+#rankingModalCloseButton {
+  background-color: #da0000;
+  width: 100px;
+  padding: 8px;
+  margin: 15px auto;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  position: relative;
+}
+
+#rankingModalCloseButton:hover,
+#rankingModalCloseButton:hover::before,
+#rankingModalCloseButton:hover::after {
+  background-color: hsl(0, 100%, 47%);
+}
+
+#rankingModalCloseButton::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: -10px;
+  right: -10px;
+  background-color: #da0000;
+  z-index: -1;
+}
+
+#rankingModalCloseButton::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: -6px;
+  right: -6px;
+  background: #da0000;
+  z-index: -1;
+}
+
+#rankingTable {
+  width: 370px;
+  margin: 0 15px;
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  border: 0;
+  border-spacing: 0;
+}
+
+#rankingTable th {
+  color: #da0000;
+  text-shadow: -1.5px 0 #fff, 0 1.5px #fff, 1.5px 0 #fff, 0 -1.5px #fff;
+}
+#rankingTable tr {
+  text-shadow: -1.5px 0 white, 0 1.5px white, 1.5px 0 white, 0 -1.5px white;
+}
+
+#rankingTable tr:nth-child(2n) {
+  background-color: hsl(48, 100%, 48%);
+}
+
+#rankingTable tr:nth-child(2) {
+  color: #fec124;
+}
+
+#rankingTable tr:nth-child(3) {
+  color: #77919d;
+}
+
+#rankingTable tr:nth-child(4) {
+  color: #5d4038;
 }
