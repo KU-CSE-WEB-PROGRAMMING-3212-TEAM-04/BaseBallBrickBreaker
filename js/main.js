@@ -121,14 +121,14 @@ $(document).ready(function () {
   $("#selectStoryGameButton").click(function () {
     $("#gameTypeSelectingScreen").hide();
     $("#teamSelectingScreen").fadeIn();
-    clickSound1.play();
+    // clickSound1.play();
   });
 
   $("#selectTeam1").click(function () {
     teamType = 1;
     $("#teamSelectingScreen").hide();
     $("#difficultyChoosingScreen").fadeIn();
-    clickSound1.play();
+    // clickSound1.play();
   });
 
   $("#selectEasyDifficulty").click(function () {
