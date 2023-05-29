@@ -12,6 +12,7 @@ startBgm.volume -= 0.5;
 var bgm2 = new Audio("src/startbgm2.mp3");
 var hit = new Audio("src/click2.mp3");
 var bunt = new Audio("src/click1.mp3");
+var clickSound1 = new Audio('source/click1.mp3')
 var brickBreak = new Audio("src/brickBreak.mp3");
 var teamType = -1;
 var storyGameDifficulty = -1;
@@ -117,28 +118,17 @@ $(document).ready(function () {
     });
   }
 
-  // #click_sound 소스 찾아서 html에 넣어야함.
-  // function play() {
-  //   var audio = $("#click_sound")[0];
-  //   if (audio.paused) {
-  //     audio.play();
-  //   } else {
-  //     audio.pause();
-  //     audio.currentTime = 0;
-  //   }
-  // }
-
   $("#selectStoryGameButton").click(function () {
     $("#gameTypeSelectingScreen").hide();
     $("#teamSelectingScreen").fadeIn();
-    // play();
+    clickSound1.play();
   });
 
   $("#selectTeam1").click(function () {
     teamType = 1;
     $("#teamSelectingScreen").hide();
     $("#difficultyChoosingScreen").fadeIn();
-    // play();
+    clickSound1.play();
   });
 
   $("#selectEasyDifficulty").click(function () {
