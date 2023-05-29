@@ -458,6 +458,12 @@ canvas {
   transform: translate(-50%, 0%);
 }
 
+#storyModeEndingPage {
+  display: none;
+  width: 800px;
+  height: 600px;
+}
+
 #beforePlayingRankedGamePage {
   display: none;
   width: 800px;
@@ -516,7 +522,7 @@ canvas {
   z-index: -1;
 }
 
-#rankedGameStatus {
+#gameStatus {
   display: none;
   width: 800px;
   height: 100px;
@@ -535,7 +541,7 @@ canvas {
   margin-left: 10px;
 }
 
-#rankedGameLiveScore {
+#liveScore {
   float: left;
   font-size: 25px;
   margin-left: 30px;
