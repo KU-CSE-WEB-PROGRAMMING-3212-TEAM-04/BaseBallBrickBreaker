@@ -894,7 +894,7 @@ $(document).ready(function () {
         }
       }
 
-      if(brickCnt > 0)
+      if(brickCnt>0)
         requestAnimationFrame(draw);
       else{
         $("#story").fadeIn();
