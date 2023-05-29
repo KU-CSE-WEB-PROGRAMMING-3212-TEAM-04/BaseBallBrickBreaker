@@ -200,7 +200,6 @@ $(document).ready(function () {
     $("#story").fadeIn();
     storyPage = 1;
     typingInterval = setInterval(typing, 100);
-
   });
 
   $("#selectNormalDifficulty").click(function () {
@@ -893,7 +892,6 @@ $(document).ready(function () {
           ballDY = -ballSpeedY; // 수직 방향은 항상 위쪽으로 설정
         }
       }
-
       if(brickCnt>0)
         requestAnimationFrame(draw);
       else{
