@@ -200,6 +200,7 @@ $(document).ready(function () {
     $("#story").fadeIn();
     storyPage = 1;
     typingInterval = setInterval(typing, 100);
+    // playEasyMode(3);
   });
 
   $("#selectNormalDifficulty").click(function () {
@@ -208,6 +209,7 @@ $(document).ready(function () {
     $("#story").fadeIn();
     storyPage = 2;
     typingInterval = setInterval(typing, 100);
+    // playNormalMode(3); 
   });
 
   $("#selectHardDifficulty").click(function () {
@@ -216,6 +218,7 @@ $(document).ready(function () {
     $("#story").fadeIn();
     storyPage = 3;
     typingInterval = setInterval(typing, 100);
+    // playHardMode(3);
   });
 
     
@@ -410,22 +413,49 @@ $(document).ready(function () {
         }
       }
     }
+function collisionDetection() {
+  for (let i = 0; i < brickColumnCount; i++) {
+    for (let j = 0; j < brickRowCount; j++) {
+      const b = bricks[i][j];
+      if (b.status > 0) {
+        if (
+          ballX + ballRadius > b.x &&
+          ballX - ballRadius < b.x + brickWidth &&
+          ballY + ballRadius > b.y &&
+          ballY - ballRadius < b.y + brickHeight
+        ) {
+          const brickLeft = b.x;
+          const brickRight = b.x + brickWidth;
+          const brickTop = b.y;
+          const brickBottom = b.y + brickHeight;
 
-    function collisionDetection() {
-      for (let i = 0; i < brickColumnCount; i++) {
-        for (let j = 0; j < brickRowCount; j++) {
-          const b = bricks[i][j];
-          if (b.status > 0) {
-            if (ballX > b.x && ballX < b.x + brickWidth && ballY > b.y && ballY < b.y + brickHeight) {
-              ballDY = -ballDY;
-              b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
-              brickBreak.play();
-              brickCnt--;
-            }
-          } 
+          if (
+            ballX + ballRadius > brickRight ||
+            ballX - ballRadius < brickLeft
+          ) {
+            // 충돌이 벽돌의 옆면에 있는 경우
+            ballDX = -ballDX; // x축 이동 방향을 반대로 변경
+          } else if (
+            ballY + ballRadius > brickTop &&
+            ballY - ballRadius < brickBottom
+          ) {
+            // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
+            ballDY = -ballDY; // y축 이동 방향을 반대로 변경
+          }
+
+          b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
+          if (b.status===0) 
+            brickCnt--;
+          brickBreak.play();
         }
       }
     }
+  }
+}
+
+
+
+
 
     function gameOver() {
       if (storyModeLives === 0) {
@@ -558,13 +588,8 @@ $(document).ready(function () {
 
       if(brickCnt>0)
         requestAnimationFrame(draw);
-      else{
-        $("#story").fadeIn();
-        $("#gameCanvas").hide();
-        $("#gameStatus").hide();
-        storyPage = 2;
-        typingInterval = setInterval(typing, 100);
-      }
+      else
+        playNormalMode(storyModeLives);
     }
 
     // 게임 루프 실행
@@ -625,8 +650,8 @@ $(document).ready(function () {
     let ballSpeedY = 5;
 
     // variables about the brick
-    const brickRowCount = 4; // number of rows of bricks
-    const brickColumnCount = 6; // number of rows of bricks
+    const brickRowCount = 1; // number of rows of bricks
+    const brickColumnCount = 1; // number of rows of bricks
     let brickCnt = brickRowCount*brickColumnCount;
     const brickWidth = 80;
     const brickHeight = 30;
@@ -744,26 +769,46 @@ $(document).ready(function () {
       }
     }
 
-    function collisionDetection() {
-      for (let i = 0; i < brickColumnCount; i++) {
-        for (let j = 0; j < brickRowCount; j++) {
-          const b = bricks[i][j];
-          if (b.status > 0) {
-            if (
-              ballX > b.x &&
-              ballX < b.x + brickWidth &&
-              ballY > b.y &&
-              ballY < b.y + brickHeight
-            ) {
-              ballDY = -ballDY;
-              b.status--;
-              brickBreak.play();
-            }
-          } else {
+ function collisionDetection() {
+  for (let i = 0; i < brickColumnCount; i++) {
+    for (let j = 0; j < brickRowCount; j++) {
+      const b = bricks[i][j];
+      if (b.status > 0) {
+        if (
+          ballX + ballRadius > b.x &&
+          ballX - ballRadius < b.x + brickWidth &&
+          ballY + ballRadius > b.y &&
+          ballY - ballRadius < b.y + brickHeight
+        ) {
+          const brickLeft = b.x;
+          const brickRight = b.x + brickWidth;
+          const brickTop = b.y;
+          const brickBottom = b.y + brickHeight;
+
+          if (
+            ballX + ballRadius > brickRight ||
+            ballX - ballRadius < brickLeft
+          ) {
+            // 충돌이 벽돌의 옆면에 있는 경우
+            ballDX = -ballDX; // x축 이동 방향을 반대로 변경
+          } else if (
+            ballY + ballRadius > brickTop &&
+            ballY - ballRadius < brickBottom
+          ) {
+            // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
+            ballDY = -ballDY; // y축 이동 방향을 반대로 변경
           }
+
+          b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
+          if (b.status===0) 
+            brickCnt--;
+          brickBreak.play();
         }
       }
     }
+  }
+}
+
 
     function gameOver() {
       if (storyModeLives === 0) {
@@ -892,15 +937,11 @@ $(document).ready(function () {
           ballDY = -ballSpeedY; // 수직 방향은 항상 위쪽으로 설정
         }
       }
-      if(brickCnt>0)
+
+      if(brickCnt > 0)
         requestAnimationFrame(draw);
-      else{
-        $("#story").fadeIn();
-        $("#gameCanvas").hide();
-        $("#gameStatus").hide();
-        storyPage = 3;
-        typingInterval = setInterval(typing, 100);
-      }
+      else
+        playHardMode(storyModeLives);
     }
 
     // 게임 루프 실행
@@ -1087,26 +1128,47 @@ $(document).ready(function () {
       }
     }
 
-    function collisionDetection() {
-      for (let i = 0; i < brickColumnCount; i++) {
-        for (let j = 0; j < brickRowCount; j++) {
-          const b = bricks[i][j];
-          if (b.status > 0) {
-            if (
-              ballX > b.x &&
-              ballX < b.x + brickWidth &&
-              ballY > b.y &&
-              ballY < b.y + brickHeight
-            ) {
-              ballDY = -ballDY;
-              b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
-              brickBreak.play();
-            }
-          } else {
+ function collisionDetection() {
+  for (let i = 0; i < brickColumnCount; i++) {
+    for (let j = 0; j < brickRowCount; j++) {
+      const b = bricks[i][j];
+      if (b.status > 0) {
+        if (
+          ballX + ballRadius > b.x &&
+          ballX - ballRadius < b.x + brickWidth &&
+          ballY + ballRadius > b.y &&
+          ballY - ballRadius < b.y + brickHeight
+        ) {
+          const brickLeft = b.x;
+          const brickRight = b.x + brickWidth;
+          const brickTop = b.y;
+          const brickBottom = b.y + brickHeight;
+
+          if (
+            ballX + ballRadius > brickRight ||
+            ballX - ballRadius < brickLeft
+          ) {
+            // 충돌이 벽돌의 옆면에 있는 경우
+            ballDX = -ballDX; // x축 이동 방향을 반대로 변경
+          } else if (
+            ballY + ballRadius > brickTop &&
+            ballY - ballRadius < brickBottom
+          ) {
+            // 충돌이 벽돌의 윗면이나 아랫면에 있는 경우
+            ballDY = -ballDY; // y축 이동 방향을 반대로 변경
           }
+
+          b.status--; // 벽돌을 제거하기 위해 상태를 0으로 변경
+          if (b.status===0) 
+            brickCnt--;
+          brickBreak.play();
         }
       }
     }
+  }
+}
+
+
 
     function gameOver() {
       if (storyModeLives === 0) {
@@ -1239,7 +1301,7 @@ $(document).ready(function () {
       if(brickCnt > 0)
         requestAnimationFrame(draw);
       else
-        console.log("Hard Mode Cleared!");
+        playHardMode(storyModeLives);
     }
 
     // 게임 루프 실행
@@ -1450,8 +1512,7 @@ $(document).ready(function () {
               }
               $("#liveScore").text("SCORE: " + rankedGameScore);
             }
-          } else {
-          }
+          } 
         }
       }
     }
