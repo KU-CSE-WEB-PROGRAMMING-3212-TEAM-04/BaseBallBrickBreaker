@@ -546,7 +546,6 @@ canvas {
   height: 600px;
 }
 
-
 #rankedGameScore {
   margin: 80px auto;
   font-size: 60px;
@@ -663,7 +662,7 @@ canvas {
     0 -3.5px #990100;
 }
 
- h2 {
+h2 {
   position: relative;
   margin: -25px auto 30px;
   padding: 15px 0;
@@ -775,4 +774,9 @@ canvas {
 
 #rankingTable tr:nth-child(4) {
   color: #5d4038;
+}
+
+#victoryImg {
+  width: 150px;
+  padding-left: 50px;
 }
