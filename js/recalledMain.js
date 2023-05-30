@@ -1217,7 +1217,7 @@ function playNormalMode() {
   $("#restartStorygameButton").on("click", function () {
     console.log("Restarting Story Game...");
     $("#StroyGameOverPage").hide();
-    lifeCount == 3;
+    lifeCount = 3;
     brickCnt = brickRowCount * brickColumnCount;
     playNormalMode();
   });
@@ -2174,6 +2174,7 @@ $("#restartRankedgameButton").on("click", function () {
   console.log("Restarting Ranked Game...");
   $("#rankedGameEndingPage").hide();
   clearCanvas();
+  lifeCount=3;
   rankedGameScore = 0;
   playRankedGame();
 });
