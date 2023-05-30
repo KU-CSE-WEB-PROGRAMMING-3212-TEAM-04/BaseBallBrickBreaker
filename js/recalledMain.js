@@ -542,8 +542,8 @@ function playEasyMode() {
             }
 
             b.status--;
-            if (b.status === 0){
-                brickCnt--;
+            if (b.status === 0) {
+              brickCnt--;
             }
             brickBreak.play();
           }
@@ -689,7 +689,7 @@ function playEasyMode() {
         ballDY = -ballSpeedY; // 수직 방향은 항상 위쪽으로 설정
       }
     }
-    
+
     if (brickCnt > 0) {
       requestAnimationFrame(draw);
     } else if (brickCnt == 0) {
@@ -824,7 +824,7 @@ function playNormalMode() {
       if (teamType === 1) {
         // remove ramdom row
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
-        
+
         var randomRowIndex = Math.floor(Math.random() * brickRowCount + 1);
         for (let j = 0; j < brickColumnCount; j++) {
           const b = bricks[randomRowIndex][j];
@@ -858,7 +858,7 @@ function playNormalMode() {
       } else if (teamType === 4) {
         // remove random column
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
-        
+
         var randomColumnIndex = Math.floor(
           Math.random() * brickColumnCount + 1
         );
@@ -1026,8 +1026,8 @@ function playNormalMode() {
             }
 
             b.status--;
-            if (b.status === 0){
-                brickCnt--;
+            if (b.status === 0) {
+              brickCnt--;
             }
             brickBreak.play();
           }
@@ -1068,12 +1068,12 @@ function playNormalMode() {
   // Game over and reset function
   function handleGameOver() {
     resetPositions();
-    if(lifeCount > -1) {
-        lifeCount--;
-        $("#livesLeft").text(lifeCount);
-        console.log("Lives: " + lifeCount);
+    if (lifeCount > -1) {
+      lifeCount--;
+      $("#livesLeft").text(lifeCount);
+      console.log("Lives: " + lifeCount);
     } else {
-        console.log("lifeCount is less than -1")
+      console.log("lifeCount is less than -1");
     }
     if (!gameOver()) {
       setTimeout(function () {
@@ -1305,7 +1305,7 @@ function playHardMode() {
       if (teamType === 1) {
         // remove ramdom row
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
-        
+
         var randomRowIndex = Math.floor(Math.random() * brickRowCount + 1);
         for (let j = 0; j < brickColumnCount; j++) {
           const b = bricks[randomRowIndex][j];
@@ -1339,7 +1339,7 @@ function playHardMode() {
       } else if (teamType === 4) {
         // remove random column
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
-        
+
         var randomColumnIndex = Math.floor(
           Math.random() * brickColumnCount + 1
         );
@@ -1507,8 +1507,8 @@ function playHardMode() {
             }
 
             b.status--;
-            if (b.status === 0){
-                brickCnt--;
+            if (b.status === 0) {
+              brickCnt--;
             }
             brickBreak.play();
           }
@@ -1549,12 +1549,12 @@ function playHardMode() {
   // Game over and reset function
   function handleGameOver() {
     resetPositions();
-    if(lifeCount > -1) {
-        lifeCount--;
-        $("#livesLeft").text(lifeCount);
-        console.log("Lives: " + lifeCount);
+    if (lifeCount > -1) {
+      lifeCount--;
+      $("#livesLeft").text(lifeCount);
+      console.log("Lives: " + lifeCount);
     } else {
-        console.log("lifeCount is less than -1")
+      console.log("lifeCount is less than -1");
     }
     if (!gameOver()) {
       setTimeout(function () {
@@ -1695,6 +1695,7 @@ function playHardMode() {
     ctx.fillStyle = "Yellow";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     $("#StoryClearPage").fadeIn();
+    $("#victoryImg").attr("src", `src/victory${teamType}.png`);
     startBgm.pause();
     bgm2.pause();
     clearSound.play();
