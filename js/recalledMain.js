@@ -712,6 +712,7 @@ function playEasyMode() {
     // died while playing story mode
     removeKeyUpHandler();
     clearCanvas();
+    lifeCount=3;
     $("#gameStatus").hide();
     $("#skillStatusPage").hide();
     $("#StroyGameOverPage").fadeIn();
