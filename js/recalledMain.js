@@ -370,7 +370,7 @@ function playEasyMode() {
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
         skill4SoundEffect.play();
         ballRadius += 10;
-        setTimeout(skill3_backToNormal, 5000);
+        setTimeout(skill3_backToNormal, 6000);
       } else if (teamType === 4) {
         // remove random column
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
@@ -855,7 +855,7 @@ function playNormalMode() {
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
         skill4SoundEffect.play();
         ballRadius += 10;
-        setTimeout(skill3_backToNormal, 5000);
+        setTimeout(skill3_backToNormal, 6000);
       } else if (teamType === 4) {
         // remove random column
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
@@ -1336,7 +1336,7 @@ function playHardMode() {
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
         skill4SoundEffect.play();
         ballRadius += 10;
-        setTimeout(skill3_backToNormal, 5000);
+        setTimeout(skill3_backToNormal, 6000);
       } else if (teamType === 4) {
         // remove random column
         var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
