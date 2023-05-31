@@ -736,6 +736,7 @@ function playEasyMode() {
 
   $("#clearModalCloseButton").click(function () {
     console.log("Back To Home...");
+    removeKeyUpHandler();
     $("#StoryClearPage").hide();
     $("#gameCanvas").hide();
     victorySound.pause();
@@ -1721,6 +1722,7 @@ function playHardMode() {
 
   $("#clearModalCloseButton").click(function () {
     console.log("Back To Home...");
+    removeKeyUpHandler();
     $("#StoryClearPage").hide();
     $("#gameCanvas").hide();
     victorySound.pause();
