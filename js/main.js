@@ -17,12 +17,13 @@ var brickBreak = new Audio("src/brickBreak.mp3");
 var over = new Audio("src/gameover.wav");
 var clearSound = new Audio("src/clear.mp3");
 var victorySound = new Audio("src/victoryAudio.mp3");
-var teamType = -1;
+var teamType = 1;
 var rankedGameScore = 0;
 var lifeCount = 3;
 var playerName = "익명의 플레이어";
 
-var difficulty = -1; // easy:0, normal:1, hard:2
+var difficulty = 0; // easy:0, normal:1, hard:2
+var isRanked = false;
 
 //이지 모드 스토리
 var keyboardSound = new Audio("src/keyboard1.mp3");
@@ -158,6 +159,7 @@ const difficultySelection = () => {
   $("#difficultyChoosingScreen").hide();
   $("#story").fadeIn();
   typingInterval = setInterval(typing, 100);
+  isRanked = false;
 };
 
 $("#selectEasyDifficulty").click(() => {
@@ -205,4 +207,54 @@ $("#selectRankedGameButton").click(function () {
   $("#gameTypeSelectingScreen").hide();
   $("#gameCanvas").show();
   $("#beforePlayingRankedGamePage").css("display", "flex");
+});
+
+$("#playRankedGameButton").click(function () {
+  $("#beforePlayingRankedGamePage").hide();
+  isRanked = true;
+  play();
+});
+
+$("#restartRankedgameButton").on("click", function () {
+  console.log("Restarting Ranked Game...");
+  $("#rankedGameEndingPage").hide();
+  clearCanvas();
+  lifeCount = 3;
+  rankedGameScore = 0;
+  play();
+});
+
+$("#backToHomeButton").click(function () {
+  console.log("Back To Home...");
+  $("#rankedGameEndingPage").hide();
+  $("#gameCanvas").hide();
+  startBgm.play();
+  displayHomeScreen();
+  isRanked = false;
+});
+
+$("#backToHomeButton_story").click(function () {
+  lifeCount = 3;
+  console.log("Back To Home...");
+  $("#StroyGameOverPage").hide();
+  $("#gameCanvas").hide();
+  displayHomeScreen();
+});
+
+$("#restartStorygameButton").on("click", function () {
+  console.log("Restarting Story Game...");
+  $("#StroyGameOverPage").hide();
+  lifeCount = 3;
+  brickCnt = brickRowCount * brickColumnCount;
+  play(difficulty);
+});
+
+$("#clearModalCloseButton").click(function () {
+  console.log("Back To Home...");
+  removeKeyHandler();
+  $("#StoryClearPage").hide();
+  $("#gameCanvas").hide();
+  victorySound.pause();
+  startBgm.play();
+  displayHomeScreen();
 });
