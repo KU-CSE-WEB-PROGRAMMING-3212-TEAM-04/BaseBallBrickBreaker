@@ -35,11 +35,12 @@ var ballSpeedY;
 // variables about the brick
 const brickRowCount = 4; // number of rows of bricks
 const brickColumnCount = 6; // number of rows of bricks
-const brickWidth = 60;
+const maximumBrickRow = 7;
 const brickHeight = 30;
-const brickPadding = 30; // spacing between bricks
 const brickOffsetTop = 30;
 const brickOffsetLeft = 150;
+var brickPadding; // spacing between bricks
+var brickWidth;
 var brickCnt;
 
 // 키보드 이벤트 처리를 위한 변수 선언
@@ -59,11 +60,13 @@ const play = (difficulty) => {
   $("#gameCanvas").show();
   $("#gameStatus").show();
   $("#livesLeft").text(lifeCount);
-  $("#liveScore").text("");
+  $("#liveScore").text(isRanked ? `SCORE: ${rankedGameScore}` : "");
 
-  $("#skillImg").attr("src", `src/skill${teamType}.png`);
-  $("#skillStatusPage").show();
-  $("#skillsLeft").text(skillsLeft);
+  if (!isRanked) {
+    $("#skillImg").attr("src", `src/skill${teamType}.png`);
+    $("#skillStatusPage").show();
+    $("#skillsLeft").text(skillsLeft);
+  }
 
   //타자
   hitterImage.src = "src/hitter" + teamType + ".png";
@@ -75,12 +78,14 @@ const play = (difficulty) => {
   ballX = canvas.width / 2;
   ballY = paddleY - ballRadius;
   // 난이도 따라 수정
-  ballDX = 4 + difficulty;
+  ballDX = isRanked ? 5 : 4 + difficulty;
   ballDY = -ballDX;
   ballSpeed = ballDX;
   ballSpeedY = ballDX;
 
   brickCnt = brickRowCount * brickColumnCount;
+  brickPadding = isRanked ? 1 : 30;
+  brickWidth = isRanked ? 80 : 60;
 
   bricks = new Array(brickRowCount);
   for (let i = 0; i < brickRowCount; i++) {
@@ -89,7 +94,7 @@ const play = (difficulty) => {
       bricks[i][j] = {
         x: 0,
         y: 0,
-        status: Math.floor(Math.random() * (difficulty + 1) + 1),
+        status: isRanked ? 1 : Math.floor(Math.random() * (difficulty + 1) + 1),
       };
     }
   }
@@ -99,6 +104,13 @@ const play = (difficulty) => {
   $(document).keyup(keyUpHandler);
 
   draw(); // loop the game
+  if (isRanked)
+    setInterval(() => {
+      for (let i = 0; i < brickRowCount; i++) {
+        bricks[i].unshift({ x: 0, y: 0, status: 1 });
+        bricks[i].pop();
+      }
+    }, 4000);
 };
 
 function handleSkill() {
@@ -187,7 +199,7 @@ function keyUpHandler(event) {
   } else if (event.key === "e") {
     resetPaddleAngle = false; // 'e' 키를 뗐을 때 패들 각도 초기화 플래그를 false로 설정
   } else if (event.key === "r") {
-    handleSkill();
+    if (!isRanked) handleSkill();
   } else if (event.key === "Escape") {
     brickCnt = 0;
   } else if (event.key === "m") {
@@ -257,20 +269,18 @@ function drawBricks() {
 function collisionDetection() {
   for (let i = 0; i < brickRowCount; i++) {
     for (let j = 0; j < brickColumnCount; j++) {
-      const b = bricks[i][j];
-      if (b.status > 0) {
-        const brickX = b.x;
-        const brickY = b.y;
+      const brick = bricks[i][j];
+      if (brick.status > 0) {
         if (
-          ballX + ballRadius > brickX &&
-          ballX - ballRadius < brickX + brickWidth &&
-          ballY + ballRadius > brickY &&
-          ballY - ballRadius < brickY + brickHeight
+          ballX + ballRadius > brick.x &&
+          ballX - ballRadius < brick.x + brickWidth &&
+          ballY + ballRadius > brick.y &&
+          ballY - ballRadius < brick.y + brickHeight
         ) {
-          const brickLeft = brickX;
-          const brickRight = brickX + brickWidth;
-          const brickTop = brickY;
-          const brickBottom = brickY + brickHeight;
+          const brickLeft = brick.x;
+          const brickRight = brick.x + brickWidth;
+          const brickTop = brick.y;
+          const brickBottom = brick.y + brickHeight;
 
           if (
             ballX + ballRadius > brickRight ||
@@ -286,11 +296,18 @@ function collisionDetection() {
             ballDY = -ballDY; // Reverse the ball's vertical direction
           }
 
-          b.status--;
-          if (b.status === 0) {
+          brick.status--;
+          if (brick.status === 0) {
             brickCnt--;
           }
           brickBreak.play();
+          if (isRanked) {
+            if (++rankedGameScore % 10 === 0) {
+              ballDY += 1;
+              ballSpeedY += 1;
+            }
+            $("#liveScore").text(`SCORE: ${rankedGameScore}`);
+          }
         }
       }
     }
@@ -307,15 +324,14 @@ function removeKeyHandler() {
 }
 
 function gameOver() {
-  if (lifeCount === 0) {
-    console.log("Died While Playing " + difficulty);
-    removeKeyHandler();
-    console.log("Removed KeyUp Handler");
-    over.play();
-    endStoryMode();
-    return true;
-  }
-  return false;
+  if (lifeCount !== 0) return false;
+
+  console.log("Died While Playing " + difficulty);
+  removeKeyHandler();
+  console.log("Removed KeyUp Handler");
+  over.play();
+  isRanked ? endRankedGame() : endStoryMode();
+  return true;
 }
 
 // Function to reset the ball and paddle positions
@@ -327,14 +343,14 @@ function resetPositions() {
   ballX = canvas.width / 2;
   ballY = paddleY - ballRadius;
   // 난이도 따라 수정
-  ballDX = 4 + difficulty;
+  ballDX = isRanked ? 5 : 4 + difficulty;
   ballDY = -ballDX;
 }
 
 // Game over and reset function
 function handleGameOver() {
   resetPositions();
-  if (lifeCount > -1) {
+  if (lifeCount > 0) {
     lifeCount--;
     $("#livesLeft").text(lifeCount);
     console.log("Lives: " + lifeCount);
@@ -443,14 +459,12 @@ function draw() {
       ballDY = -ballSpeedY; // 수직 방향은 항상 위쪽으로 설정
     }
   }
-
-  if (brickCnt > 0) {
+  if (isRanked || brickCnt > 0) {
     requestAnimationFrame(draw);
   } else if (brickCnt == 0 && difficulty == 2) {
     console.log("HARD CLEARED");
     clearStoryMode();
   } else if (brickCnt == 0) {
-    console.log("asdf");
     difficulty++;
     $("#gameCanvas").hide();
     $("#gameStatus").hide();
@@ -475,6 +489,18 @@ function endStoryMode() {
   $("#StroyGameOverPage").fadeIn();
 }
 
+function endRankedGame() {
+  clearCanvas();
+  $("#gameStatus").hide();
+  uploadScoreToDB(rankedGameScore);
+  $("#rankedGameScore").text("SCORE: " + rankedGameScore);
+  ctx.fillStyle = "Yellow";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  $("#rankedGameEndingPage").show();
+  lifeCount = 3;
+  rankedGameScore = 0;
+}
+
 function clearStoryMode() {
   $("#gameStatus").hide();
   $("#skillStatusPage").hide();
@@ -488,32 +514,6 @@ function clearStoryMode() {
   clearSound.play();
   victorySound.play();
 }
-
-$("#backToHomeButton_story").click(function () {
-  lifeCount = 3;
-  console.log("Back To Home...");
-  $("#StroyGameOverPage").hide();
-  $("#gameCanvas").hide();
-  displayHomeScreen();
-});
-
-$("#restartStorygameButton").on("click", function () {
-  console.log("Restarting Story Game...");
-  $("#StroyGameOverPage").hide();
-  lifeCount = 3;
-  brickCnt = brickRowCount * brickColumnCount;
-  play(difficulty);
-});
-
-$("#clearModalCloseButton").click(function () {
-  console.log("Back To Home...");
-  removeKeyHandler();
-  $("#StoryClearPage").hide();
-  $("#gameCanvas").hide();
-  victorySound.pause();
-  startBgm.play();
-  displayHomeScreen();
-});
 
 // 충돌 판정 함수
 function checkCollision(rect1, rect2) {
