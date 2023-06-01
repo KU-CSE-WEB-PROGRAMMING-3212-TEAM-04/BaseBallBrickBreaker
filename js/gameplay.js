@@ -441,7 +441,7 @@ function draw() {
     };
 
     // 충돌 판정
-    if (checkCollision(paddleBox, ballBox) && paddleAngle!==paddleMaxAngle) {
+    if (checkCollision(paddleBox, ballBox) && paddleAngle !== paddleMaxAngle) {
       if (resetPaddleAngle) {
         // 'e' 키가 눌려 있는 경우
 
