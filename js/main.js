@@ -155,7 +155,7 @@ $("#selectTeam4").click(() => {
   teamSelection();
 });
 
-const difficultySelection = () => {
+const selectDifficulty = () => {
   $("#difficultyChoosingScreen").hide();
   $("#story").fadeIn();
   typingInterval = setInterval(typing, 100);
@@ -164,17 +164,17 @@ const difficultySelection = () => {
 
 $("#selectEasyDifficulty").click(() => {
   difficulty = 0;
-  difficultySelection();
+  selectDifficulty();
 });
 
 $("#selectNormalDifficulty").click(() => {
   difficulty = 1;
-  difficultySelection();
+  selectDifficulty();
 });
 
 $("#selectHardDifficulty").click(() => {
   difficulty = 2;
-  difficultySelection();
+  selectDifficulty();
 });
 
 function typing() {
