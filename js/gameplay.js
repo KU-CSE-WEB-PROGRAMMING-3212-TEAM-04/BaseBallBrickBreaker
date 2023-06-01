@@ -395,48 +395,6 @@ function draw() {
   } else {
     paddleAngle = -25; // 스페이스바를 뗐을 때 각도 초기화
   }
-  // 패들과 충돌 판정을 위한 충돌 박스 계산
-const paddleCenterX = paddleX + paddleWidth / 2;
-const paddleTopY = paddleY;
-
-// 방망이 휘두르는 모션
-if (spacePressed) {
-  paddleAngle = Math.min(paddleAngle + 15, paddleMaxAngle); // 최대 각도까지 회전
-} else if (resetPaddleAngle) {
-  paddleAngle = 0; // 'e' 키를 누르는 동안 패들 각도를 0으로 초기화
-} else {
-  paddleAngle = -25; // 스페이스바를 뗐을 때 각도 초기화
-}
-
-const paddleBox = calculatePaddleBox(paddleCenterX, paddleTopY, paddleWidth, paddleHeight, paddleAngle);
-
-function calculatePaddleBox(centerX, topY, width, height, angle) {
-  // 라디안값 계산
-  const angleInRadians = (angle * Math.PI) / 180;
-  
-  // 패들 히트박스 계산
-  const halfWidth = width / 2;
-  const halfHeight = height / 2;
-  
-  const cos = Math.cos(angleInRadians);
-  const sin = Math.sin(angleInRadians);
-  
-  const offsetX = halfHeight * sin;
-  const offsetY = halfHeight * (1 - cos);
-  
-  const x = centerX - halfWidth + offsetX;
-  const y = topY - offsetY;
-  const rotatedWidth = width * cos + height * sin;
-  const rotatedHeight = height * cos + width * sin;
-  
-  return {
-    x: x,
-    y: y,
-    width: rotatedWidth,
-    height: rotatedHeight
-  };
-}
-
 
   // 공 위치 업데이트
   ballX += ballDX;
@@ -464,7 +422,16 @@ function calculatePaddleBox(centerX, topY, width, height, angle) {
     ballX > paddleX &&
     ballX < paddleX + paddleWidth // 공이 패들의 x 좌표 범위에 있을 때
   ) {
-    
+    // 패들과 충돌 판정을 위한 충돌 박스 계산
+    const paddleCenterX = paddleX + paddleWidth / 2;
+    const paddleTopY = paddleY;
+    const paddleBox = {
+      x: paddleCenterX - paddleWidth / 2,
+      y: paddleTopY,
+      width: paddleWidth,
+      height: paddleHeight,
+    };
+
     // 공과 충돌 판정을 위한 충돌 박스 계산
     const ballBox = {
       x: ballX - ballRadius,
@@ -474,7 +441,7 @@ function calculatePaddleBox(centerX, topY, width, height, angle) {
     };
 
     // 충돌 판정
-    if (checkCollision(paddleBox, ballBox)) {
+    if (checkCollision(paddleBox, ballBox) && paddleAngle!==paddleMaxAngle) {
       if (resetPaddleAngle) {
         // 'e' 키가 눌려 있는 경우
 
