@@ -160,6 +160,7 @@ const selectDifficulty = () => {
   $("#story").fadeIn();
   typingInterval = setInterval(typing, 100);
   isRanked = false;
+  skillsLeft = 5;
 };
 
 $("#selectEasyDifficulty").click(() => {
