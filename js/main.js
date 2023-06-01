@@ -1,15 +1,32 @@
-//인트로
+//Intro
 var introLabel1;
 var introLabel2;
 var introDuration1;
 var introDuration2;
 var totalDuration;
-
-//시작화면
-var hue_value = 0;
 var startBgm = new Audio("src/startbgm1.mp3");
 startBgm.volume -= 0.5;
 var bgm2 = new Audio("src/startbgm2.mp3");
+
+introLabel1 = $("#gameIntro1").find($("label"));
+introLabel2 = $("#gameIntro2").find($("label"));
+introDuration1 = animateLabels(introLabel1, 0);
+
+setTimeout(function () {
+  $("#gameIntro1").hide();
+}, introDuration1);
+introDuration2 = animateLabels(introLabel2, introDuration1);
+totalDuration = introDuration1 + introDuration2 - 2000;
+
+setTimeout(function () {
+  $(".gameIntroScreen").hide();
+  displayHomeScreen();
+  startBgm.play();
+  startBgm.loop = true;
+}, totalDuration);
+
+//시작화면
+var hue_value = 0;
 var hit = new Audio("src/click2.mp3");
 var bunt = new Audio("src/click1.mp3");
 var clickSound1 = new Audio("src/click1.mp3");
@@ -42,23 +59,6 @@ const ctx = canvas.getContext("2d");
 function clearCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
-
-//인트로
-introLabel1 = $("#gameIntro1").find($("label"));
-introLabel2 = $("#gameIntro2").find($("label"));
-introDuration1 = animateLabels(introLabel1, 0);
-setTimeout(function () {
-  $("#gameIntro1").hide();
-}, introDuration1);
-introDuration2 = animateLabels(introLabel2, introDuration1);
-totalDuration = introDuration1 + introDuration2 - 2000;
-
-setTimeout(function () {
-  $(".gameIntroScreen").hide();
-  displayHomeScreen();
-  startBgm.play();
-  startBgm.loop = true;
-}, totalDuration);
 
 function animateLabels(inputs, initialDelay) {
   var totalDuration = initialDelay;
