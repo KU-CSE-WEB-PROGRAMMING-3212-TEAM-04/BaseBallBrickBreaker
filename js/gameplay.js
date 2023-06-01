@@ -53,6 +53,8 @@ var bricks;
 
 var skill4SoundEffect = new Audio("src/skill4SoundEffect.mp3");
 
+var shiftInterval = 0;
+
 const play = (difficulty) => {
   console.log(`Playing difficulty ${difficulty}`);
 
@@ -105,7 +107,7 @@ const play = (difficulty) => {
 
   draw(); // loop the game
   if (isRanked)
-    setInterval(() => {
+    shiftInterval = setInterval(() => {
       for (let i = 0; i < brickRowCount; i++) {
         bricks[i].unshift({ x: 0, y: 0, status: 1 });
         bricks[i].pop();
@@ -490,6 +492,10 @@ function endStoryMode() {
 }
 
 function endRankedGame() {
+  if (shiftInterval !== 0) {
+    clearInterval(shiftInterval);
+    shiftInterval = 0;
+  }
   clearCanvas();
   $("#gameStatus").hide();
   uploadScoreToDB(rankedGameScore);
