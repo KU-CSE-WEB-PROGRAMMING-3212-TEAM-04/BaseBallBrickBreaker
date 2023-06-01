@@ -245,6 +245,7 @@ $("#restartStorygameButton").on("click", function () {
   console.log("Restarting Story Game...");
   $("#StroyGameOverPage").hide();
   lifeCount = 3;
+  skillsLeft = 5;
   brickCnt = brickRowCount * brickColumnCount;
   play(difficulty);
 });
