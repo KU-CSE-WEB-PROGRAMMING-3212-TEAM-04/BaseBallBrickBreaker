@@ -8,6 +8,7 @@ const paddleMaxAngle = 105; // 최대 회전 각도 (방망이 휘두르는 각�
 let paddleX = (canvas.width - paddleWidth) / 2;
 let paddleY = canvas.height - paddleHeight - 45;
 let paddleAngle = -25; // 현재 방망이 회전 각도
+
 const paddleImage = new Image();
 paddleImage.src = "src/batWithHands.png";
 
@@ -19,9 +20,6 @@ let hitterY;
 
 const ballImage = new Image();
 ballImage.src = "src/ball.png";
-
-const backgroundImage = new Image();
-backgroundImage.src = "src/ground.jpg";
 
 var ballRotationAngle;
 var ballRadius;
@@ -63,6 +61,8 @@ const play = (difficulty) => {
   $("#gameStatus").show();
   $("#livesLeft").text(lifeCount);
   $("#liveScore").text(isRanked ? `SCORE: ${rankedGameScore}` : "");
+  $("#rankedGameBackground").show();
+  $("#rankedGameBackgroundVideo").play();
 
   if (!isRanked) {
     $("#skillImg").attr("src", `src/skill${teamType}.png`);
@@ -369,7 +369,6 @@ function handleGameOver() {
 // 게임 루프
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
   drawPaddle();
   drawHitter();
@@ -470,6 +469,9 @@ function draw() {
     difficulty++;
     $("#gameCanvas").hide();
     $("#gameStatus").hide();
+    $("#rankedGameBackground").hide();
+    $("#rankedGameBackgroundVideo").pause();
+
     $("#skillStatusPage").hide();
     $("#skillAlertPage").hide();
     $("#story").fadeIn();
@@ -487,6 +489,9 @@ function endStoryMode() {
   clearCanvas();
   lifeCount = 3;
   $("#gameStatus").hide();
+  $("#rankedGameBackground").hide();
+  $("#rankedGameBackgroundVideo").pause();
+
   $("#skillStatusPage").hide();
   $("#StroyGameOverPage").fadeIn();
 }
@@ -498,6 +503,9 @@ function endRankedGame() {
   }
   clearCanvas();
   $("#gameStatus").hide();
+  $("#rankedGameBackground").hide();
+  $("#rankedGameBackgroundVideo").pause();
+
   uploadScoreToDB(rankedGameScore);
   $("#rankedGameScore").text("SCORE: " + rankedGameScore);
   ctx.fillStyle = "Yellow";
@@ -509,6 +517,9 @@ function endRankedGame() {
 
 function clearStoryMode() {
   $("#gameStatus").hide();
+  $("#rankedGameBackground").hide();
+  $("#rankedGameBackgroundVideo").pause();
+
   $("#skillStatusPage").hide();
   $("#story").hide();
   ctx.fillStyle = "Yellow";
